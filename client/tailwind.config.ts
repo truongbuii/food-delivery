@@ -44,11 +44,11 @@ export default {
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))'
+        ring: 'hsl(var(--ring))',
+        lightGray: 'hsl(var(--light-gray))'
       },
       boxShadow: {
-        socialBtn:
-          '18.58696px 18.58696px 37.17392px 0px rgba(211, 209, 216, 0.7)',
+        socialBtn: `15px 15px 37px 0px rgba(211, 209, 216, 0.7)`,
         primaryBtn: '0px 10px 20px 0px rgba(254, 114, 76, 0.50)'
       },
       animation: {
