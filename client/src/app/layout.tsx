@@ -1,6 +1,7 @@
 import '@styles/globals.css';
-import { MainLayout } from '@/layout';
+import { MainLayout } from '@/layouts';
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,9 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="">
-        <MainLayout>{children}</MainLayout>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MainLayout>{children}</MainLayout>
+        </ThemeProvider>
       </body>
     </html>
   );
