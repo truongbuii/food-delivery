@@ -2,6 +2,7 @@ import '@styles/globals.css';
 import { MainLayout } from '@/layouts';
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/provider';
+import { PageTransition } from '@/components/molecule';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,11 +19,13 @@ export default function RootLayout({
       <body className="">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <MainLayout>{children}</MainLayout>
+          <MainLayout>
+            <PageTransition>{children}</PageTransition>
+          </MainLayout>
         </ThemeProvider>
       </body>
     </html>

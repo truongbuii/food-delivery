@@ -1,5 +1,6 @@
 'use client';
 
+import { SplashScreen } from '@/components/molecule';
 import { PATHNAME, PUBLIC_PATH } from '@/configs';
 import useScreenMode from '@/hooks/useScreenMode';
 import { usePathname } from 'next/navigation';
@@ -28,7 +29,7 @@ const useLayout = () => {
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isMobile } = useScreenMode();
-  const { isSplash, isLoading } = useLayout();
+  const { finishLoading, isSplash, isLoading } = useLayout();
 
   return (
     <div
@@ -36,7 +37,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         isMobile ? '' : 'max-w-[23.4375rem]'
       }`}
     >
-      {!isLoading && isSplash ? <div>Load...</div> : children}
+      {isLoading && isSplash ? (
+        <SplashScreen finishLoading={finishLoading} />
+      ) : (
+        children
+      )}
     </div>
   );
 };

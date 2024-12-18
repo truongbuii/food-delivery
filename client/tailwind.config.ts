@@ -45,11 +45,13 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        lightGray: 'hsl(var(--light-gray))'
+        lightGray: 'hsl(var(--light-gray))',
+        overlay: 'hsl(var(--overlay))'
       },
       boxShadow: {
+        foodShadow: `0px 10px 25px 0 var(--food-shadow)`,
         socialBtn: `15px 15px 37px 0px rgba(211, 209, 216, 0.7)`,
-        primaryBtn: '0px 10px 20px 0px rgba(254, 114, 76, 0.50)'
+        primaryBtn: '5px 10px 30px 0px rgba(254, 114, 76, 0.35)'
       },
       animation: {
         scale: 'scaleUp 1.25s ease-in-out infinite',
