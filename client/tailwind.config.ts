@@ -55,7 +55,8 @@ export default {
       },
       animation: {
         scale: 'scaleUp 1.25s ease-in-out infinite',
-        shiny: 'shiny 1.5s ease-in-out infinite'
+        shiny: 'shiny 1.5s ease-in-out infinite',
+        'caret-blink': 'caret-blink 1.25s ease-out infinite'
       },
       keyframes: {
         scaleUp: {
@@ -83,6 +84,10 @@ export default {
             transform: 'scale(50) rotate(45deg)',
             opacity: '0'
           }
+        },
+        'caret-blink': {
+          '0%,70%,100%': { opacity: '1' },
+          '20%,50%': { opacity: '0' }
         }
       },
       borderRadius: {
