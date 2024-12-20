@@ -1,0 +1,116 @@
+'use client';
+
+import { useCallback, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { TVerificationSchema, VerificationSchema } from './validSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage
+} from '@/components/ui/form';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot
+} from '@/components/ui/input-otp';
+import { Button } from '@/components/ui/button';
+import { REGEXP_ONLY_DIGITS } from 'input-otp';
+
+const VerificationForm = () => {
+  const [resendCountdown, setResendCountdown] = useState<number>(0);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const form = useForm<TVerificationSchema>({
+    resolver: zodResolver(VerificationSchema),
+    defaultValues: {
+      pin: ''
+    },
+    mode: 'onSubmit'
+  });
+
+  const onSubmit = useCallback((value: TVerificationSchema) => {
+    console.log(value);
+  }, []);
+
+  const handleResend = useCallback(() => {
+    if (resendCountdown === 0) {
+      setResendCountdown(10);
+      timer.current = setInterval(() => {
+        setResendCountdown((prev) => {
+          if (prev === 1 && timer.current) {
+            clearInterval(timer.current);
+            timer.current = null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+  }, [resendCountdown]);
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-10"
+      >
+        <div className="flex flex-col gap-4 justify-center mt-4">
+          <span className="w-[247px] h-[40px] text-sm text-lightGray">
+            Please type the verification code sent to {''} your email
+          </span>
+          <FormField
+            control={form.control}
+            name="pin"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputOTP
+                    maxLength={4}
+                    {...field}
+                    pattern={REGEXP_ONLY_DIGITS}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormMessage className="!mt-[4px] px-1 text-[12px] font-normal text-[#ff402e]" />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex flex-col gap-10 text-center">
+          <span className="flex justify-center gap-1 text-sm text-[#9E9E9F]">
+            {resendCountdown > 0
+              ? `Please check your email !`
+              : `I don’t receive a code!`}
+            <button
+              className="text-primary underline"
+              onClick={handleResend}
+              disabled={resendCountdown > 0}
+            >
+              {resendCountdown > 0
+                ? `Please wait ${resendCountdown}s`
+                : 'Please resend'}
+            </button>
+          </span>
+          <Button
+            size={'lg'}
+            loading={false}
+            disabled={false}
+            className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtn"
+          >
+            Verify
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
+export default VerificationForm;
