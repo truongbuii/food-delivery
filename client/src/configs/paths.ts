@@ -4,7 +4,8 @@ export const PUBLIC_PATH = {
   SIGN_UP: '/sign-up',
   RESET_PASSWORD: '/reset-password',
   VERIFICATION: '/verification-code',
-  CHANGE_PASSWORD: '/change-password'
+  CHANGE_PASSWORD: '/change-password',
+  PHONE_REGISTRATION: '/phone-registration'
 };
 
 export const ROOT_PATH = {
