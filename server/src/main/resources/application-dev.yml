@@ -6,10 +6,10 @@ spring:
     name: food-delivery
   # datasource setting
   datasource:
-    url: jdbc:postgresql://localhost:5432/food_delivery
+    url: jdbc:postgresql://localhost:5432/
     driver-class-name: org.postgresql.Driver
-    username: admin
-    password: admin
+    username:
+    password:
   ##
   jpa:
     # Hibernate ddl auto (none, create, create-drop, validate, update)
@@ -44,9 +44,9 @@ spring:
 application:
   api-prefix: /api/v1
   jwt:
-    secret-key: FDjhBadj3d6X3df9WYac+DhnK1dK4xqj567N1+HHRv4=
-    expiration: 900000
-    refresh-expiration: 604800000
+    secret-key:
+    expiration:
+    refresh-expiration:
 
 logging:
   level:
