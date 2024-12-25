@@ -6,7 +6,7 @@ spring:
     name: food-delivery
   # datasource setting
   datasource:
-    url: jdbc:postgresql://localhost:5432/
+    url: jdbc:postgresql://localhost:5432/food_delivery
     driver-class-name: org.postgresql.Driver
     username:
     password:

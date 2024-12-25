@@ -6,7 +6,7 @@ spring:
     name: food-delivery
   # datasource setting
   datasource:
-    url: jdbc:postgresql://localhost:5432/food_delivery
+    url: jdbc:postgresql://ep-flat-sky-a5t8vcwf.us-east-2.aws.neon.tech/test?user=test_owner&password=7qZRvuB4tLJl&sslmode=require
     driver-class-name: org.postgresql.Driver
     username: admin
     password: admin
@@ -36,13 +36,12 @@ spring:
       host:
       port:
 
-  flyway:
-    locations: classpath:/db/migration, classpath:/db/dev/migration
-    baseline-on-migrate: true
-    baseline-version: 0
+#  flyway:
+#    locations: classpath:/db/migration, classpath:/db/dev/migration
+#    baseline-on-migrate: true
+#    baseline-version: 0
 
 application:
-  api-prefix: /api/v1
   jwt:
     secret-key: FDjhBadj3d6X3df9WYac+DhnK1dK4xqj567N1+HHRv4=
     expiration: 900000

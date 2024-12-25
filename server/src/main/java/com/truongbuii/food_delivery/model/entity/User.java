@@ -1,6 +1,5 @@
 package com.truongbuii.food_delivery.model.entity;
 
-
 import com.truongbuii.food_delivery.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-
 
 @Entity
 @Table(name = "user")

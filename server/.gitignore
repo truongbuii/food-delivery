@@ -21,7 +21,6 @@ target/
 .env
 **/src/main/resources/application.yml
 
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
