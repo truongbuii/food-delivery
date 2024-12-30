@@ -100,7 +100,9 @@ services:
     image: provectuslabs/kafka-ui:latest
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:${KAFKA_SERVICE_PORT}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:19092
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper-01:2181,zookeeper-02:2182,zookeeper-03:2183
     ports:
       - "8089:8080"
     depends_on:

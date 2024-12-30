@@ -3,6 +3,9 @@ package com.truongbuii.food_delivery.model.entity;
 import com.truongbuii.food_delivery.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.Type;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 @Getter
 @Setter
 @Builder
@@ -33,6 +36,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean isActive;
     private String googleId;
     private String facebookId;
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Role role = Role.CUSTOMER;
