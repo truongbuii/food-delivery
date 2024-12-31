@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleException(BadCredentialsException e) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
-                .message(e.getMessage())
+                .message(Constant.ErrorCode.ERR_USER_INVALID_CREDENTIALS)
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
@@ -63,6 +63,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleException(InvalidTokenException e) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.UNAUTHORIZED.value())
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+    }
+
+    @ExceptionHandler({InvalidOtpException.class})
+    public ResponseEntity<ApiResponse<?>> handleException(InvalidOtpException e) {
+        ApiResponse<?> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);

@@ -1,5 +1,5 @@
 package com.truongbuii.food_delivery.model.request;
 
-public record AccessTokenPost(
+public record TokenPost(
         String token) {
 }

@@ -1,9 +1,7 @@
 package com.truongbuii.food_delivery.controller;
 
 import com.truongbuii.food_delivery.model.common.Constant;
-import com.truongbuii.food_delivery.model.request.AccessTokenPost;
-import com.truongbuii.food_delivery.model.request.AuthSignIn;
-import com.truongbuii.food_delivery.model.request.AuthSignUp;
+import com.truongbuii.food_delivery.model.request.*;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
 import com.truongbuii.food_delivery.model.response.UserResponse;
 import com.truongbuii.food_delivery.service.AuthenticationService;
@@ -41,10 +39,46 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-access-token")
-    public ResponseEntity<ApiResponse<AccessTokenPost>> newAccessToken(
-            @CookieValue(Constant.Cookie.COOKIE_REFRESH_TOKEN_NAME) AccessTokenPost accessTokenPost
+    public ResponseEntity<ApiResponse<TokenPost>> newAccessToken(
+            @CookieValue(Constant.Cookie.COOKIE_REFRESH_TOKEN_NAME) TokenPost tokenPost
     ) {
-        AccessTokenPost accessToken = authenticationService.refreshAccessToken(accessTokenPost);
-        return ResponseEntity.ok(ApiResponse.<AccessTokenPost>builder().data(accessToken).build());
+        TokenPost accessToken = authenticationService.refreshAccessToken(tokenPost);
+        return ResponseEntity.ok(ApiResponse.<TokenPost>builder().data(accessToken).build());
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<ApiResponse<?>> signOut(
+            @CookieValue(Constant.Cookie.COOKIE_REFRESH_TOKEN_NAME) TokenPost tokenPost,
+            HttpServletResponse response
+    ) {
+        authenticationService.signOut(tokenPost, response);
+        return ResponseEntity.ok(ApiResponse.builder().build());
+    }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<ApiResponse<?>> sendOtp(
+            @Valid
+            @RequestBody EmailPost emailPost
+    ) {
+        authenticationService.sendOtp(emailPost);
+        return ResponseEntity.ok(ApiResponse.builder().build());
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<?>> resetPassword(
+            @Valid
+            @RequestBody EmailPost emailPost
+    ) {
+        authenticationService.forgotPassword(emailPost);
+        return ResponseEntity.ok(ApiResponse.<Object>builder().build());
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<ApiResponse<?>> changePassword(
+            @Valid
+            @RequestBody ChangePasswordPatch changePasswordPatch
+    ) {
+        authenticationService.changePassword(changePasswordPatch);
+        return ResponseEntity.ok(ApiResponse.<Object>builder().build());
     }
 }
