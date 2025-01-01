@@ -25,7 +25,7 @@ public final class Constant {
         public static final String COOKIE_REFRESH_TOKEN_NAME = "FD_REFRESH_TOKEN";
         public static final boolean COOKIE_SECURE = true;
         public static final boolean COOKIE_HTTP_ONLY = true;
-        public static final int COOKIE_MAX_AGE = 3 * 60;
+        public static final int COOKIE_MAX_AGE = 30 * 24 * 60 * 60;
         public static final String COOKIE_PATH = "/";
     }
 

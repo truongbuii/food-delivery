@@ -8,7 +8,7 @@ import { ResetPasswordSchema, TResetPasswordSchema } from './validSchema';
 import { InputField } from '@/components/molecule';
 import { Button } from '@/components/ui/button';
 
-const ResetPasswordForm = () => {
+const ForgotPasswordForm = () => {
   const form = useForm<TResetPasswordSchema>({
     resolver: zodResolver(ResetPasswordSchema),
     mode: 'onSubmit'
@@ -41,4 +41,4 @@ const ResetPasswordForm = () => {
   );
 };
 
-export default ResetPasswordForm;
+export default ForgotPasswordForm;
