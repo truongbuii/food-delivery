@@ -1,8 +1,7 @@
 package com.truongbuii.food_delivery.exception;
 
-import com.truongbuii.food_delivery.model.common.Constant;
+import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleException(BadCredentialsException e) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
-                .message(Constant.ErrorCode.ERR_USER_INVALID_CREDENTIALS)
+                .message(ErrorCode.ERR_USER_INVALID_CREDENTIALS)
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }

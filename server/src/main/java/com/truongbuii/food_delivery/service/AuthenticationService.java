@@ -6,6 +6,7 @@ import com.truongbuii.food_delivery.exception.InvalidTokenException;
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.UserMapper;
 import com.truongbuii.food_delivery.model.common.Constant;
+import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.*;
 import com.truongbuii.food_delivery.model.response.UserResponse;
@@ -49,7 +50,7 @@ public class AuthenticationService {
     public UserResponse signUp(AuthSignUp authSignUp, HttpServletResponse response) {
         Optional<User> userOptional = userRepository.findByEmail(authSignUp.email());
         if (userOptional.isPresent()) {
-            throw new DuplicateResourceException(Constant.ErrorCode.ERR_USER_DUPLICATE);
+            throw new DuplicateResourceException(ErrorCode.ERR_USER_DUPLICATE);
         }
         User user = userMapper.toUser(authSignUp);
         user.setPassword(passwordEncoder.encode(authSignUp.password()));
@@ -99,11 +100,11 @@ public class AuthenticationService {
         boolean isTokenValid = jwtService.isTokenValid(tokenPost.token(), userDetails);
         if (!isTokenValid) {
             log.error("Failed to refresh access token: {} is invalid", tokenPost.token());
-            throw new InvalidTokenException(Constant.ErrorCode.ERR_TOKEN_INVALID);
+            throw new InvalidTokenException(ErrorCode.ERR_TOKEN_INVALID);
         }
 
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new ResourceNotFoundException(Constant.ErrorCode.ERR_USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
         return new TokenPost(jwtService.generateToken(user));
     }
 
@@ -114,7 +115,7 @@ public class AuthenticationService {
         boolean isTokenValid = jwtService.isTokenValid(tokenPost.token(), userDetails);
         if (!isTokenValid) {
             log.error("Failed to sign out: {} is invalid", tokenPost.token());
-            throw new InvalidTokenException(Constant.ErrorCode.ERR_TOKEN_INVALID);
+            throw new InvalidTokenException(ErrorCode.ERR_TOKEN_INVALID);
         }
         /* // BLACKLIST TOKEN //
          *
@@ -132,7 +133,7 @@ public class AuthenticationService {
 
     public void checkUserExist(String email) {
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(Constant.ErrorCode.ERR_USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
     }
 
     public void sendOtp(EmailPost emailPost) {
@@ -153,12 +154,12 @@ public class AuthenticationService {
 
     public void changePassword(ChangePasswordPatch changePasswordPatch) {
         User user = userRepository.findByEmail(changePasswordPatch.email())
-                .orElseThrow(() -> new ResourceNotFoundException(Constant.ErrorCode.ERR_USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
         // Check OTP request with otp in Redis
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + changePasswordPatch.email();
         String redisOtp = (String) redisTemplate.opsForValue().get(redisOtpKey);
         if (redisOtp != null && !redisOtp.trim().equals(changePasswordPatch.otp().trim())) {
-            throw new InvalidOtpException(Constant.ErrorCode.ERR_USER_INVALID_OTP);
+            throw new InvalidOtpException(ErrorCode.ERR_USER_INVALID_OTP);
         }
         user.setPassword(passwordEncoder.encode(changePasswordPatch.password()));
         userRepository.save(user);
@@ -172,7 +173,7 @@ public class AuthenticationService {
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + email;
         redisTemplate.opsForValue().set(redisOtpKey, OTP, 15, TimeUnit.MINUTES);
 
-        OtpNotification otpNotification = new OtpNotification(email, subject, OTP);
-        kafkaTemplate.send(topic, otpNotification);
+        NotificationEmail notificationEmail = new NotificationEmail(email, subject, OTP);
+        kafkaTemplate.send(topic, notificationEmail);
     }
 }

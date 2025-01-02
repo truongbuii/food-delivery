@@ -1,6 +1,6 @@
 import axios, { AxiosError, CreateAxiosDefaults, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/stores";
-import { IApiErrorResponse } from "../models";
+import { IApiErrorResponse } from "@/interfaces";
 import { AUTH_STORAGE_KEY, PATHNAME } from "@/configs";
 
 // Create an instance of axios with optional config

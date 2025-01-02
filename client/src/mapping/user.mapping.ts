@@ -6,7 +6,7 @@ const MapperUser = (user: Record<string, any>): IUserInfo => {
     email: user.email ?? "",
     emailVerified: user.emailVerified ?? false,
     fullName: user.fullName ?? "",
-    phoneNumber: user.phoneNumber ?? "",
+    phoneNumber: user.phoneNumber ?? "1232",
     dob: user.dob ?? "",
     avatarUrl: user.avatarUrl ?? "",
     isActive: user.isActive ?? true,

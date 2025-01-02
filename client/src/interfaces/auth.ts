@@ -21,8 +21,25 @@ interface ISignIn {
   password: string;
 }
 
+interface IEmailPost {
+  email: string;
+}
+
+interface IChangePassword {
+  email: string;
+  otp: number;
+  password: string;
+}
+
 interface IUserResponse extends IUserInfo {
   accessToken: string;
 }
 
-export type { IUserInfo, ISignUp, ISignIn, IUserResponse };
+export type {
+  IUserInfo,
+  ISignUp,
+  ISignIn,
+  IEmailPost,
+  IChangePassword,
+  IUserResponse,
+};

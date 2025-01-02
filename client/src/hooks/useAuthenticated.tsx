@@ -11,23 +11,20 @@ const PATH_PUBLIC_MAP = Object.keys(PUBLIC_PATH).map(
 
 const useAuthenticated = () => {
   const { push } = useRouter();
-  const { userInfo, token } = useAuthStore();
+  const { userInfo, token } = useAuthStore.getState();
+
   const { onRedirect } = useRedirect();
   const pathname = usePathname();
 
   const getAccessToken = useCallback(() => {
     let accessToken = "";
-    if (token?.length === 0) return;
+    if (!token) return;
     accessToken = token;
+
     return accessToken;
   }, [token]);
 
   const fetchCurrentUser = async () => {
-    if (!userInfo) {
-      push(PATHNAME.SIGN_IN);
-      return;
-    }
-
     if (userInfo) {
       onRedirect(userInfo);
       return;
@@ -37,6 +34,8 @@ const useAuthenticated = () => {
   useEffect(() => {
     const accessToken = getAccessToken();
     const isOnboarding = clientStorage.get(ONBOARDING_STORAGE_KEY);
+    console.log(accessToken);
+
     if (!isOnboarding) {
       push(PATHNAME.ONBOARDING);
       return;
@@ -50,7 +49,6 @@ const useAuthenticated = () => {
       }
       push(PATHNAME.SIGN_IN);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, getAccessToken]);
 };
 
