@@ -81,4 +81,22 @@ public class AuthenticationController {
         authenticationService.changePassword(changePasswordPatch);
         return ResponseEntity.ok(ApiResponse.<Object>builder().build());
     }
+
+    @PatchMapping("/verification-email")
+    public ResponseEntity<ApiResponse<UserResponse>> verificationEmail(
+            @Valid
+            @RequestBody UserEmailPatch userEmailPatch
+    ) {
+        UserResponse userResponse = authenticationService.verificationEmail(userEmailPatch);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(userResponse).build());
+    }
+
+    @PatchMapping("/set-phone-number")
+    public ResponseEntity<ApiResponse<UserResponse>> setPhoneNumber(
+            @Valid
+            @RequestBody UserPhonePatch userPhonePatch
+    ) {
+        UserResponse userResponse = authenticationService.setPhoneNumber(userPhonePatch);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(userResponse).build());
+    }
 }

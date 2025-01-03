@@ -19,6 +19,7 @@ const createHttpClient = (config?: CreateAxiosDefaults) => {
   client.interceptors.request.use(
     (config) => {
       const accessToken = useAuthStore.getState().token;
+      console.log("Using Token:", accessToken);
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

@@ -34,7 +34,6 @@ const useAuthenticated = () => {
   useEffect(() => {
     const accessToken = getAccessToken();
     const isOnboarding = clientStorage.get(ONBOARDING_STORAGE_KEY);
-    console.log(accessToken);
 
     if (!isOnboarding) {
       push(PATHNAME.ONBOARDING);
@@ -49,6 +48,7 @@ const useAuthenticated = () => {
       }
       push(PATHNAME.SIGN_IN);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, getAccessToken]);
 };
 

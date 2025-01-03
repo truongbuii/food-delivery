@@ -33,6 +33,8 @@ const SignInForm = () => {
         onSuccess: (res) => {
           if (res && res?.data) {
             const { accessToken, ...userInfo } = res.data;
+            console.log(res.data);
+
             setUserInfo(MapperUser(userInfo));
             setTokens(accessToken);
             onRedirect(userInfo);
