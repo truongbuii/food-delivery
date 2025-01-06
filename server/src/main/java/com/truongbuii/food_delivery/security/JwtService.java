@@ -1,6 +1,9 @@
 package com.truongbuii.food_delivery.security;
 
+import com.truongbuii.food_delivery.exception.InvalidTokenException;
+import com.truongbuii.food_delivery.model.common.ErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -80,12 +83,16 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts
+                    .parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new InvalidTokenException(ErrorCode.ERR_TOKEN_EXPIRED);
+        }
     }
 
     private SecretKey getSignInKey() {

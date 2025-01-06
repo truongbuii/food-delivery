@@ -27,8 +27,21 @@ interface IEmailPost {
 
 interface IChangePassword {
   email: string;
-  otp: number;
+  otp: string;
   password: string;
+}
+
+interface IPhoneRegister {
+  email: string;
+  phoneNumber: string;
+}
+interface ISendOtp {
+  email: string;
+}
+
+interface IVerificationEmail {
+  email: string;
+  otp: string;
 }
 
 interface IUserResponse extends IUserInfo {
@@ -41,5 +54,8 @@ export type {
   ISignIn,
   IEmailPost,
   IChangePassword,
+  IVerificationEmail,
+  IPhoneRegister,
+  ISendOtp,
   IUserResponse,
 };

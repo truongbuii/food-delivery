@@ -14,6 +14,13 @@ import { Button } from "@/components/ui/button";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { z } from "zod";
 import { isValidPhoneNumber } from "react-phone-number-input";
+import { usePhoneRegisterMutation } from "@/queries";
+import { useAuthStore } from "@/stores";
+import { useMessage } from "@/hooks/useMessage";
+import { IPhoneRegister } from "@/interfaces";
+import { PATHNAME } from "@/configs";
+import { useRouter } from "next/navigation";
+import { MapperUser } from "@/mapping/user.mapping";
 
 const PhoneRegistrationSchema = z.object({
   phone: z
@@ -35,9 +42,40 @@ const PhoneRegistrationForm = () => {
     mode: "all",
   });
 
-  const onSubmit = useCallback((value: TPhoneRegistrationSchema) => {
-    console.log(value);
-  }, []);
+  const { mutateAsync, isPending } = usePhoneRegisterMutation();
+  const { setUserInfo } = useAuthStore();
+  const message = useMessage();
+  const { push } = useRouter();
+
+  const onSubmit = useCallback(
+    (data: { phone: string }) => {
+      const email = useAuthStore.getState().userInfo?.email;
+      if (!email) {
+        message.error("Oops! Something went wrong");
+        push(PATHNAME.SIGN_IN);
+        return;
+      }
+      const value: IPhoneRegister = {
+        email,
+        phoneNumber: data.phone,
+      };
+
+      mutateAsync(value, {
+        onSuccess: (res) => {
+          if (res && res?.data) {
+            const { ...userInfo } = res.data;
+            setUserInfo(MapperUser(userInfo));
+            push(PATHNAME.HOME);
+            return;
+          }
+        },
+        onError: (err) => {
+          message.error(err?.message);
+        },
+      });
+    },
+    [mutateAsync, message, push, setUserInfo]
+  );
 
   return (
     <Form {...form}>
@@ -61,8 +99,8 @@ const PhoneRegistrationForm = () => {
         <div className="w-full text-center">
           <Button
             size={"lg"}
-            loading={false}
-            disabled={false}
+            loading={isPending}
+            disabled={isPending}
             className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtn"
           >
             SEND

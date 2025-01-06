@@ -53,8 +53,8 @@ const createHttpClient = (config?: CreateAxiosDefaults) => {
         if (error.config.url.includes(PATHNAME.SIGN_IN)) {
           return Promise.reject(error.response.data || error);
         }
-        const { setTokens } = useAuthStore.getState();
-        setTokens("");
+        // const { setTokens } = useAuthStore.getState();
+        // setTokens("");
       }
       return Promise.reject(error.response.data || error);
     }

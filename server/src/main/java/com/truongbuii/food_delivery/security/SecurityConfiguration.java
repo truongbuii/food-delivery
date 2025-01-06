@@ -27,7 +27,7 @@ public class SecurityConfiguration {
     private String CLIENT_URL;
 
     private static final String[] PUBLIC_URLS = {
-            "/auth/**"
+            "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password"
     };
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

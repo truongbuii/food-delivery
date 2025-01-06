@@ -4,9 +4,12 @@ import {
   IApiDataResponse,
   IChangePassword,
   IEmailPost,
+  IPhoneRegister,
+  ISendOtp,
   ISignIn,
   ISignUp,
   IUserResponse,
+  IVerificationEmail,
 } from "@/interfaces";
 
 const httpClient = createHttpClient();
@@ -61,5 +64,43 @@ export const changePasswordService = async (
       password: value.password,
     }
   );
+  return resp;
+};
+
+export const verificationEmailService = async (
+  value: IVerificationEmail
+): Promise<IApiDataResponse<IUserResponse>> => {
+  const resp = await httpClient.patch<
+    IVerificationEmail,
+    IApiDataResponse<IUserResponse>
+  >(EndPoints.AUTH.verificationEmail, {
+    otp: value.otp,
+    email: value.email,
+  });
+  return resp;
+};
+
+export const reSendOtpService = async (
+  value: ISendOtp
+): Promise<IApiDataResponse<void>> => {
+  const resp = await httpClient.post<ISendOtp, IApiDataResponse<void>>(
+    EndPoints.AUTH.sendOtp,
+    {
+      email: value.email,
+    }
+  );
+  return resp;
+};
+
+export const phoneRegisterService = async (
+  value: IPhoneRegister
+): Promise<IApiDataResponse<IUserResponse>> => {
+  const resp = await httpClient.patch<
+    IPhoneRegister,
+    IApiDataResponse<IUserResponse>
+  >(EndPoints.AUTH.setPhoneNumber, {
+    email: value.email,
+    phoneNumber: value.phoneNumber,
+  });
   return resp;
 };

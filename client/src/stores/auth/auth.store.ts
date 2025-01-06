@@ -2,7 +2,6 @@ import { IUserInfo } from "@/interfaces";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AUTH_STORAGE_KEY } from "@/configs";
-import { clientStorage } from "@/stores/client/client.store";
 
 interface IAuthState {
   token: string;
@@ -35,7 +34,6 @@ export const useAuthStore = create<IAuthState>()(
           token: "",
           userInfo: undefined,
         }));
-        clientStorage.clear();
       },
     }),
     { name: AUTH_STORAGE_KEY }

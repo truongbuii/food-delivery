@@ -23,18 +23,17 @@ const SignInForm = () => {
   });
 
   const { mutateAsync, isPending } = useSignInMutation();
-  const { setUserInfo, setTokens } = useAuthStore();
+  const { setUserInfo, setTokens, reset } = useAuthStore();
   const message = useMessage();
   const { onRedirect } = useRedirect();
 
   const onSubmit = useCallback(
     (value: ISignIn) => {
+      reset();
       mutateAsync(value, {
         onSuccess: (res) => {
           if (res && res?.data) {
             const { accessToken, ...userInfo } = res.data;
-            console.log(res.data);
-
             setUserInfo(MapperUser(userInfo));
             setTokens(accessToken);
             onRedirect(userInfo);
@@ -46,7 +45,7 @@ const SignInForm = () => {
         },
       });
     },
-    [mutateAsync, setUserInfo, setTokens, message, onRedirect]
+    [mutateAsync, setUserInfo, setTokens, message, onRedirect, reset]
   );
   return (
     <Form {...form}>
