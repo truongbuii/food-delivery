@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.security;
 
+import com.truongbuii.food_delivery.exception.AppException;
 import com.truongbuii.food_delivery.exception.InvalidTokenException;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
 import io.jsonwebtoken.Claims;
@@ -92,6 +93,8 @@ public class JwtService {
                     .getPayload();
         } catch (ExpiredJwtException e) {
             throw new InvalidTokenException(ErrorCode.ERR_TOKEN_EXPIRED);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.ERR_INTERNAL_SERVER_ERROR);
         }
     }
 

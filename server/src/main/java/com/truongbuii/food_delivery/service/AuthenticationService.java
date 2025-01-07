@@ -171,7 +171,7 @@ public class AuthenticationService {
         // Check OTP request with otp in Redis
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + userEmailPatch.email();
         String redisOtp = (String) redisTemplate.opsForValue().get(redisOtpKey);
-        if (redisOtp != null && !redisOtp.trim().equals(userEmailPatch.otp().trim())) {
+        if (redisOtp == null || !redisOtp.trim().equals(userEmailPatch.otp().trim())) {
             throw new InvalidOtpException(ErrorCode.ERR_USER_INVALID_OTP);
         }
         User user = userRepository.findByEmail(userEmailPatch.email())

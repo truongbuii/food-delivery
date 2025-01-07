@@ -25,7 +25,6 @@ import { IApiErrorResponse, ISendOtp, IVerificationEmail } from "@/interfaces";
 import { useRouter } from "next/navigation";
 import { PATHNAME } from "@/configs";
 import { MapperUser } from "@/mapping/user.mapping";
-import useRedirect from "@/hooks/useRedirect";
 
 const VerificationForm = () => {
   const [resendCountdown, setResendCountdown] = useState<number>(0);
@@ -36,7 +35,6 @@ const VerificationForm = () => {
   const { setUserInfo } = useAuthStore();
   const message = useMessage();
   const { push } = useRouter();
-  const { onRedirect } = useRedirect();
 
   const form = useForm<TVerificationSchema>({
     resolver: zodResolver(VerificationSchema),
@@ -63,7 +61,6 @@ const VerificationForm = () => {
           if (res && res?.data) {
             const { ...userInfo } = res.data;
             setUserInfo(MapperUser(userInfo));
-            onRedirect(userInfo);
             push(PATHNAME.PHONE_REGISTRATION);
             return;
           }
@@ -73,7 +70,7 @@ const VerificationForm = () => {
         },
       });
     },
-    [mutateAsync, message, push, setUserInfo, onRedirect]
+    [mutateAsync, message, push, setUserInfo]
   );
 
   const handleResend = useCallback(() => {

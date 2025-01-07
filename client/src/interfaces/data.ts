@@ -1,12 +1,16 @@
 interface IApiDataResponse<T> {
-    code: number;
-    message?: string;
-    data?: T;
-  }
+  code: number;
+  message?: string;
+  data?: T;
+}
 
-  interface IApiErrorResponse {
-    code: number;
-    message: string;
-  }
+interface IApiErrorResponse {
+  code: number;
+  message: string;
+}
 
-  export type { IApiDataResponse, IApiErrorResponse };
+interface IToken {
+  token: string;
+}
+
+export type { IApiDataResponse, IApiErrorResponse, IToken };

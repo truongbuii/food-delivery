@@ -8,9 +8,11 @@ import {
   ISendOtp,
   ISignIn,
   ISignUp,
+  IToken,
   IUserResponse,
   IVerificationEmail,
 } from "@/interfaces";
+import axios from "axios";
 
 const httpClient = createHttpClient();
 
@@ -103,4 +105,21 @@ export const phoneRegisterService = async (
     phoneNumber: value.phoneNumber,
   });
   return resp;
+};
+
+export const getNewTokenService = async (): Promise<
+  IApiDataResponse<IToken>
+> => {
+  const client = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  });
+
+  const resp = await client.post<IApiDataResponse<IToken>>(
+    EndPoints.AUTH.getNewAccessToken
+  );
+  return resp.data;
 };

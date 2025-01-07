@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,10 +25,12 @@ public class SecurityConfiguration {
     private String CLIENT_URL;
 
     private static final String[] PUBLIC_URLS = {
-            "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password"
+            "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password", "/auth/refresh-access-token"
     };
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -59,7 +59,8 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exc -> exc
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 );
 
         return httpSecurity.build();
