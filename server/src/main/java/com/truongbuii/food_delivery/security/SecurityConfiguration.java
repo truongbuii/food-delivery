@@ -24,8 +24,9 @@ public class SecurityConfiguration {
     @Value("${client-url}")
     private String CLIENT_URL;
 
-    private static final String[] PUBLIC_URLS = {
-            "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password", "/auth/refresh-access-token"
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password",
+            "/auth/refresh-access-token", "/auth/social-login", "/auth/social-callback"
     };
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -51,7 +52,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         request -> request
-                                .requestMatchers(PUBLIC_URLS).permitAll()
+                                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -98,5 +100,23 @@ public class AuthenticationController {
     ) {
         UserResponse userResponse = authenticationService.setPhoneNumber(userPhonePatch);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(userResponse).build());
+    }
+
+    @GetMapping("/social-login")
+    public ResponseEntity<ApiResponse<String>> socialLogin(
+            @RequestParam("provider_type") String providerType
+    ) {
+        String url = authenticationService.generateSocialLoginUrl(providerType);
+        return ResponseEntity.ok(ApiResponse.<String>builder().data(url).build());
+    }
+
+    @GetMapping("/social-callback")
+    public ResponseEntity<ApiResponse<UserResponse>> callbackSocialLogin(
+            @RequestParam("code") String code,
+            @RequestParam("provider_type") String providerType,
+            HttpServletResponse response
+    ) throws IOException {
+        UserResponse userInfo = authenticationService.authenticateSocialLogin(code, providerType, response);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(userInfo).build());
     }
 }
