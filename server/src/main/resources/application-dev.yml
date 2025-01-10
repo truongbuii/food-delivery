@@ -1,0 +1,74 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: food-delivery
+  # datasource setting
+  datasource:
+    url: jdbc:postgresql://localhost:5432/
+    driver-class-name: org.postgresql.Driver
+    username:
+    password:
+  ##
+  jpa:
+    # Hibernate ddl auto (none, create, create-drop, validate, update)
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+
+    database: postgresql
+    properties:
+      hibernate:
+        format_sql: true
+        # The SQL dialect makes Hibernate generate better SQL for the chosen database
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  # servlet setting
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  ## redis setting
+  data:
+    redis:
+      host:
+      port:
+  ## kafka setting
+  kafka:
+    bootstrap-servers:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: com.truongbuii.food_delivery.model.request
+
+
+  flyway:
+    locations: classpath:/db/migration, classpath:/db/dev/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
+application:
+  jwt:
+    secret-key:
+    expiration:
+    refresh-expiration:
+  brevo:
+    api-key:
+    api-url: https://api.brevo.com/v3/smtp/email
+    sender-mail:
+
+
+logging:
+  level:
+    org.springframework.security: OFF
+

@@ -1,4 +1,4 @@
-import ResetPasswordForm from './ResetPasswordForm';
+import ResetPasswordForm from './ForgotPasswordForm';
 
 export * from './validSchema';
 

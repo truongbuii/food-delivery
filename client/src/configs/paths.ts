@@ -2,8 +2,8 @@ export const PUBLIC_PATH = {
   ONBOARDING: '/onboarding',
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',
-  RESET_PASSWORD: '/reset-password',
-  VERIFICATION: '/verification-code',
+  FORGOT_PASSWORD: '/forgot-password',
+  VERIFICATION: '/verification',
   CHANGE_PASSWORD: '/change-password',
   PHONE_REGISTRATION: '/phone-registration'
 };

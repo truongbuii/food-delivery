@@ -1,0 +1,121 @@
+version: "3.9"
+
+name: food-delivery-container
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgresql
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: food_delivery
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - food-delivery-network
+
+  redis:
+    image: redis:7.4.1-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST}
+      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT}
+    volumes:
+      - redis:/data
+    networks:
+      - food-delivery-network
+
+  zookeeper-01:
+    image: confluentinc/cp-zookeeper:7.8.0
+    hostname: zookeeper-01
+    container_name: zookeeper-01
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: zookeeper-01:2888:3888;zookeeper-02:2888:3888;zookeeper-03:2888:3888
+    #2888: For leader-follower synchronization in the ensemble.
+    #3888: For leader election within the ensemble
+    networks:
+      - food-delivery-network
+
+  zookeeper-02:
+    image: confluentinc/cp-zookeeper:7.8.0
+    hostname: zookeeper-02
+    container_name: zookeeper-02
+    ports:
+      - "2182:2182"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_SERVERS: zookeeper-01:2888:3888;zookeeper-02:2888:3888;zookeeper-03:2888:3888
+    networks:
+      - food-delivery-network
+
+  zookeeper-03:
+    image: confluentinc/cp-zookeeper:7.8.0
+    hostname: zookeeper-03
+    container_name: zookeeper-03
+    ports:
+      - "2183:2183"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2183
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_SERVERS: zookeeper-01:2888:3888;zookeeper-02:2888:3888;zookeeper-03:2888:3888
+    networks:
+      - food-delivery-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    hostname: ${KAFKA_SERVICE_HOST}
+    container_name: kafka
+    depends_on:
+      - zookeeper-01
+      - zookeeper-02
+      - zookeeper-03
+    ports:
+      - "${KAFKA_SERVICE_PORT}:${KAFKA_SERVICE_PORT}"
+      - "29092:29092"
+    restart: "on-failure"
+    environment:
+      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+    networks:
+      - food-delivery-network
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:19092
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper-01:2181,zookeeper-02:2182,zookeeper-03:2183
+    ports:
+      - "8089:8080"
+    depends_on:
+      - kafka
+    networks:
+      - food-delivery-network
+
+networks:
+  food-delivery-network:
+    driver: bridge
+    name: food-delivery-network
+
+
+volumes:
+  postgres:
+  redis:

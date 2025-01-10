@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const SignUpSchema = z.object({
-  fullname: z
+  fullName: z
     .string()
     .min(3, { message: 'Name must be at least 6 characters long' })
     .max(20)

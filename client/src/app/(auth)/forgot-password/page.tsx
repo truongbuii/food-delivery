@@ -1,8 +1,8 @@
-import { ResetPasswordForm } from '@/components/features/auth/reset-password';
-import { PATHNAME } from '@/configs';
-import { CustomBackBtn } from '@/layouts';
+import { ResetPasswordForm } from "@/components/features/auth/forgot-password";
+import { PATHNAME } from "@/configs";
+import { CustomBackBtn } from "@/layouts";
 
-const ResetPasswordPage = () => {
+const ForgotPasswordPage = () => {
   return (
     <>
       <CustomBackBtn type="back" expectPath={PATHNAME.SIGN_IN} />
@@ -21,4 +21,4 @@ const ResetPasswordPage = () => {
   );
 };
 
-export default ResetPasswordPage;
+export default ForgotPasswordPage;
