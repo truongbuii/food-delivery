@@ -6,13 +6,16 @@ import {
   IPhoneRegister,
   ISignIn,
   ISignUp,
+  ISocialLogin,
   IUserResponse,
   IVerificationEmail,
 } from "@/interfaces";
 import { QUERIES_KEY } from "@/queries/key";
 import {
   changePasswordService,
+  exchangeOauthTokenForToken,
   forgotPasswordService,
+  getOauthUrl,
   phoneRegisterService,
   reSendOtpService,
   signInService,
@@ -67,5 +70,18 @@ export const usePhoneRegisterMutation = () => {
   return useMutation<IApiDataResponse<IUserResponse>, IApiErrorResponse, any>({
     mutationFn: (value: IPhoneRegister) => phoneRegisterService(value),
     mutationKey: [QUERIES_KEY.AUTH.PHONE_REGISTER],
+  });
+};
+
+export const useOauthLogin = () => {
+  return useMutation({
+    mutationFn: (provider: string) => getOauthUrl(provider),
+  });
+};
+
+export const useExchangeOauthCodeForToken = () => {
+  return useMutation<IApiDataResponse<IUserResponse>, IApiErrorResponse, any>({
+    mutationFn: (value: ISocialLogin) => exchangeOauthTokenForToken(value),
+    mutationKey: [QUERIES_KEY.AUTH.SOCIAL_CALLBACK],
   });
 };

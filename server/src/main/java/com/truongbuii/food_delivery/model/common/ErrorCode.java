@@ -6,6 +6,7 @@ public class ErrorCode {
     public static final String ERR_UNAUTHORIZED = "Sorry! You don't have permission";
     public static final String ERR_TOKEN_EXPIRED = "Your session has expired. Please login again";
     public static final String ERR_TOKEN_INVALID = "Session is invalid. Please log in again";
+    public static final String ERR_PROVIDER_NOT_SUPPORTED = "This provider is not supported";
 
     // User error
     public static final String ERR_USER_NOT_FOUND = "We couldn't find your email";

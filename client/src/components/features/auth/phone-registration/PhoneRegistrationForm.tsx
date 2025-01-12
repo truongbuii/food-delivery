@@ -21,6 +21,7 @@ import { IPhoneRegister } from "@/interfaces";
 import { PATHNAME } from "@/configs";
 import { useRouter } from "next/navigation";
 import { MapperUser } from "@/mapping/user.mapping";
+import useRedirect from "@/hooks/useRedirect";
 
 const PhoneRegistrationSchema = z.object({
   phone: z
@@ -46,6 +47,7 @@ const PhoneRegistrationForm = () => {
   const { setUserInfo } = useAuthStore();
   const message = useMessage();
   const { push } = useRouter();
+  const { onRedirect } = useRedirect();
 
   const onSubmit = useCallback(
     (data: { phone: string }) => {
@@ -65,7 +67,7 @@ const PhoneRegistrationForm = () => {
           if (res && res?.data) {
             const { ...userInfo } = res.data;
             setUserInfo(MapperUser(userInfo));
-            push(PATHNAME.HOME);
+            onRedirect(userInfo);
             return;
           }
         },
@@ -74,7 +76,7 @@ const PhoneRegistrationForm = () => {
         },
       });
     },
-    [mutateAsync, message, push, setUserInfo]
+    [mutateAsync, message, push, setUserInfo, onRedirect]
   );
 
   return (

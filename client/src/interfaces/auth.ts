@@ -44,6 +44,11 @@ interface IVerificationEmail {
   otp: string;
 }
 
+interface ISocialLogin {
+  providerType: string;
+  code?: string;
+}
+
 interface IUserResponse extends IUserInfo {
   accessToken: string;
 }
@@ -57,5 +62,6 @@ export type {
   IVerificationEmail,
   IPhoneRegister,
   ISendOtp,
+  ISocialLogin,
   IUserResponse,
 };
