@@ -23,6 +23,8 @@ const EndPoints = {
     getNewAccessToken: "refresh-access-token",
     verificationEmail: "verification-email",
     setPhoneNumber: "set-phone-number",
+    socialLogin: "social-login",
+    socialCallback: "social-callback",
   }),
   USER: createPath(BASE_USER, {}),
 } as const;

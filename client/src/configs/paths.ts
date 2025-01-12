@@ -6,7 +6,7 @@ export const PUBLIC_PATH = {
   VERIFICATION: "/verification",
   CHANGE_PASSWORD: "/change-password",
   PHONE_REGISTRATION: "/phone-registration",
-  GOOGLE_AUTH_CALLBACK: "/google/callback",
+  GOOGLE_AUTH_CALLBACK: "/oauth/google/callback",
 };
 
 export const ROOT_PATH = {

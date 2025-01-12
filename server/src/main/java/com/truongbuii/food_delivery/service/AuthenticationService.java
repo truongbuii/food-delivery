@@ -69,6 +69,7 @@ public class AuthenticationService {
     @Value("${spring.security.oauth2.client.provider.google.user-info-uri}")
     private String googleUserInfoUri;
 
+
     @Transactional
     public UserResponse signUp(AuthSignUp authSignUp, HttpServletResponse response) {
         Optional<User> userOptional = userRepository.findByEmail(authSignUp.email());
@@ -229,16 +230,13 @@ public class AuthenticationService {
                 authUri = googleAuthUri;
                 break;
             case "FACEBOOK":
-                clientId = "";
-                redirectUri = "";
-                authUri = "";
-                break;
+                throw new AppException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
             default:
                 throw new AppException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
         }
         redirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
         String state = GeneratorUtils.generateStateToken(); // Generate a state parameter for security
-        String scope = URLEncoder.encode("email profile", StandardCharsets.UTF_8);
+        String scope = URLEncoder.encode("openid profile email", StandardCharsets.UTF_8);
         return String.format("%s?client_id=%s&redirect_uri=%s&state=%s&scope=%s&response_type=code",
                 authUri, clientId, redirectUri, state, scope);
     }

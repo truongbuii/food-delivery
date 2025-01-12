@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import nProgress from 'nprogress';
-import { useEffect } from 'react';
+import { usePathname, useSearchParams } from "next/navigation";
+import nProgress from "nprogress";
+import { useEffect } from "react";
 
 const useRouterProgress = () => {
   const pathname = usePathname();

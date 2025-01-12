@@ -8,6 +8,7 @@ import {
   ISendOtp,
   ISignIn,
   ISignUp,
+  ISocialLogin,
   IToken,
   IUserResponse,
   IVerificationEmail,
@@ -122,4 +123,26 @@ export const getNewTokenService = async (): Promise<
     EndPoints.AUTH.getNewAccessToken
   );
   return resp.data;
+};
+
+export const getOauthUrl = async (
+  providerType: string
+): Promise<IApiDataResponse<string>> => {
+  const resp = await httpClient.get<string, IApiDataResponse<string>>(
+    `${EndPoints.AUTH.socialLogin}?provider_type=${providerType}`
+  );
+  return resp;
+};
+
+export const exchangeOauthTokenForToken = async (
+  value: ISocialLogin
+): Promise<IApiDataResponse<IUserResponse>> => {
+  console.log(value.providerType);
+  const resp = await httpClient.get<
+    ISocialLogin,
+    IApiDataResponse<IUserResponse>
+  >(
+    `${EndPoints.AUTH.socialCallback}?code=${value.code}&provider_type=${value.providerType}`
+  );
+  return resp;
 };
