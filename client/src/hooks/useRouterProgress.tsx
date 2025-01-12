@@ -1,19 +1,24 @@
-"use client";
-
-import { usePathname, useSearchParams } from "next/navigation";
-import nProgress from "nprogress";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import NProgress from "nprogress";
 
 const useRouterProgress = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
   useEffect(() => {
-    nProgress.done();
+    // Check if the pathname has changed
+    if (pathname !== prevPathname) {
+      NProgress.start();
+      setPrevPathname(pathname); // Update the previous pathname to the current one
+    }
+
     return () => {
-      nProgress.start();
+      NProgress.done();
     };
-  }, [pathname, searchParams]);
+  }, [pathname, prevPathname]);
+
+  return null;
 };
 
 export default useRouterProgress;

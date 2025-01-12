@@ -6,27 +6,31 @@ import { PATHNAME } from "@/configs";
 const useRedirect = () => {
   const { push } = useRouter();
 
+  const checkRedirect = useCallback((user: IUserInfo) => {
+    if (!user) {
+      return PATHNAME.SIGN_IN;
+    }
+
+    if (!user.emailVerified) {
+      return PATHNAME.VERIFICATION;
+    }
+
+    if (user.phoneNumber === "") {
+      return PATHNAME.PHONE_REGISTRATION;
+    }
+
+    return PATHNAME.HOME;
+  }, []);
+
   const onRedirect = useCallback(
     (user: IUserInfo) => {
-      if (!user) {
-        push(PATHNAME.SIGN_IN);
-        return;
-      }
-
-      if (!user.emailVerified) {
-        push(PATHNAME.VERIFICATION);
-        return;
-      }
-
-      if (user.phoneNumber === "") {
-        push(PATHNAME.PHONE_REGISTRATION);
-        return;
-      }
+      const redirectPath = checkRedirect(user);
+      push(redirectPath);
     },
-    [push]
+    [checkRedirect, push]
   );
 
-  return { onRedirect };
+  return { onRedirect, checkRedirect };
 };
 
 export default useRedirect;

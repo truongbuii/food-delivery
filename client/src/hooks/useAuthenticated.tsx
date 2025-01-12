@@ -1,7 +1,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { clientStorage, useAuthStore } from "@/stores";
 import useRedirect from "./useRedirect";
-import { PATHNAME, PUBLIC_PATH } from "@/configs";
+import { PATHNAME, PUBLIC_PATH, ROOT_PATH } from "@/configs";
 import { useCallback, useEffect } from "react";
 import { ONBOARDING_STORAGE_KEY } from "@/configs";
 
@@ -13,7 +13,7 @@ const useAuthenticated = () => {
   const { push } = useRouter();
   const { userInfo, token } = useAuthStore.getState();
 
-  const { onRedirect } = useRedirect();
+  const { checkRedirect } = useRedirect();
   const pathname = usePathname();
 
   const getAccessToken = useCallback(() => {
@@ -26,7 +26,10 @@ const useAuthenticated = () => {
 
   const fetchCurrentUser = async () => {
     if (userInfo) {
-      onRedirect(userInfo);
+      const redirectPath = checkRedirect(userInfo);
+      if (redirectPath !== ROOT_PATH.HOME) {
+        push(redirectPath);
+      }
       return;
     }
   };
