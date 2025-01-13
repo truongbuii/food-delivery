@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="">
+      <body className="bg-accent">
         <Providers>
           <MainLayout>
             <PageTransition>{children}</PageTransition>

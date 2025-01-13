@@ -50,6 +50,21 @@ spring:
       auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: com.truongbuii.food_delivery.model.request
+  ## oauth2 setting
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3000/oauth/google/callback}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
 
 
   flyway:
@@ -64,9 +79,10 @@ application:
     refresh-expiration:
   brevo:
     api-key:
-    api-url: https://api.brevo.com/v3/smtp/email
+    api-url:
     sender-mail:
 
+client-url:
 
 logging:
   level:

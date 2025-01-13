@@ -1,6 +1,6 @@
-import VerificationForm from '@/components/features/auth/verification';
-import { PATHNAME } from '@/configs';
-import { CustomBackBtn } from '@/layouts';
+import VerificationForm from "@/components/features/auth/verification";
+import { CustomBackBtn } from "@/components/molecule/BackButton";
+import { PATHNAME } from "@/configs";
 
 const Verification = () => {
   return (

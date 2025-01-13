@@ -25,7 +25,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <SnackbarProvider preventDuplicate maxSnack={1}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >

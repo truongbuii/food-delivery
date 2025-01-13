@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const PageTransition = ({
   children,
   className,
-  animation = 'swipe-left'
+  animation = "swipe-left",
 }: {
   children: React.ReactNode;
   className?: string;
-  animation?: 'swipe-left' | 'swipe-up';
+  animation?: "swipe-left" | "swipe-up";
 }) => {
   const animationProps = {
-    'swipe-left': {
+    "swipe-left": {
       initial: { opacity: 0, x: 100 },
       animate: { opacity: 1, x: 0 },
-      exit: { opacity: 0, x: -100 }
+      exit: { opacity: 0, x: -100 },
     },
-    'swipe-up': {
+    "swipe-up": {
       initial: { opacity: 0, y: 800 },
       animate: { opacity: 1, y: 0 },
       exit: { opacity: 0, y: -500 },
       transition: {
-        duration: 0.5
-      }
-    }
+        duration: 0.5,
+      },
+    },
   };
   return (
     <motion.div {...animationProps[animation]} className={className}>

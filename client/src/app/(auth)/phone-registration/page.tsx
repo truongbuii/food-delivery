@@ -1,6 +1,6 @@
 import { PhoneRegistrationForm } from "@/components/features/auth/phone-registration";
+import { CustomBackBtn } from "@/components/molecule/BackButton";
 import { PATHNAME } from "@/configs";
-import { CustomBackBtn } from "@/layouts";
 
 const PhoneRegistrationPage = () => {
   return (

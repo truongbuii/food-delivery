@@ -1,5 +1,4 @@
-import MainLayout from './MainLayout';
-import BackgroundAuth from './BackgroundAuth';
-import { CustomBackBtn } from './MainLayout';
+import MainLayout from "./MainLayout";
+import BackgroundAuth from "./BackgroundAuth";
 
-export { MainLayout, BackgroundAuth, CustomBackBtn };
+export { MainLayout, BackgroundAuth };

@@ -1,6 +1,6 @@
 import { ResetPasswordForm } from "@/components/features/auth/forgot-password";
+import { CustomBackBtn } from "@/components/molecule/BackButton";
 import { PATHNAME } from "@/configs";
-import { CustomBackBtn } from "@/layouts";
 
 const ForgotPasswordPage = () => {
   return (

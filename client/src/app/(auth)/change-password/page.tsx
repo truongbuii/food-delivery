@@ -1,6 +1,6 @@
-import { ChangePasswordForm } from '@/components/features/auth/change-password';
-import { PATHNAME } from '@/configs';
-import { CustomBackBtn } from '@/layouts';
+import { ChangePasswordForm } from "@/components/features/auth/change-password";
+import { CustomBackBtn } from "@/components/molecule/BackButton";
+import { PATHNAME } from "@/configs";
 
 const ChangePasswordPage = () => {
   return (
