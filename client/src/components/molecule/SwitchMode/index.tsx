@@ -3,30 +3,45 @@
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import React, { useState } from "react";
+import React, { useCallback, useMemo } from "react";
 
 export default function DarkModeSwitch() {
-  const { setTheme, themes, systemTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
-  const spring = {
-    type: "spring",
-    stiffness: 700,
-    damping: 30,
-  };
+  const spring = useMemo(
+    () => ({
+      type: "spring",
+      stiffness: 700,
+      damping: 30,
+    }),
+    []
+  );
+
+  const currentIcon = useMemo(() => {
+    return theme === "dark" ? (
+      <Moon size={20} />
+    ) : (
+      <Sun size={20} className="text-[#FFC529]" />
+    );
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  }, [theme, setTheme]);
 
   return (
     <div
-      onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-      className={`flex-start flex items-center h-[30px] w-[70px] rounded-[50px] bg-zinc-100 p-[5px] shadow-inner hover:cursor-pointer dark:bg-zinc-700 place-content-end`}
+      onClick={toggleTheme}
+      className={`flex-start flex items-center h-[30px] w-[70px] rounded-[50px]  p-[5px] shadow-inner hover:cursor-pointer bg-destructive ${
+        theme === "dark" && "place-content-end"
+      }`}
     >
       <motion.div
-        className="flex h-[25px] w-[25px] items-center justify-center rounded-full bg-black/90"
+        className="flex h-[25px] w-[25px] items-center justify-center rounded-full bg-background"
         layout
         transition={spring}
       >
-        <motion.div whileTap={{ rotate: 360 }}>
-          { ? <Moon size={20} /> : <Sun size={20} />}
-        </motion.div>
+        <motion.div whileTap={{ rotate: 360 }}>{currentIcon}</motion.div>
       </motion.div>
     </div>
   );

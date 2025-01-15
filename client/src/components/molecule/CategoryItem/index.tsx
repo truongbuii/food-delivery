@@ -24,7 +24,7 @@ const CategoryItem: FC<CategoryItemProps> = ({
           className={clsx(
             "flex flex-col w-[58px] h-[90px] p-1 items-center gap-2 rounded-[40px] cursor-pointer transition-all",
             isSelected
-              ? "bg-primary shadow-primaryBtn"
+              ? "bg-primary shadow-primaryBtnShadow"
               : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
           )}
           onClick={onClick}

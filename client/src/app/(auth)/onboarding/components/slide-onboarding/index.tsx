@@ -1,41 +1,41 @@
-import { PageTransition } from '@/components/molecule';
-import Image from 'next/image';
-import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import { useRef } from 'react';
-import { IMAGES_CONST } from '@/configs';
-import { StepKey, useOnboarding } from '@/hooks/useOnboarding';
-import { Button } from '@/components/ui/button';
+import { PageTransition } from "@/components/molecule";
+import Image from "next/image";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import { useRef } from "react";
+import { IMAGES_CONST } from "@/configs";
+import { StepKey, useOnboarding } from "@/hooks/useOnboarding";
+import { Button } from "@/components/ui/button";
 
 const slides = [
   {
     id: 1,
-    step: 'step2',
-    titleTop: 'Browse your menu',
-    titleBottom: 'and order directly',
+    step: "step2",
+    titleTop: "Browse your menu",
+    titleBottom: "and order directly",
     description:
-      'Our app can send you everywhere, even space. For only $2.99 per month',
-    image: IMAGES_CONST.onboarding.onboard1
+      "Our app can send you everywhere, even space. For only $2.99 per month",
+    image: IMAGES_CONST.onboarding.onboard1,
   },
   {
     id: 2,
-    step: 'step3',
-    titleTop: 'Even to space',
-    titleBottom: 'with us! Together',
+    step: "step3",
+    titleTop: "Even to space",
+    titleBottom: "with us! Together",
     description:
-      'Our app can send you everywhere, even space. For only $2.99 per month',
-    image: IMAGES_CONST.onboarding.onboard2
+      "Our app can send you everywhere, even space. For only $2.99 per month",
+    image: IMAGES_CONST.onboarding.onboard2,
   },
   {
     id: 3,
-    step: 'done',
-    titleTop: 'Pick delivery at',
-    titleBottom: 'your door',
+    step: "done",
+    titleTop: "Pick delivery at",
+    titleBottom: "your door",
     description:
-      'Our app can send you everywhere, even space. For only $2.99 per month',
-    image: IMAGES_CONST.onboarding.onboard3
-  }
+      "Our app can send you everywhere, even space. For only $2.99 per month",
+    image: IMAGES_CONST.onboarding.onboard3,
+  },
 ];
 
 const SliderOnboarding = () => {
@@ -60,7 +60,7 @@ const SliderOnboarding = () => {
         ref={swiperRef}
         modules={[Pagination, Navigation]}
         slidesPerView={1}
-        pagination={{ clickable: true, el: '.custom-pagination' }}
+        pagination={{ clickable: true, el: ".custom-pagination" }}
         navigation
         spaceBetween={30}
         centeredSlides={true}
@@ -90,11 +90,11 @@ const SliderOnboarding = () => {
                 </div>
                 <div className="flex justify-center">
                   <Button
-                    size={'md'}
-                    className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtn"
+                    size={"md"}
+                    className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
                     onClick={handleNextSlide}
                   >
-                    {slide.step === 'done' ? 'Get Started' : 'Next'}
+                    {slide.step === "done" ? "Get Started" : "Next"}
                   </Button>
                 </div>
               </div>

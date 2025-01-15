@@ -11,7 +11,7 @@ const tagVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-destructive text-tag",
+        default: "bg-tag",
       },
       size: {
         default: "text-xs",
@@ -28,7 +28,7 @@ const tagVariants = cva(
 const Tag: FC<TagProps> = ({ title, size }) => {
   return (
     <div className={tagVariants({ size })}>
-      <span className="text-tag font-medium uppercase py-[2px] px-2 text-">
+      <span className="font-medium uppercase py-[2px] px-2 text-lightGray">
         {title}
       </span>
     </div>

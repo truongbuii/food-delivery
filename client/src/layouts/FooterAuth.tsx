@@ -24,7 +24,7 @@ const FooterAuth = () => {
   };
 
   return (
-    <div className="absolute bottom-6 flex flex-col gap-2 px-6 w-full">
+    <div className="absolute bottom-8 flex flex-col gap-2 px-6 w-full">
       <div className="flex items-center justify-between py-2">
         <div className="bg-gray-200 bg-opacity-50 w-28 h-[1px]"></div>
         <span className="text-sm text-[#9796A1]">Or sign in with</span>
@@ -32,7 +32,7 @@ const FooterAuth = () => {
       </div>
       <div className="flex justify-between">
         <Button
-          className="w-36 h-14 rounded-[28px] p-4 bg-white hover:bg-lightGray/50 shadow-socialBtn"
+          className="w-36 h-14 rounded-[28px] p-4 bg-white hover:bg-lightGray/50 shadow-socialBtnShadow"
           onClick={() => handleSocialLogin("facebook")}
         >
           <Image
@@ -43,7 +43,7 @@ const FooterAuth = () => {
           <span className="w-16 text-black">FACEBOOK</span>
         </Button>
         <Button
-          className="w-36 h-14 rounded-[28px] p-4 bg-white hover:bg-lightGray/50 shadow-socialBtn"
+          className="w-36 h-14 rounded-[28px] p-4 bg-white hover:bg-lightGray/50 shadow-socialBtnShadow"
           onClick={() => handleSocialLogin("google")}
         >
           <Image

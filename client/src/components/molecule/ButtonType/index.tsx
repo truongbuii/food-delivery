@@ -29,13 +29,9 @@ const ButtonType = ({
       back: (
         <Button
           onClick={() => push(expectPath as string)}
-          className="absolute z-[99] bg-secondary w-10 h-10 rounded-[12px] top-6 left-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-primary"
+          className="absolute z-[99] bg-secondary w-10 h-10 rounded-[12px] top-6 left-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-primary "
         >
-          <ChevronLeft
-            style={{
-              color: "hsl(var(--foreground))",
-            }}
-          />
+          <ChevronLeft size={18} className="text-foreground" />
         </Button>
       ),
       filter: (

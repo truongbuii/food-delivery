@@ -11,7 +11,7 @@ const LogOut = () => {
     <div className={`absolute ${isMobile ? "bottom-20" : "bottom-8"} px-6`}>
       <Button
         size={"sm"}
-        className="m-auto mt-2 rounded-[40px] p-5 hover:bg-primary shadow-primaryBtn"
+        className="m-auto mt-2 rounded-[40px] p-5 hover:bg-primary shadow-primaryBtnShadow"
       >
         <CirclePower size={26} />
         Log Out

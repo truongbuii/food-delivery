@@ -75,7 +75,7 @@ const FeeAndTimeDelivery: FC<{ fee: number; time: string }> = ({
   fee,
   time,
 }) => (
-  <div className="flex gap-2 text-tag font-medium">
+  <div className="flex gap-2 text-lightGray font-medium">
     <div className="flex gap-1 items-center">
       <Bike size={12} strokeWidth={2} className="text-primary" />
       <span className="text-xs">{fee === 0 ? "free" : fee}</span>
@@ -118,22 +118,22 @@ const InfoSection: FC<{ type: "restaurant" | "item" }> = ({ type }) => (
             className="mt-1"
           />
         </div>
-        <div className="text-xs text-tag">Other type content...</div>
+        <div className="text-xs text-lightGra">Other type content...</div>
       </div>
     )}
   </>
 );
 
-interface CardItemProps {
+interface cardItemShadowProps {
   type: "restaurant" | "item";
 }
 
-const HorizontalCard: FC<CardItemProps> = ({ type }) => {
+const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
   const isItem = type === "item";
 
   return (
     <div
-      className={`relative flex flex-col w-[266px] py-2 rounded-2xl shadow-cardItem`}
+      className={`relative flex flex-col w-[266px] rounded-2xl bg-cardItem shadow-cardItemShadow`}
     >
       <div className="relative">
         <Image
@@ -155,7 +155,7 @@ const HorizontalCard: FC<CardItemProps> = ({ type }) => {
           <RatingBadge
             rating={4.9}
             count={25}
-            className="absolute right-4 -bottom-2 shadow-primaryBtn"
+            className="absolute right-4 -bottom-2 shadow-primaryBtnShadow"
             variant="sm"
           />
         )}
@@ -169,20 +169,20 @@ const HorizontalCard: FC<CardItemProps> = ({ type }) => {
   );
 };
 
-const VerticalCard: FC<CardItemProps> = ({ type }) => {
+const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
   const { isMobile } = useScreenMode();
   const renderByType = useMemo(
     () => ({
       restaurant: (
         <div
           className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
-          } p-2 shadow-cardItem rounded-2xl`}
+          } p-2 shadow-cardItemShadow bg-cardItem rounded-2xl`}
         >
           <div className="flex justify-between relative">
             <div
               className={`flex items-center justify-center ${
                 isMobile ? "w-16 h-16" : "w-14 h-14"
-              } rounded-2xl shadow-socialBtn`}
+              } rounded-2xl shadow-socialBtnShadow bg-white`}
             >
               <Image
                 src={IMAGES_CONST.common.defaultAvatar}
@@ -215,14 +215,12 @@ const VerticalCard: FC<CardItemProps> = ({ type }) => {
       ),
       item: (
         <div
-          className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItem rounded-2xl`}
+          className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
         >
           <div className="relative w-full max-h-36 rounded-2xl overflow-hidden">
             <Image
               src={IMAGES_CONST.common.defaultAvatar}
               alt=""
-              // width={isMobile ? 153 : undefined}
-              // height={146}
               layout={isMobile ? "" : "responsive"}
               className="w-full h-full"
             />

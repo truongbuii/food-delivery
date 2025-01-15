@@ -47,7 +47,7 @@ const ForgotPasswordForm = () => {
             size={"lg"}
             loading={isPending}
             disabled={isPending}
-            className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtn"
+            className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
           >
             Reset Password
           </Button>

@@ -1,5 +1,5 @@
 import { ResetPasswordForm } from "@/components/features/auth/forgot-password";
-import { ButtonType } from "@/components/molecule/ButtonType";
+import { ButtonType } from "@/components/molecule";
 import { PATHNAME } from "@/configs";
 
 const ForgotPasswordPage = () => {
