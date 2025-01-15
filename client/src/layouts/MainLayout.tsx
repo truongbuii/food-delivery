@@ -33,7 +33,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`w-full mx-auto min-h-screen relative ${
+      className={`w-full mx-auto min-h-screen relative bg-background ${
         isMobile ? "" : "max-w-[23.4375rem] overflow-hidden"
       }`}
     >

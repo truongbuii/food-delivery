@@ -19,7 +19,9 @@ import authFacebookIcon from "@images/auth/facebook-icon.svg";
 import authGoogleIcon from "@images/auth/google-icon.svg";
 
 // Common images
-import defaultAvatar from "@images/auth/default_avatar.png";
+import defaultAvatar from "@images/common/default_avatar.svg";
+import restaurant from "@images/common/restaurant.svg";
+import starIcon from "@images/common/star_icon.svg";
 
 export const IMAGES_CONST = {
   onboarding: {
@@ -41,7 +43,9 @@ export const IMAGES_CONST = {
     facebookIcon: authFacebookIcon,
     googleIcon: authGoogleIcon,
   },
-  user: {
+  common: {
     defaultAvatar: defaultAvatar,
+    restaurant: restaurant,
+    starIcon: starIcon,
   },
 };

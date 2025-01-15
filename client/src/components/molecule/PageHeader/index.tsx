@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomBackBtn } from "@/components/molecule/BackButton";
+import { Avatar, ButtonType } from "@/components/molecule";
 import { DrawerTrigger } from "@/components/ui/drawer";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -63,7 +63,7 @@ const PageHeader = () => {
   return (
     <div className="flex justify-between h-10">
       <DrawerTrigger>
-        <CustomBackBtn type="side-menu" />
+        <ButtonType type="side-menu" />
       </DrawerTrigger>
       <div className="flex flex-col items-center h-full text-sm max-w-52">
         <p>Delivery to</p>
@@ -77,7 +77,7 @@ const PageHeader = () => {
           placeholder="Choose an option"
         />
       </div>
-      <div>avatar</div>
+      <Avatar width={40} height={40} />
     </div>
   );
 };

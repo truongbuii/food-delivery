@@ -1,37 +1,83 @@
-import { PageHeader } from "@/components/molecule";
+import LogOut from "@/components/features/user/log-out";
+import HomeScreen from "@/components/features/user/home-screen";
+import { PageHeader, SwitchMode } from "@/components/molecule";
+import { HeaderSideMenu } from "@/components/molecule/Avatar";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+  CircleHelp,
+  FileText,
+  Mail,
+  MapPin,
+  Settings,
+  UserRound,
+  Wallet,
+} from "lucide-react";
+import Link from "next/link";
 const HomePage = () => {
   return (
     <>
       <Drawer setBackgroundColorOnScale={false} direction="left">
         <div vaul-drawer-wrapper="">
-          <div className="min-h-screen relative bg-background ">
-            <div className="flex flex-col gap-7 px-5 pt-8 ">
+          <div className="relative min-h-screen">
+            <div className="flex flex-col gap-5 px-5 pt-8">
               <PageHeader />
               <div className="flex flex-col text-3xl font-bold ">
                 <span>What would you like</span>
                 <span>to order</span>
               </div>
+              <HomeScreen />
             </div>
           </div>
         </div>
 
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Move Goal</DrawerTitle>
-            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2">
-              menu
+        <DrawerContent className="">
+          <HeaderSideMenu />
+          <div className="flex flex-col gap-7 pl-6 pr-10 mt-5 text-sm">
+            <div className="flex gap-4">
+              <FileText className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">My Orders</p>
+              </Link>
             </div>
+            <div className="flex gap-4">
+              <UserRound className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">My Profile</p>
+              </Link>
+            </div>
+            <div className="flex gap-4">
+              <MapPin className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p>Delivery Address</p>
+              </Link>
+            </div>
+            <div className="flex gap-4">
+              <Wallet className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">Payment Methods</p>
+              </Link>
+            </div>
+            <div className="flex gap-4">
+              <Mail className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">Contact Us</p>
+              </Link>
+            </div>
+            <div className="flex gap-4">
+              <Settings className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">Settings</p>
+              </Link>
+            </div>
+            <div className="flex gap-4">
+              <CircleHelp className="text-lightGray w-6 h-6" />
+              <Link href="" className="flex-1">
+                <p className="">Help & FAQs</p>
+              </Link>
+            </div>
+            <SwitchMode />
           </div>
+          <LogOut />
         </DrawerContent>
       </Drawer>
     </>
