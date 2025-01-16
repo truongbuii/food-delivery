@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import React, { useCallback, useMemo } from "react";
 
 export default function DarkModeSwitch() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme, systemTheme } = useTheme();
 
   const spring = useMemo(
     () => ({
@@ -18,12 +18,14 @@ export default function DarkModeSwitch() {
   );
 
   const currentIcon = useMemo(() => {
-    return theme === "dark" ? (
+    const currentTheme = theme === "system" ? systemTheme : theme;
+
+    return currentTheme === "dark" ? (
       <Moon size={20} />
     ) : (
       <Sun size={20} className="text-[#FFC529]" />
     );
-  }, [theme]);
+  }, [theme, systemTheme]);
 
   const toggleTheme = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");

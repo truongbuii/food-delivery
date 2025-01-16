@@ -75,7 +75,7 @@ const FeeAndTimeDelivery: FC<{ fee: number; time: string }> = ({
   fee,
   time,
 }) => (
-  <div className="flex gap-2 text-lightGray font-medium">
+  <div className="flex gap-2 text-lightGray">
     <div className="flex gap-1 items-center">
       <Bike size={12} strokeWidth={2} className="text-primary" />
       <span className="text-xs">{fee === 0 ? "free" : fee}</span>
@@ -91,7 +91,7 @@ const InfoSection: FC<{ type: "restaurant" | "item" }> = ({ type }) => (
   <>
     {type === "restaurant" ? (
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <span className="font-semibold">McDonalds</span>
           <CircleCheck
             color="#029094"
@@ -135,15 +135,12 @@ const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
     <div
       className={`relative flex flex-col w-[266px] rounded-2xl bg-cardItem shadow-cardItemShadow`}
     >
-      <div className="relative">
+      <div className="relative w-full h-[136px]">
         <Image
           src={IMAGES_CONST.common.restaurant}
           alt=""
-          width={266}
-          height={224}
-          layout="intrinsic"
-          objectFit="cover"
-          className="w-full h-full rounded-2xl"
+          fill
+          className="object-cover rounded-2xl"
         />
         <HeartButton />
         <RatingBadge
@@ -187,9 +184,9 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
               <Image
                 src={IMAGES_CONST.common.defaultAvatar}
                 alt=""
-                width={isMobile ? 57 : 42}
-                height={isMobile ? 57 : 42}
-                objectFit="cover"
+                width={isMobile ? 55 : 42}
+                height={isMobile ? 55 : 42}
+                style={{ objectFit: "cover" }}
                 className="rounded-full"
               />
             </div>
@@ -217,12 +214,12 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
         <div
           className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
         >
-          <div className="relative w-full max-h-36 rounded-2xl overflow-hidden">
+          <div className="relative w-full h-36 max-h-36 rounded-2xl overflow-hidden">
             <Image
               src={IMAGES_CONST.common.defaultAvatar}
               alt=""
-              layout={isMobile ? "" : "responsive"}
               className="w-full h-full"
+              style={{ objectFit: "cover" }}
             />
             <HeartButton />
             <RatingBadge rating={4.5} count={25} />

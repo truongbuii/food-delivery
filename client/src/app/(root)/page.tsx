@@ -1,6 +1,6 @@
 import LogOut from "@/components/features/user/log-out";
 import HomeScreen from "@/components/features/user/home-screen";
-import { PageHeader, SwitchMode } from "@/components/molecule";
+import { FixedFooter, PageHeader, SwitchMode } from "@/components/molecule";
 import { HeaderSideMenu } from "@/components/molecule/Avatar";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import {
@@ -19,14 +19,15 @@ const HomePage = () => {
       <Drawer setBackgroundColorOnScale={false} direction="left">
         <div vaul-drawer-wrapper="">
           <div className="relative min-h-screen">
-            <div className="flex flex-col gap-5 px-5 pt-8">
+            <div className="flex flex-col gap-5 px-5 pt-6">
               <PageHeader />
-              <div className="flex flex-col text-3xl font-bold ">
+              <div className="flex flex-col text-2xl font-bold ">
                 <span>What would you like</span>
                 <span>to order</span>
               </div>
               <HomeScreen />
             </div>
+            <FixedFooter />
           </div>
         </div>
 

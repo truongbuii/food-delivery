@@ -35,7 +35,6 @@ const CategoryItem: FC<CategoryItemProps> = ({
             width={48}
             height={48}
             className="rounded-full object-cover"
-            layout="responsive"
           />
           <p
             className={`text-xs text-center font-normal ${

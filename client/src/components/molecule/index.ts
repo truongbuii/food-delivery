@@ -9,6 +9,7 @@ import SearchAndFilter from "./SearchAndFilter";
 import { VerticalCard, HorizontalCard } from "./CardItem";
 import Tag from "./Tag";
 import SwitchMode from "./SwitchMode";
+import FixedFooter from "./FixedFooter";
 
 export {
   PageTransition,
@@ -24,4 +25,5 @@ export {
   HorizontalCard,
   Tag,
   SwitchMode,
+  FixedFooter,
 };
