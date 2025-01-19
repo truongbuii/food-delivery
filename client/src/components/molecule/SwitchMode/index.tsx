@@ -17,25 +17,24 @@ export default function DarkModeSwitch() {
     []
   );
 
-  const currentIcon = useMemo(() => {
-    const currentTheme = theme === "system" ? systemTheme : theme;
-
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const modeIcon = useMemo(() => {
     return currentTheme === "dark" ? (
       <Moon size={20} />
     ) : (
       <Sun size={20} className="text-[#FFC529]" />
     );
-  }, [theme, systemTheme]);
+  }, [currentTheme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }, [theme, setTheme]);
+    setTheme(currentTheme === "dark" ? "light" : "dark");
+  }, [currentTheme, setTheme]);
 
   return (
     <div
       onClick={toggleTheme}
       className={`flex-start flex items-center h-[30px] w-[70px] rounded-[50px]  p-[5px] shadow-inner hover:cursor-pointer bg-destructive ${
-        theme === "dark" && "place-content-end"
+        currentTheme === "dark" && "place-content-end"
       }`}
     >
       <motion.div
@@ -43,7 +42,7 @@ export default function DarkModeSwitch() {
         layout
         transition={spring}
       >
-        <motion.div whileTap={{ rotate: 360 }}>{currentIcon}</motion.div>
+        <motion.div whileTap={{ rotate: 360 }}>{modeIcon}</motion.div>
       </motion.div>
     </div>
   );

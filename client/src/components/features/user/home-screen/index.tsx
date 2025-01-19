@@ -80,7 +80,7 @@ const HomeScreen = () => {
         </Carousel>
       </div>
 
-      <div className="flex flex-col gap-6 pb-6">
+      <div className="flex flex-col pb-6">
         {/* Featured restaurants */}
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
@@ -93,8 +93,19 @@ const HomeScreen = () => {
               <ChevronRight size={10} className="mt-[2px]" />
             </Link>
           </div>
-          <HorizontalCard type="item" />
-          <HorizontalCard type="restaurant" />
+          <div className="">
+            <Carousel className="w-full max-w-max">
+              <CarouselContent>
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <CarouselItem key={index} className="basis-5/5">
+                    <div className="pb-8">
+                      <HorizontalCard type="item" />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
         </div>
 
         {/* Featured items */}

@@ -5,27 +5,26 @@ import { useEffect, useState, useRef, memo } from "react";
 import throttle from "lodash/throttle";
 import Link from "next/link";
 import { Bell, Compass, Heart, MapPin, ShoppingBag } from "lucide-react";
+import BadgeNumber from "@/components/molecule/BadgeNumber";
 
 const FixedFooter = () => {
   const { isMobile } = useScreenMode();
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
-  const threshold = 100;
+  const threshold = 50;
 
   useEffect(() => {
     const handleScroll = throttle(() => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY - lastScrollY.current > threshold) {
-        console.log(currentScrollY - lastScrollY.current);
-
         setIsHidden(true);
       } else if (lastScrollY.current - currentScrollY > threshold) {
         setIsHidden(false);
       }
 
       lastScrollY.current = currentScrollY;
-    }, 1500);
+    }, 200);
 
     window.addEventListener("scroll", handleScroll);
 
@@ -49,9 +48,10 @@ const FixedFooter = () => {
         </Link>
         <Link href="/" className="relative">
           <ShoppingBag size={28} strokeWidth={2} className="text-primary" />
-          <span className="absolute -top-1 -right-3 w-[14px] h-[14px] text-[10px] text-center rounded-sm bg-[#FFC529] text-white">
-            4
-          </span>
+          <BadgeNumber
+            number={4}
+            className="absolute -top-2 -right-3 w-[15px] h-[15px] text-[10px] leading-[15px] rounded-md"
+          />
         </Link>
         <Link href="/">
           <Heart size={23} strokeWidth={2} />

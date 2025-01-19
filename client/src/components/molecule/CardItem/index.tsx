@@ -1,3 +1,4 @@
+import BadgeNumber from "@/components/molecule/BadgeNumber";
 import { IconStar } from "@/components/molecule/svgs";
 import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ interface RatingBadgeProps {
 }
 
 const ratingBadgeVariants = cva(
-  "flex justify-center items-center bg-white rounded-2xl",
+  "flex justify-center items-center bg-ratingBadge rounded-2xl",
   {
     variants: {
       variant: {
@@ -61,12 +62,21 @@ const RatingBadge: FC<RatingBadgeProps> = ({
         <span
           className={clsx(
             "text-lightGray",
-            variant === "sm" ? "text-[8px]" : "text-[9px]"
+            variant === "sm" ? "text-[7px]" : "text-[9px]"
           )}
         >
           (+{count})
         </span>
       </div>
+    </div>
+  );
+};
+
+const PriceBadge: FC<{ price: number }> = ({ price }) => {
+  return (
+    <div className="absolute top-2 left-2 w-[70px] h-7 bg-white rounded-2xl text-center font-semibold">
+      <span className="text-primary text-xs">$</span>
+      <span className="text-lg text-black">{price}</span>
     </div>
   );
 };
@@ -152,7 +162,7 @@ const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
           <RatingBadge
             rating={4.9}
             count={25}
-            className="absolute right-4 -bottom-2 shadow-primaryBtnShadow"
+            className="absolute right-4 -bottom-2 shadow-ratingBadgeShadow"
             variant="sm"
           />
         )}
@@ -177,7 +187,7 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
         >
           <div className="flex justify-between relative">
             <div
-              className={`flex items-center justify-center ${
+              className={`relative flex items-center justify-center ${
                 isMobile ? "w-16 h-16" : "w-14 h-14"
               } rounded-2xl shadow-socialBtnShadow bg-white`}
             >
@@ -188,6 +198,10 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
                 height={isMobile ? 55 : 42}
                 style={{ objectFit: "cover" }}
                 className="rounded-full"
+              />
+              <BadgeNumber
+                number={4.5}
+                className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
               />
             </div>
             <HeartButton />
@@ -214,25 +228,30 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
         <div
           className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
         >
-          <div className="relative w-full h-36 max-h-36 rounded-2xl overflow-hidden">
+          <div className="relative w-full h-36 max-h-36 ">
             <Image
               src={IMAGES_CONST.common.defaultAvatar}
               alt=""
-              className="w-full h-full"
+              className="w-full h-full rounded-2xl"
               style={{ objectFit: "cover" }}
             />
             <HeartButton />
-            <RatingBadge rating={4.5} count={25} />
-            {type === "item" && <RatingBadge rating={4.9} count={25} />}
+            <RatingBadge
+              rating={4.9}
+              count={25}
+              className="absolute left-2 -bottom-3 shadow-ratingBadgeShadow"
+              variant="default"
+            />
+            <PriceBadge price={25.23} />
           </div>
-          <div className="flex flex-col gap-1 p-2">
+          <div className="flex flex-col gap-1 py-2 px-4 mt-4">
             <span className="font-semibold text-sm">McDonald</span>
             <p className="text-xs text-lightGray">Chicken, Cheese</p>
           </div>
         </div>
       ),
     }),
-    [isMobile, type]
+    [isMobile]
   );
 
   return renderByType[type];

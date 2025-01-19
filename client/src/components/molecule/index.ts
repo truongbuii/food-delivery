@@ -10,6 +10,7 @@ import { VerticalCard, HorizontalCard } from "./CardItem";
 import Tag from "./Tag";
 import SwitchMode from "./SwitchMode";
 import FixedFooter from "./FixedFooter";
+import BadgeNumber from "./BadgeNumber";
 
 export {
   PageTransition,
@@ -26,4 +27,5 @@ export {
   Tag,
   SwitchMode,
   FixedFooter,
+  BadgeNumber,
 };

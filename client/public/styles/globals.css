@@ -30,6 +30,7 @@
     --food-shadow: rgba(211, 209, 216, 0.25);
     --tag: 0 0 96%;
     --cart-item: 0 0% 100%;
+    --rating-badge: 0 0% 100%;
   }
   .dark {
     --background: 240, 12%, 20%;
@@ -57,6 +58,7 @@
     --food-shadow: rgba(75, 47, 47, 0.2);
     --tag: 240 9% 31%;
     --cart-item: 240 12% 25%;
+    --rating-badge: 240 9% 31%;
   }
 }
 @layer base {
