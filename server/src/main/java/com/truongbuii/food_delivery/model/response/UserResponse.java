@@ -7,12 +7,12 @@ import lombok.Data;
 public class UserResponse {
     Long id;
     String email;
-    Boolean emailVerified;
+    boolean emailVerified;
     String fullName;
     String phoneNumber;
     String dob;
     String avatarUrl;
-    Boolean isActive;
+    boolean isActive;
     String role;
     String accessToken;
 }

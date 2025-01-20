@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.security;
 
+import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class AuthenticationConfig {
     public UserDetailsService userDetailsService() {
         return username -> userRepository
                 .findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
     }
 
     @Bean

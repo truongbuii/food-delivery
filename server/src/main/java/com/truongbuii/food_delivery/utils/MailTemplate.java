@@ -1,7 +1,7 @@
 package com.truongbuii.food_delivery.utils;
 
 import com.truongbuii.food_delivery.config.AppConfiguration;
-import com.truongbuii.food_delivery.model.request.BodyParam;
+import com.truongbuii.food_delivery.model.request.auth.BodyParam;
 
 public class MailTemplate {
 

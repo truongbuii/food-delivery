@@ -1,4 +1,4 @@
-package com.truongbuii.food_delivery.model.request;
+package com.truongbuii.food_delivery.model.request.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

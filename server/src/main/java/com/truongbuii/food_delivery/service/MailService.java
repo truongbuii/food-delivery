@@ -1,9 +1,9 @@
 package com.truongbuii.food_delivery.service;
 
 import com.truongbuii.food_delivery.model.common.Constant;
-import com.truongbuii.food_delivery.model.request.BodyParam;
-import com.truongbuii.food_delivery.model.request.EmailClient;
-import com.truongbuii.food_delivery.model.request.SendEmail;
+import com.truongbuii.food_delivery.model.request.auth.BodyParam;
+import com.truongbuii.food_delivery.model.request.auth.EmailClient;
+import com.truongbuii.food_delivery.model.request.auth.SendEmail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

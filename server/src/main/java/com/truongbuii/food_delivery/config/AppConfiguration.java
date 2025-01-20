@@ -8,6 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class AppConfiguration {
+    /*
+     * Setting up WebClient for making HTTP requests to other services [Brevo]
+     */
     @Bean
     public WebClient webClient() {
         return WebClient.builder().build();
