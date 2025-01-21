@@ -4,8 +4,6 @@ import com.truongbuii.food_delivery.config.AppConfiguration;
 import com.truongbuii.food_delivery.model.request.auth.BodyParam;
 
 public class MailTemplate {
-
-
     private static final String HEADER = "<html><head><style>" +
             "body { font-family: Arial, sans-serif; }" +
             "h2 { color: #4CAF50; }" +

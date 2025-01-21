@@ -9,8 +9,9 @@ public class ErrorCode {
     public static final String ERR_PROVIDER_NOT_SUPPORTED = "This provider is not supported";
 
     // User error
+    public static final String ERR_USER_INVALID_OTP = "Your OTP is invalid";
     public static final String ERR_USER_NOT_FOUND = "We couldn't find your email";
     public static final String ERR_USER_DUPLICATE = "This email is already taken";
     public static final String ERR_USER_INVALID_CREDENTIALS = "Email or password is incorrect";
-    public static final String ERR_USER_INVALID_OTP = "Your OTP is invalid";
+    public static final String ERR_PHONE_NUMBER_DUPLICATE = "This phone number is already taken";
 }

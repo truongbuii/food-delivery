@@ -30,9 +30,8 @@ public class User extends BaseEntity implements UserDetails {
     private String fullName;
     private String phoneNumber;
     private LocalDate dob;
-    @Column(name = "avatar_url")
     private String avatarUrl;
-    private boolean isActive;
+    private boolean userActive;
     private String googleId;
     private String facebookId;
     @JdbcType(PostgreSQLEnumJdbcType.class)
@@ -62,7 +61,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isActive;
+        return userActive;
     }
 
     @Override

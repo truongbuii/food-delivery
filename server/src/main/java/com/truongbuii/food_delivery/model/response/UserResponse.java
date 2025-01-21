@@ -1,9 +1,11 @@
 package com.truongbuii.food_delivery.model.response;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UserResponse {
     Long id;
     String email;
@@ -12,7 +14,7 @@ public class UserResponse {
     String phoneNumber;
     String dob;
     String avatarUrl;
-    boolean isActive;
+    boolean userActive;
     String role;
     String accessToken;
 }

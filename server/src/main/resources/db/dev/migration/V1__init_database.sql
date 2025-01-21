@@ -10,7 +10,7 @@ CREATE TABLE "user" (
     dob DATE,
     avatar_url VARCHAR(255),
     role user_role NOT NULL DEFAULT 'CUSTOMER',
-    is_active BOOLEAN DEFAULT TRUE,
+    user_active BOOLEAN DEFAULT TRUE,
     google_id VARCHAR(128) UNIQUE,
     facebook_id VARCHAR(128) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,8 +49,8 @@ CREATE TABLE restaurant (
     total_stars FLOAT DEFAULT 0.0 CHECK (total_stars >= 0.0),
     total_reviews INTEGER DEFAULT 0 CHECK (total_reviews >= 0),
     slug VARCHAR(255),
-    is_published BOOLEAN DEFAULT TRUE,
-    is_featured BOOLEAN DEFAULT FALSE,
+    has_published BOOLEAN DEFAULT TRUE,
+    has_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -73,7 +73,7 @@ CREATE TABLE food (
     restaurant_id BIGINT NOT NULL,
     category_id BIGINT NOT NULL,
     slug VARCHAR(255),
-    is_featured BOOLEAN DEFAULT FALSE,
+    has_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

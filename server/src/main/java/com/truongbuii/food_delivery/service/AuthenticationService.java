@@ -78,6 +78,8 @@ public class AuthenticationService {
         }
         User user = userMapper.toUser(authSignUp);
         user.setPassword(passwordEncoder.encode(authSignUp.password()));
+        user.setEmailVerified(Boolean.FALSE);
+        user.setUserActive(Boolean.TRUE);
         userRepository.save(user);
 
         handleSendNotificationProcess(
