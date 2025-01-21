@@ -42,21 +42,35 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        cardItem: {
+          DEFAULT: "hsl(var(--cart-item))",
+          foreground: "hsl(var(--cart-item))",
+        },
+        ratingBadge: {
+          DEFAULT: "hsl(var(--rating-badge))",
+          foreground: "hsl(var(--rating-badge))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         lightGray: "hsl(var(--light-gray))",
+        tag: "hsl(var(--tag))",
         overlay: "hsl(var(--overlay))",
       },
       boxShadow: {
-        foodShadow: `0px 10px 25px 0 var(--food-shadow)`,
-        socialBtn: `15px 15px 37px 0px rgba(211, 209, 216, 0.7)`,
-        primaryBtn: "5px 10px 30px 0px rgba(254, 114, 76, 0.35)",
+        foodShadow: "5px 15px 25px -2px var(--food-shadow)",
+        socialBtnShadow: "10px 10px 30px -10px rgba(0, 0, 0, 0.12)",
+        primaryBtnShadow: "2px 10px 25px -4px rgba(254, 114, 76, 0.5)",
+        cardItemShadow: "10px 15px 30px -5px rgba(0, 0, 0, 0.05)",
+        badgeNumShadow: "0px 5px 10px 0px rgba(255, 197, 41, 0.5)",
+        ratingBadgeShadow: "0px 2px 20px -1px rgba(254, 114, 76, 0.2)",
       },
       animation: {
         scale: "scaleUp 1.25s ease-in-out infinite",
         shiny: "shiny 1.5s ease-in-out infinite",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       keyframes: {
         scaleUp: {
@@ -91,8 +105,28 @@ export default {
           },
         },
         "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
+          "0%,70%,100%": {
+            opacity: "1",
+          },
+          "20%,50%": {
+            opacity: "0",
+          },
+        },
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
       },
       borderRadius: {

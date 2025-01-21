@@ -1,9 +1,9 @@
 package com.truongbuii.food_delivery.controller;
 
 import com.truongbuii.food_delivery.model.common.Constant;
-import com.truongbuii.food_delivery.model.request.BodyParam;
-import com.truongbuii.food_delivery.model.request.NotificationEmail;
-import com.truongbuii.food_delivery.model.request.SendEmail;
+import com.truongbuii.food_delivery.model.request.auth.BodyParam;
+import com.truongbuii.food_delivery.model.request.auth.NotificationEmail;
+import com.truongbuii.food_delivery.model.request.auth.SendEmail;
 import com.truongbuii.food_delivery.service.MailService;
 import com.truongbuii.food_delivery.utils.MailTemplate;
 import lombok.RequiredArgsConstructor;

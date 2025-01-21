@@ -10,7 +10,7 @@ import com.truongbuii.food_delivery.mapper.UserMapper;
 import com.truongbuii.food_delivery.model.common.Constant;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.entity.User;
-import com.truongbuii.food_delivery.model.request.*;
+import com.truongbuii.food_delivery.model.request.auth.*;
 import com.truongbuii.food_delivery.model.response.UserResponse;
 import com.truongbuii.food_delivery.repository.UserRepository;
 import com.truongbuii.food_delivery.security.JwtService;

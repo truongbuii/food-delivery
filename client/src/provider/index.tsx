@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useAuthenticated from "../hooks/useAuthenticated";
 import { SnackbarProvider } from "notistack";
@@ -21,11 +21,12 @@ export const useAuthProvider = () => {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { client } = useAuthProvider();
+  const { theme } = useTheme();
   return (
     <SnackbarProvider preventDuplicate maxSnack={1}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
+        defaultTheme={theme}
         enableSystem
         disableTransitionOnChange
       >
