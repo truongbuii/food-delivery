@@ -26,4 +26,11 @@ public final class Constant {
         public static final String KAFKA_OTP_GROUP_ID = "otp-group";
         public static final String KAFKA_FORGOT_PASSWORD_GROUP_ID = "fg-pwd-group";
     }
+
+    public static final class Cloudinary {
+        public static final String CLOUDINARY_USER_FOLDER = "users";
+        public static final String CLOUDINARY_RESTAURANT_FOLDER = "restaurants";
+        public static final String CLOUDINARY_FOOD_FOLDER = "foods";
+        public static final String CLOUDINARY_CATEGORY_FOLDER = "categories";
+    }
 }

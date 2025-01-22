@@ -83,6 +83,10 @@ application:
     sender-mail:
 
 client-url:
+cloudinary:
+  cloud_name:
+  api_key:
+  api_secret:
 
 logging:
   level:

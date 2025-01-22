@@ -2,6 +2,7 @@ package com.truongbuii.food_delivery.service;
 
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.UserMapper;
+import com.truongbuii.food_delivery.model.common.Constant;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.user.UserProfilePut;
@@ -10,6 +11,7 @@ import com.truongbuii.food_delivery.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final MediaService mediaService;
 
     public UserResponse getById(Long id) {
         return userRepository.findById(id)
@@ -30,6 +33,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
     }
 
+    @Transactional
     public UserResponse put(UserProfilePut userProfilePut) {
         User user = getByEmail(userProfilePut.email());
         validatePhoneNumberDuplicate(userProfilePut.phoneNumber(), user);
@@ -40,7 +44,17 @@ public class UserService {
             user.setDob(userProfilePut.dob());
         }
         if (userProfilePut.avatar() != null && !userProfilePut.avatar().isEmpty()) {
-            String avatarUrl = System.currentTimeMillis() + "_" + userProfilePut.avatar().getOriginalFilename();
+            // remove old avatar if exists
+            if (user.getAvatarUrl() != null) {
+                mediaService.deleteImage(
+                        user.getAvatarUrl()
+                        , Constant.Cloudinary.CLOUDINARY_USER_FOLDER
+                );
+            }
+            String avatarUrl = mediaService.uploadImage(
+                    userProfilePut.avatar(),
+                    Constant.Cloudinary.CLOUDINARY_USER_FOLDER
+            );
             user.setAvatarUrl(avatarUrl);
         }
         userRepository.save(user);
