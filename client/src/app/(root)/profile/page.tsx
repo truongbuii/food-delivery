@@ -1,17 +1,20 @@
 import ProfileForm from "@/components/features/user/profile";
-import { AvatarUpload } from "@/components/molecule";
+import { ButtonType } from "@/components/molecule";
+import { PATHNAME } from "@/configs";
 import { BackgroundProfile } from "@/layouts";
 
 const ProfilePage = () => {
   return (
-    <BackgroundProfile>
-      <div className="absolute w-full px-6 pb-6">
-        <AvatarUpload className="absolute top-20 left-1/2 transform -translate-x-1/2" />
-        <div className="mt-72 w-full flex flex-col gap-6 mb-14">
-          <ProfileForm />
+    <>
+      <ButtonType type="back" expectPath={PATHNAME.HOME} />
+      <BackgroundProfile>
+        <div className="absolute w-full px-6 pb-6">
+          <div className="mt-80 w-full flex flex-col gap-6 mb-14">
+            <ProfileForm />
+          </div>
         </div>
-      </div>
-    </BackgroundProfile>
+      </BackgroundProfile>
+    </>
   );
 };
 

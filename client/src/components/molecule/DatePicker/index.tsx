@@ -7,18 +7,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 interface DatePickerProps {
   id: string;
-  value: Date | undefined;
-  onChange: (date: Date | undefined) => void;
+  value: string | undefined;
+  onChange: (date: string | undefined) => void;
 }
 
 const DatePicker = ({ id, value, onChange }: DatePickerProps) => {
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    onChange(selectedDate);
+    onChange(selectedDate ? selectedDate.toISOString() : undefined);
   };
   return (
     <Popover>
@@ -26,18 +26,12 @@ const DatePicker = ({ id, value, onChange }: DatePickerProps) => {
         <Button
           id={id}
           variant={"outline"}
-          style={{
-            width: "100%",
-            height: "55px",
-            borderRadius: "10px",
-            marginTop: "4px",
-            padding: "14px 12px",
-          }}
+          className="w-full h-[55px] justify-start rounded-[10px] mt-1 py-[14px] px-[12px] bg-secondary hover:bg-secondary"
         >
           <CalendarIcon className="mr-2 h-4 w-4 text-lightGray" />
-          <div className="text-foreground">
+          <div className="text-foreground text-left font-normal ">
             {value ? (
-              format(value, "PPP")
+              format(parseISO(value), "PPP")
             ) : (
               <span className="text-lightGray">Pick a date</span>
             )}
@@ -47,7 +41,7 @@ const DatePicker = ({ id, value, onChange }: DatePickerProps) => {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={value}
+          selected={value ? parseISO(value) : undefined}
           onSelect={handleDateSelect}
           initialFocus
         />

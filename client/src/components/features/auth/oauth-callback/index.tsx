@@ -30,7 +30,6 @@ const OauthCallback = () => {
             setUserInfo(MapperUser(userInfo));
             setTokens(accessToken);
             onRedirect(userInfo);
-            push("/");
           }
         });
         isCalled.current = true;

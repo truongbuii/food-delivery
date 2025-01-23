@@ -17,7 +17,9 @@ public class FileSizeValidator implements ConstraintValidator<ValidFileSize, Mul
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
         if (file == null || file.isEmpty()) {
-            return true;
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+            return false;
         }
 
         if (file.getSize() > maxSize) {

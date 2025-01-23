@@ -2,6 +2,7 @@
 
 import { SplashScreen } from "@/components/molecule";
 import { PATHNAME, PUBLIC_PATH } from "@/configs";
+import useRouterProgress from "@/hooks/useRouterProgress";
 import useScreenMode from "@/hooks/useScreenMode";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -30,7 +31,7 @@ const useLayout = () => {
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isMobile } = useScreenMode();
   const { finishLoading, isSplash, isLoading } = useLayout();
-
+  useRouterProgress();
   return (
     <div
       className={`w-full mx-auto min-h-screen relative bg-background ${

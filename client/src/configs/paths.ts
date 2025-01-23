@@ -11,5 +11,6 @@ export const PUBLIC_PATH = {
 
 export const ROOT_PATH = {
   HOME: "/",
+  PROFILE: "/profile",
 };
 export const PATHNAME = { ...PUBLIC_PATH, ...ROOT_PATH };

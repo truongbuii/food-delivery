@@ -13,12 +13,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/me")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> get(
             @AuthenticationPrincipal User principal
     ) {
@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(me).build());
     }
 
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<UserResponse>> put(
             @Valid
             @ModelAttribute UserProfilePut userProfilePut

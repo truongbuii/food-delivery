@@ -26,7 +26,9 @@ const EndPoints = {
     socialLogin: "social-login",
     socialCallback: "social-callback",
   }),
-  USER: createPath(BASE_USER, {}),
+  USER: createPath(BASE_USER, {
+    profile: "me",
+  }),
 } as const;
 
 export default EndPoints;

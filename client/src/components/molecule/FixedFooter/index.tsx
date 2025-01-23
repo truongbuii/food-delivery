@@ -47,7 +47,7 @@ const FixedFooter = () => {
           <MapPin size={23} strokeWidth={2} />
         </Link>
         <Link href="/" className="relative">
-          <ShoppingBag size={28} strokeWidth={2} className="text-primary" />
+          <ShoppingBag size={23} strokeWidth={2} className="text-primary" />
           <BadgeNumber
             number={4}
             className="absolute -top-2 -right-3 w-[15px] h-[15px] text-[10px] leading-[15px] rounded-md"

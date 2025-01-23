@@ -13,6 +13,7 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
+import { PATHNAME } from "@/configs";
 const HomePage = () => {
   return (
     <>
@@ -42,7 +43,7 @@ const HomePage = () => {
             </div>
             <div className="flex gap-4">
               <UserRound className="text-lightGray w-6 h-6" />
-              <Link href="" className="flex-1">
+              <Link href={PATHNAME.PROFILE} className="flex-1">
                 <p className="">My Profile</p>
               </Link>
             </div>

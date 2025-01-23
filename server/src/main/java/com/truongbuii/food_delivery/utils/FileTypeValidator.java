@@ -23,9 +23,7 @@ public class FileTypeValidator implements ConstraintValidator<ValidFileType, Mul
     @SneakyThrows // will automatically catch and rethrow any exceptions
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
         if (file == null || file.getContentType() == null) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-            return false;
+            return true;
         }
 
         for (String type : allowedTypes) {

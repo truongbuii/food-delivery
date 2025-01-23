@@ -1,5 +1,6 @@
 "use client";
 
+import { Theme } from "@/interfaces";
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -17,9 +18,9 @@ export default function DarkModeSwitch() {
     []
   );
 
-  const currentTheme = theme === "system" ? systemTheme : theme;
+  const currentTheme = theme === Theme.SYSTEM ? systemTheme : theme;
   const modeIcon = useMemo(() => {
-    return currentTheme === "dark" ? (
+    return currentTheme === Theme.DARK ? (
       <Moon size={20} />
     ) : (
       <Sun size={20} className="text-[#FFC529]" />
@@ -27,14 +28,14 @@ export default function DarkModeSwitch() {
   }, [currentTheme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(currentTheme === "dark" ? "light" : "dark");
+    setTheme(currentTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK);
   }, [currentTheme, setTheme]);
 
   return (
     <div
       onClick={toggleTheme}
       className={`flex-start flex items-center h-[30px] w-[70px] rounded-[50px]  p-[5px] shadow-inner hover:cursor-pointer bg-destructive ${
-        currentTheme === "dark" && "place-content-end"
+        currentTheme === Theme.DARK && "place-content-end"
       }`}
     >
       <motion.div

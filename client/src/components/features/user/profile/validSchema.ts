@@ -4,7 +4,6 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { z } from "zod";
 
 const ProfileSchema = z.object({
-  email: z.string().email().optional(),
   fullName: z
     .string()
     .min(3, { message: "Name must be at least 6 characters long" })
@@ -20,7 +19,7 @@ const ProfileSchema = z.object({
       message: "Invalid phone number",
     })
     .optional(),
-  dob: z.date().optional(),
+  dob: z.string().optional(),
 });
 
 type TProfileSchema = z.infer<typeof ProfileSchema>;

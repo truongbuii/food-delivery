@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores";
 import { Camera } from "lucide-react";
 import Image from "next/image";
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 
 interface AvatarProps {
   width?: number;
@@ -21,6 +21,9 @@ interface AvatarProps {
 
 interface AvatarUploadProps {
   className?: string;
+  currentAvatar: string | undefined;
+  onAvatarUpdate: (newAvatarURL: File) => void;
+  fullName: string;
 }
 
 const Avatar = ({ width = 40, height = 40, className }: AvatarProps) => {
@@ -39,12 +42,12 @@ const Avatar = ({ width = 40, height = 40, className }: AvatarProps) => {
   );
 };
 
-const AvatarUpload: FC<AvatarUploadProps> = ({ className }) => {
-  const { userInfo } = useAuthStore();
-  const [avatarURL, setAvatarURL] = useState<string | undefined>(
-    userInfo?.avatarUrl
-  );
-
+const AvatarUpload: FC<AvatarUploadProps> = ({
+  className,
+  currentAvatar,
+  onAvatarUpdate,
+  fullName,
+}) => {
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const handleImageUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -56,24 +59,20 @@ const AvatarUpload: FC<AvatarUploadProps> = ({ className }) => {
     if (uploadedFile) {
       const formData = new FormData();
       formData.append("file", uploadedFile);
-      setAvatarURL(URL.createObjectURL(uploadedFile));
+      onAvatarUpdate(uploadedFile);
     }
   };
   return (
     <div
       className={cn(
-        "flex flex-col justify-center items-center gap-5",
+        "flex flex-col justify-center items-center gap-4",
         className
       )}
     >
       <div className="relative flex justify-center items-center w-[108px] h-[108px] rounded-full bg-background ">
         <div className="relative w-[90px] h-[90px] rounded-full shadow-avatarShadow overflow-hidden">
           <Image
-            src={
-              avatarURL ||
-              userInfo?.avatarUrl ||
-              IMAGES_CONST.common.defaultAvatar.src
-            }
+            src={currentAvatar || IMAGES_CONST.common.defaultAvatar.src}
             alt="Avatar"
             fill
             className="w-full h-full rounded-full object-cover"
@@ -101,7 +100,7 @@ const AvatarUpload: FC<AvatarUploadProps> = ({ className }) => {
         </form>
       </div>
       <div className="flex flex-col text-center gap-2">
-        <p className="text-xl font-semibold">{userInfo?.fullName}</p>
+        <p className="text-xl font-semibold">{fullName}</p>
         <p className="text-xs text-lightGray">Edit profile</p>
       </div>
     </div>

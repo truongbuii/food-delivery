@@ -1,5 +1,5 @@
 import VerificationForm from "@/components/features/auth/verification";
-import { ButtonType } from "@/components/molecule/ButtonType";
+import { ButtonType } from "@/components/molecule";
 import { PATHNAME } from "@/configs";
 
 const Verification = () => {

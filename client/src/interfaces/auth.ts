@@ -4,7 +4,7 @@ interface IUserInfo {
   emailVerified?: boolean;
   fullName?: string;
   phoneNumber?: string;
-  dob?: Date;
+  dob?: string;
   avatarUrl?: string;
   isActive?: boolean;
   role?: string;
