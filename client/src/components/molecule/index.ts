@@ -2,7 +2,7 @@ import PageTransition from "./PageTransition";
 import SplashScreen from "./SplashScreen";
 import InputField from "./InputField";
 import PageHeader from "./PageHeader";
-import { Avatar, HeaderSideMenu } from "./Avatar";
+import { Avatar, HeaderSideMenu, AvatarUpload } from "./Avatar";
 import ButtonType from "./ButtonType";
 import CategoryItem from "./CategoryItem";
 import SearchAndFilter from "./SearchAndFilter";
@@ -11,6 +11,7 @@ import Tag from "./Tag";
 import SwitchMode from "./SwitchMode";
 import FixedFooter from "./FixedFooter";
 import BadgeNumber from "./BadgeNumber";
+import DatePicker from "./DatePicker";
 
 export {
   PageTransition,
@@ -19,6 +20,7 @@ export {
   PageHeader,
   Avatar,
   HeaderSideMenu,
+  AvatarUpload,
   ButtonType,
   CategoryItem,
   SearchAndFilter,
@@ -28,4 +30,5 @@ export {
   SwitchMode,
   FixedFooter,
   BadgeNumber,
+  DatePicker,
 };

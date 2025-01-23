@@ -63,7 +63,8 @@ export default {
         primaryBtnShadow: "2px 10px 25px -4px rgba(254, 114, 76, 0.5)",
         cardItemShadow: "10px 15px 30px -5px rgba(0, 0, 0, 0.05)",
         badgeNumShadow: "0px 5px 10px 0px rgba(255, 197, 41, 0.5)",
-        ratingBadgeShadow: "0px 2px 20px -1px rgba(254, 114, 76, 0.2)",
+        ratingBadgeShadow: "0px 5px 10px 0px rgba(254, 114, 76, 0.1)",
+        avatarShadow: "0px 15px 40px 0px rgba(255, 197, 41, 0.3)",
       },
       animation: {
         scale: "scaleUp 1.25s ease-in-out infinite",

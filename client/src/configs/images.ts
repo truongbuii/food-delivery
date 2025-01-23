@@ -22,6 +22,9 @@ import authGoogleIcon from "@images/auth/google-icon.svg";
 import defaultAvatar from "@images/common/default_avatar.svg";
 import restaurant from "@images/common/restaurant.svg";
 import starIcon from "@images/common/star_icon.svg";
+import profileBackground1 from "@images/common/pf_background1.svg";
+import profileBackground2 from "@images/common/pf_background2.svg";
+import profileBackground3 from "@images/common/pf_background3.svg";
 
 export const IMAGES_CONST = {
   onboarding: {
@@ -47,5 +50,8 @@ export const IMAGES_CONST = {
     defaultAvatar: defaultAvatar,
     restaurant: restaurant,
     starIcon: starIcon,
+    profileBackground1: profileBackground1,
+    profileBackground2: profileBackground2,
+    profileBackground3: profileBackground3,
   },
 };

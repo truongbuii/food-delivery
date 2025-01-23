@@ -1,14 +1,14 @@
-import { Control, FieldValues, Path } from 'react-hook-form';
+import { Control, FieldValues, Path } from "react-hook-form";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 interface InputFieldProps<Type extends FieldValues> {
   control: Control<Type>;
@@ -16,6 +16,8 @@ interface InputFieldProps<Type extends FieldValues> {
   label?: ReactNode | string;
   placeholder?: string;
   type?: string;
+  disabled?: boolean;
+  value?: string;
 }
 
 const InputField = <T extends FieldValues>({
@@ -29,7 +31,7 @@ const InputField = <T extends FieldValues>({
       control={control}
       name={name}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      defaultValue={'' as any}
+      defaultValue={"" as any}
       render={({ field }) => (
         <FormItem>
           {label && (
@@ -40,13 +42,14 @@ const InputField = <T extends FieldValues>({
           <FormControl>
             <Input
               style={{
-                height: '55px',
-                borderRadius: '10px',
-                marginTop: '4px',
-                padding: '14px 12px'
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
               }}
               id={name}
               onChange={field.onChange}
+              value={field.value || ""}
               {...rest}
             />
           </FormControl>
