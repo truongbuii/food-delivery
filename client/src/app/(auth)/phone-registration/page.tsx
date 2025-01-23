@@ -1,5 +1,6 @@
 import { PhoneRegistrationForm } from "@/components/features/auth/phone-registration";
-import { ButtonType } from "@/components/molecule/ButtonType";
+import { ButtonType } from "@/components/molecule";
+
 import { PATHNAME } from "@/configs";
 
 const PhoneRegistrationPage = () => {

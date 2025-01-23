@@ -1,6 +1,6 @@
 "use client";
 
-import { InputField } from "@/components/molecule";
+import { CustomFormField } from "@/components/molecule";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse } from "@/interfaces";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PATHNAME } from "@/configs";
+import { Input } from "@/components/ui/input";
 
 interface IFormValues {
   password: string;
@@ -22,6 +23,10 @@ const ChangePasswordForm = () => {
   const form = useForm<TChangePasswordSchema>({
     resolver: zodResolver(ChangePasswordSchema),
     mode: "onSubmit",
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const { push } = useRouter();
@@ -50,18 +55,43 @@ const ChangePasswordForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <InputField
+        <CustomFormField
+          control={form.control}
           name="password"
-          control={form.control}
-          label="New password"
-          placeholder="Enter your new password"
+          label="Password"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Password"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
-        <InputField
-          name="confirmPassword"
+        <CustomFormField
           control={form.control}
+          name="confirmPassword"
           label="Confirm password"
-          placeholder="Enter your new password again"
-          type="password"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Enter your new password again"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
         <div className="w-full text-center">
           <Button

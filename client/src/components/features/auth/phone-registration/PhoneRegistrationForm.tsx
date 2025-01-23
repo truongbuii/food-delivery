@@ -1,27 +1,22 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { CustomFormField } from "@/components/molecule";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { z } from "zod";
-import { isValidPhoneNumber } from "react-phone-number-input";
+import { PATHNAME } from "@/configs";
+import { useMessage } from "@/hooks/useMessage";
+import useRedirect from "@/hooks/useRedirect";
+import { IPhoneRegister } from "@/interfaces";
+import { MapperUser } from "@/mapping/user.mapping";
 import { usePhoneRegisterMutation } from "@/queries";
 import { useAuthStore } from "@/stores";
-import { useMessage } from "@/hooks/useMessage";
-import { IPhoneRegister } from "@/interfaces";
-import { PATHNAME } from "@/configs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { MapperUser } from "@/mapping/user.mapping";
-import useRedirect from "@/hooks/useRedirect";
+import { useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { z } from "zod";
 
 const PhoneRegistrationSchema = z.object({
   phone: z
@@ -82,20 +77,18 @@ const PhoneRegistrationForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
+        <CustomFormField
           control={form.control}
           name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <PhoneInput
-                  defaultCountry="VN"
-                  placeholder="Enter a phone number"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="!mt-[4px] px-1 text-[12px] font-normal text-[#ff402e]" />
-            </FormItem>
+          renderInput={({ id, value, onChange }) => (
+            <PhoneInput
+              id={id}
+              value={value}
+              onChange={onChange}
+              defaultCountry="VN"
+              placeholder="Enter a phone number"
+              className="!mt-0"
+            />
           )}
         />
         <div className="w-full text-center">

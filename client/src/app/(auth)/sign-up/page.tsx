@@ -1,6 +1,6 @@
-import { SignUpForm } from '@/components/features/auth/signup';
-import { PATHNAME } from '@/configs';
-import Link from 'next/link';
+import { SignUpForm } from "@/components/features/auth/signup";
+import { PATHNAME } from "@/configs";
+import Link from "next/link";
 
 const SignUpPage = () => {
   return (
@@ -16,8 +16,8 @@ const SignUpPage = () => {
             href={PATHNAME.SIGN_IN}
             className="mx-1 font-semibold text-primary underline"
           >
-            {' '}
-            Login{' '}
+            {" "}
+            Login{" "}
           </Link>
         </span>
       </div>

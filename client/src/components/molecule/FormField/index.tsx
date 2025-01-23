@@ -6,32 +6,30 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 import { ReactNode } from "react";
 
-interface InputFieldProps<Type extends FieldValues> {
+interface CustomFormFieldProps<Type extends FieldValues> {
   control: Control<Type>;
   name: Path<Type>;
   label?: ReactNode | string;
-  placeholder?: string;
-  type?: string;
-  disabled?: boolean;
-  value?: string;
+  renderInput: (field: {
+    id: string;
+    value: any;
+    onChange: (value: any) => void;
+  }) => ReactNode;
 }
 
-const InputField = <T extends FieldValues>({
+const CustomFormField = <T extends FieldValues>({
   control,
   name,
   label,
-  ...rest
-}: InputFieldProps<T>) => {
+  renderInput,
+}: CustomFormFieldProps<T>) => {
   return (
     <FormField
       control={control}
       name={name}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      defaultValue={"" as any}
       render={({ field }) => (
         <FormItem>
           {label && (
@@ -40,18 +38,11 @@ const InputField = <T extends FieldValues>({
             </FormLabel>
           )}
           <FormControl>
-            <Input
-              style={{
-                height: "55px",
-                borderRadius: "10px",
-                marginTop: "4px",
-                padding: "14px 12px",
-              }}
-              id={name}
-              onChange={field.onChange}
-              value={field.value || ""}
-              {...rest}
-            />
+            {renderInput({
+              id: name,
+              value: field.value,
+              onChange: field.onChange,
+            })}
           </FormControl>
           <FormMessage className="!mt-[4px] px-1 text-[12px] font-normal text-[#ff402e]" />
         </FormItem>
@@ -60,4 +51,4 @@ const InputField = <T extends FieldValues>({
   );
 };
 
-export default InputField;
+export default CustomFormField;

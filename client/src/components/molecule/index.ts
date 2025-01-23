@@ -1,6 +1,6 @@
 import PageTransition from "./PageTransition";
 import SplashScreen from "./SplashScreen";
-import InputField from "./InputField";
+import CustomFormField from "./FormField";
 import PageHeader from "./PageHeader";
 import { Avatar, HeaderSideMenu, AvatarUpload } from "./Avatar";
 import ButtonType from "./ButtonType";
@@ -16,7 +16,7 @@ import DatePicker from "./DatePicker";
 export {
   PageTransition,
   SplashScreen,
-  InputField,
+  CustomFormField,
   PageHeader,
   Avatar,
   HeaderSideMenu,

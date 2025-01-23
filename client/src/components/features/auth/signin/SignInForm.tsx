@@ -5,7 +5,7 @@ import { SignInSchema, TSignInSchema } from "./validSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { Form } from "@/components/ui/form";
-import { InputField } from "@/components/molecule";
+import { CustomFormField } from "@/components/molecule";
 import { Button } from "@/components/ui/button";
 import { PATHNAME } from "@/configs";
 import Link from "next/link";
@@ -15,11 +15,16 @@ import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse, ISignIn } from "@/interfaces";
 import { MapperUser } from "@/mapping/user.mapping";
 import useRedirect from "@/hooks/useRedirect";
+import { Input } from "@/components/ui/input";
 
 const SignInForm = () => {
   const form = useForm<TSignInSchema>({
     resolver: zodResolver(SignInSchema),
     mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const { mutateAsync, isPending } = useSignInMutation();
@@ -50,18 +55,43 @@ const SignInForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <InputField
+        <CustomFormField
+          control={form.control}
           name="email"
-          control={form.control}
           label="Email"
-          placeholder="Your email"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Your email"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
-        <InputField
-          name="password"
+        <CustomFormField
           control={form.control}
+          name="password"
           label="Password"
-          placeholder="Your password"
-          type="password"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Password"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
         <div className="text-right !mt-3">
           <Link

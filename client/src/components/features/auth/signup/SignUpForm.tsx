@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { InputField } from "@/components/molecule";
+import { CustomFormField } from "@/components/molecule";
 import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SignUpSchema, TSignUpSchema } from "./validSchema";
@@ -13,11 +13,17 @@ import { useMessage } from "@/hooks/useMessage";
 import { MapperUser } from "@/mapping/user.mapping";
 import { IApiErrorResponse, ISignUp } from "@/interfaces";
 import useRedirect from "@/hooks/useRedirect";
+import { Input } from "@/components/ui/input";
 
 const SignUpForm = () => {
   const form = useForm<TSignUpSchema>({
     resolver: zodResolver(SignUpSchema),
     mode: "onSubmit",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
   });
 
   const message = useMessage();
@@ -48,24 +54,62 @@ const SignUpForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <InputField
+        <CustomFormField
+          control={form.control}
           name="fullName"
-          control={form.control}
-          label="Full name"
-          placeholder="Your full name"
+          label="Full Name"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Your full name"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
-        <InputField
+        <CustomFormField
+          control={form.control}
           name="email"
-          control={form.control}
           label="Email"
-          placeholder="Your email"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Your email"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
-        <InputField
-          name="password"
+        <CustomFormField
           control={form.control}
+          name="password"
           label="Password"
-          placeholder="Your password"
-          type="password"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Password"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
         />
         <div className="w-full text-center">
           <Button

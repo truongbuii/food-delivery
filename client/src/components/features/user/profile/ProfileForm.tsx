@@ -1,21 +1,15 @@
 "use client";
 
-import { DatePicker, InputField } from "@/components/molecule";
+import { DatePicker, CustomFormField } from "@/components/molecule";
 import { ProfileSchema, TProfileSchema } from "./validSchema";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "@/stores";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const ProfileForm = () => {
   const { userInfo } = useAuthStore();
@@ -23,7 +17,24 @@ const ProfileForm = () => {
   const form = useForm<TProfileSchema>({
     resolver: zodResolver(ProfileSchema),
     mode: "onSubmit",
+    defaultValues: {
+      email: userInfo?.email || "",
+      fullName: userInfo?.fullName || "",
+      phone: userInfo?.phoneNumber || "",
+      dob: userInfo?.dob ? new Date(userInfo.dob) : undefined,
+    },
   });
+
+  useEffect(() => {
+    if (userInfo) {
+      form.reset({
+        email: userInfo.email || "",
+        fullName: userInfo.fullName || "",
+        phone: userInfo.phoneNumber || "",
+        dob: userInfo.dob ? new Date(userInfo.dob) : undefined,
+      });
+    }
+  }, [userInfo, form]);
 
   const onSubmit = useCallback((value: TProfileSchema) => {
     console.log(value);
@@ -32,40 +43,67 @@ const ProfileForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <InputField
+        <CustomFormField
+          control={form.control}
           name="email"
-          control={form.control}
           label="Email"
-          value={userInfo?.email || ""}
-          disabled
-        />
-        <InputField
-          name="fullName"
-          control={form.control}
-          label="Full name"
-          placeholder="Your full name"
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium text-[#9796A1]">
-                Phone Number
-              </FormLabel>
-              <FormControl>
-                <PhoneInput
-                  defaultCountry="VN"
-                  placeholder="Enter a phone number"
-                  className="!mt-0"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="!mt-[4px] px-1 text-[12px] font-normal text-[#ff402e]" />
-            </FormItem>
+          renderInput={({ id, value }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              placeholder="Your email"
+              disabled
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
           )}
         />
-        <DatePicker />
+        <CustomFormField
+          control={form.control}
+          name="fullName"
+          label="Full Name"
+          renderInput={({ id, value, onChange }) => (
+            <Input
+              id={id}
+              value={value || ""}
+              onChange={onChange}
+              placeholder="Your full name"
+              style={{
+                height: "55px",
+                borderRadius: "10px",
+                marginTop: "4px",
+                padding: "14px 12px",
+              }}
+            />
+          )}
+        />
+        <CustomFormField
+          control={form.control}
+          name="phone"
+          label="Phone"
+          renderInput={({ id, value, onChange }) => (
+            <PhoneInput
+              id={id}
+              value={value}
+              onChange={onChange}
+              defaultCountry="VN"
+              placeholder="Enter a phone number"
+              className="!mt-0"
+            />
+          )}
+        />
+        <CustomFormField
+          control={form.control}
+          name="dob"
+          label="Date of Birth"
+          renderInput={({ id, value, onChange }) => (
+            <DatePicker id={id} value={value} onChange={onChange} />
+          )}
+        />
         <div className="w-full text-center">
           <Button
             size={"lg"}
