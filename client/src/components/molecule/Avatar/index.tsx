@@ -81,7 +81,6 @@ const AvatarUpload: FC<AvatarUploadProps> = ({
             }}
           />
         </div>
-
         <form id="form" encType="multipart/form-data">
           <Button
             type="submit"

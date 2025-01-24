@@ -14,4 +14,7 @@ public class ErrorCode {
     public static final String ERR_USER_DUPLICATE = "This email is already taken";
     public static final String ERR_USER_INVALID_CREDENTIALS = "Email or password is incorrect";
     public static final String ERR_PHONE_NUMBER_DUPLICATE = "This phone number is already taken";
+
+    // Media error
+    public static final String ERR_MEDIA_FOLDER_NOT_FOUND = "Folder not found";
 }

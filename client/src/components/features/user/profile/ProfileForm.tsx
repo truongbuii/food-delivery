@@ -49,15 +49,14 @@ const ProfileForm = () => {
   }, [userInfo, form]);
 
   const onSubmit = useCallback(
-    (data: any) => {
+    (data: IProfile) => {
       const value: IProfile = {
         ...data,
         email: userInfo?.email,
         avatar: avatarURL,
-        dob: data.dob,
       };
 
-      console.log(value);
+      console.log(data);
 
       mutateAsync(value, {
         onSuccess: (res) => {
@@ -107,7 +106,7 @@ const ProfileForm = () => {
           <CustomFormField
             control={form.control}
             name="phone"
-            label="Phone"
+            label="Phone Number"
             renderInput={({ id, value, onChange }) => (
               <PhoneInput
                 id={id}
@@ -125,19 +124,6 @@ const ProfileForm = () => {
             label="Date of Birth"
             renderInput={({ id, value, onChange }) => (
               <DatePicker id={id} value={value} onChange={onChange} />
-              // <Input
-              //   type="date"
-              //   id={id}
-              //   value={value || ""}
-              //   onChange={onChange}
-              //   placeholder="Your full name"
-              //   style={{
-              //     height: "55px",
-              //     borderRadius: "10px",
-              //     marginTop: "4px",
-              //     padding: "14px 12px",
-              //   }}
-              // />
             )}
           />
           <div className="w-full text-center">

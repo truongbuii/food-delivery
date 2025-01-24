@@ -28,8 +28,8 @@ export const updateProfileService = async (
       email: value.email,
       fullName: value.fullName,
       phoneNumber: value.phoneNumber,
-      // dob: value.dob,
-      // avatar: value.avatar,
+      dob: value.dob,
+      avatar: value.avatar,
     }
   );
   return resp;

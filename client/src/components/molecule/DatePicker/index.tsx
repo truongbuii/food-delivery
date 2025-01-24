@@ -18,7 +18,7 @@ interface DatePickerProps {
 
 const DatePicker = ({ id, value, onChange }: DatePickerProps) => {
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    onChange(selectedDate ? selectedDate.toISOString() : undefined);
+    onChange(selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined);
   };
   return (
     <Popover>
@@ -41,9 +41,12 @@ const DatePicker = ({ id, value, onChange }: DatePickerProps) => {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
+          captionLayout="dropdown"
           selected={value ? parseISO(value) : undefined}
           onSelect={handleDateSelect}
-          initialFocus
+          fromYear={1900}
+          toYear={new Date().getFullYear()}
+          defaultMonth={new Date()}
         />
       </PopoverContent>
     </Popover>

@@ -7,7 +7,6 @@ import com.truongbuii.food_delivery.model.response.UserResponse;
 import com.truongbuii.food_delivery.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +25,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(me).build());
     }
 
-    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/me")
     public ResponseEntity<ApiResponse<UserResponse>> put(
             @Valid
-            @ModelAttribute UserProfilePut userProfilePut
+            @RequestBody UserProfilePut userProfilePut
     ) {
         UserResponse me = userService.put(userProfilePut);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(me).build());
