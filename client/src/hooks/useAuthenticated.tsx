@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
-import { clientStorage, useAuthStore } from "@/stores";
+import { clientStorage, useTokenStore, useUserStore } from "@/stores";
 import useRedirect from "./useRedirect";
 import { PATHNAME, PUBLIC_PATH, ROOT_PATH } from "@/configs";
 import { useCallback, useEffect } from "react";
@@ -11,18 +11,15 @@ const PATH_PUBLIC_MAP = Object.keys(PUBLIC_PATH).map(
 
 const useAuthenticated = () => {
   const { push } = useRouter();
-  const { userInfo, token } = useAuthStore.getState();
+  const { userInfo } = useUserStore.getState();
 
   const { checkRedirect } = useRedirect();
   const pathname = usePathname();
 
   const getAccessToken = useCallback(() => {
-    let accessToken = "";
-    if (!token) return;
-    accessToken = token;
-
-    return accessToken;
-  }, [token]);
+    const tokenState = useTokenStore.getState();
+    return tokenState.token || "";
+  }, []);
 
   const fetchCurrentUser = async () => {
     if (userInfo) {
@@ -36,6 +33,7 @@ const useAuthenticated = () => {
 
   useEffect(() => {
     const accessToken = getAccessToken();
+
     const isOnboarding = clientStorage.get(ONBOARDING_STORAGE_KEY);
 
     if (!isOnboarding) {
@@ -49,9 +47,9 @@ const useAuthenticated = () => {
       if (PATH_PUBLIC_MAP.includes(pathname)) {
         return;
       }
+
       push(PATHNAME.SIGN_IN);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, getAccessToken]);
 };
 

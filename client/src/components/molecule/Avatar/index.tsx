@@ -8,36 +8,37 @@ import {
 } from "@/components/ui/drawer";
 import { IMAGES_CONST } from "@/configs";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores";
+import { useUserStore } from "@/stores";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { FC, useRef } from "react";
 
 interface AvatarProps {
   className?: string;
+  avatarURL?: string;
 }
 
 interface AvatarUploadProps {
   className?: string;
-  currentAvatar: string | undefined;
-  onAvatarUpdate: (newAvatarURL: File) => void;
+  currentAvatar?: string;
+  onAvatarChange: (newAvatarFile: File) => void;
   fullName: string;
 }
 
-const Avatar = ({ className }: AvatarProps) => {
-  const { userInfo } = useAuthStore();
+const Avatar: FC<AvatarProps> = ({ className, avatarURL }) => {
   return (
     <div
       className={cn(
-        "relative w-[40px] h-[40px] rounded-full overflow-hidden",
+        "relative w-10 h-10 rounded-full overflow-hidden",
         className
       )}
     >
       <Image
-        src={userInfo?.avatarUrl || IMAGES_CONST.common.defaultAvatar.src}
+        src={avatarURL || IMAGES_CONST.common.defaultAvatar.src}
         alt="Avatar"
         fill
-        className="w-full h-full rounded-full object-cover"
+        sizes="100vw"
+        className="w-full h-full object-cover"
         onError={(e) => {
           e.currentTarget.src = IMAGES_CONST.common.defaultAvatar.src;
         }}
@@ -49,58 +50,45 @@ const Avatar = ({ className }: AvatarProps) => {
 const AvatarUpload: FC<AvatarUploadProps> = ({
   className,
   currentAvatar,
-  onAvatarUpdate,
+  onAvatarChange,
   fullName,
 }) => {
-  const fileUploadRef = useRef<HTMLInputElement>(null);
-  const handleImageUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    fileUploadRef.current?.click();
+    fileInputRef.current?.click();
   };
 
-  const uploadImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = e.target.files?.[0];
-    if (uploadedFile) {
-      onAvatarUpdate(uploadedFile);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      onAvatarChange(selectedFile);
     }
   };
+
   return (
-    <div
-      className={cn(
-        "flex flex-col justify-center items-center gap-4",
-        className
-      )}
-    >
-      <div className="relative flex justify-center items-center w-[110px] h-[110px] rounded-full bg-background ">
-        <div className="relative w-[95px] h-[95px] rounded-full shadow-avatarShadow overflow-hidden">
-          <Image
-            src={currentAvatar || IMAGES_CONST.common.defaultAvatar.src}
-            alt="Avatar"
-            fill
-            className="w-full h-full rounded-full object-cover"
-            onError={(e) => {
-              e.currentTarget.src = IMAGES_CONST.common.defaultAvatar.src;
-            }}
-          />
-        </div>
-        <form id="form" encType="multipart/form-data">
-          <Button
-            type="submit"
-            onClick={handleImageUpload}
-            className="absolute bottom-2 right-2 w-7 h-7 p-0 rounded-full bg-background hover:bg-background"
-          >
-            <Camera size={15} className="text-lightGray" />
-          </Button>
-          <input
-            type="file"
-            id="file"
-            ref={fileUploadRef}
-            onChange={uploadImageDisplay}
-            hidden
-          />
-        </form>
+    <div className={cn("flex flex-col items-center gap-4", className)}>
+      <div className="relative flex items-center justify-center w-28 h-28 rounded-full bg-background">
+        <Avatar
+          avatarURL={currentAvatar}
+          className="w-24 h-24 rounded-full shadow-avatarShadow"
+        />
+        <Button
+          type="button"
+          onClick={handleUploadClick}
+          className="absolute bottom-2 right-2 w-7 h-7 p-0 rounded-full bg-background hover:bg-background"
+        >
+          <Camera size={15} className="text-lightGray" />
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          hidden
+        />
       </div>
-      <div className="flex flex-col text-center gap-2">
+      <div className="text-center">
         <p className="text-xl font-semibold">{fullName}</p>
         <p className="text-xs text-lightGray">Edit profile</p>
       </div>
@@ -108,11 +96,12 @@ const AvatarUpload: FC<AvatarUploadProps> = ({
   );
 };
 
-const HeaderSideMenu = () => {
-  const { userInfo } = useAuthStore();
+const HeaderSideMenu: FC = () => {
+  const { userInfo } = useUserStore.getState();
+
   return (
     <DrawerHeader className="flex flex-col gap-2 px-6 mt-10">
-      <Avatar className="w-[90px] h-[90px]" />
+      <Avatar avatarURL={userInfo?.avatarUrl} className="w-24 h-24" />
       <div className="flex flex-col gap-2">
         <DrawerTitle className="text-xl text-left">
           {userInfo?.fullName}

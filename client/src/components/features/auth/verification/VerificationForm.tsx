@@ -19,24 +19,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useResendOtpMutation, useVerificationEmailMutation } from "@/queries";
-import { useAuthStore } from "@/stores";
 import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse, ISendOtp, IVerificationEmail } from "@/interfaces";
 import { useRouter } from "next/navigation";
 import { PATHNAME } from "@/configs";
-import { MapperUser } from "@/mapping/user.mapping";
 import useRedirect from "@/hooks/useRedirect";
+import { useAuthActions, useUserStore } from "@/stores";
 
 const VerificationForm = () => {
   const [resendCountdown, setResendCountdown] = useState<number>(0);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { mutateAsync, isPending } = useVerificationEmailMutation();
-  const { mutateAsync: mutateAsyncResendOtp } = useResendOtpMutation();
-  const { setUserInfo } = useAuthStore();
   const message = useMessage();
   const { push } = useRouter();
   const { onRedirect } = useRedirect();
+  const { setAuth, userInfo } = useAuthActions();
+  const { mutateAsync, isPending } = useVerificationEmailMutation();
+  const { mutateAsync: mutateAsyncResendOtp } = useResendOtpMutation();
 
   const form = useForm<TVerificationSchema>({
     resolver: zodResolver(VerificationSchema),
@@ -48,7 +47,7 @@ const VerificationForm = () => {
 
   const onSubmit = useCallback(
     (data: { pin: string }) => {
-      const email = useAuthStore.getState().userInfo?.email;
+      const email = userInfo?.email;
       if (!email) {
         message.error("Oops! Something went wrong");
         push(PATHNAME.SIGN_IN);
@@ -62,7 +61,7 @@ const VerificationForm = () => {
         onSuccess: (res) => {
           if (res && res?.data) {
             const { ...userInfo } = res.data;
-            setUserInfo(MapperUser(userInfo));
+            setAuth(userInfo);
             onRedirect(userInfo);
             return;
           }
@@ -72,11 +71,11 @@ const VerificationForm = () => {
         },
       });
     },
-    [mutateAsync, message, push, setUserInfo, onRedirect]
+    [mutateAsync, message, push, onRedirect, setAuth, userInfo]
   );
 
   const handleResend = useCallback(() => {
-    const email = useAuthStore.getState().userInfo?.email;
+    const email = useUserStore.getState().userInfo?.email;
     if (!email) {
       message.error("Oops! Something went wrong");
       push(PATHNAME.SIGN_IN);

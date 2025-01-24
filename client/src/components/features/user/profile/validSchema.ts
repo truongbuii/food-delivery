@@ -13,7 +13,7 @@ const ProfileSchema = z.object({
       "Full name should only contain letters and spaces"
     )
     .optional(),
-  phone: z
+  phoneNumber: z
     .string()
     .min(1, { message: "Phone number is required" })
     .refine((phone) => isValidPhoneNumber(phone), {

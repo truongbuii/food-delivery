@@ -21,8 +21,8 @@ const ForgotPasswordForm = () => {
     },
   });
 
-  const { mutateAsync, isPending } = useForgotPasswordMutation();
   const message = useMessage();
+  const { mutateAsync, isPending } = useForgotPasswordMutation();
 
   const onSubmit = useCallback(
     (value: IEmailPost) => {

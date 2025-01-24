@@ -1,5 +1,5 @@
 import { ChangePasswordForm } from "@/components/features/auth/change-password";
-import { ButtonType } from "@/components/molecule/ButtonType";
+import { ButtonType } from "@/components/molecule";
 import { PATHNAME } from "@/configs";
 
 const ChangePasswordPage = () => {

@@ -8,9 +8,8 @@ import { PATHNAME } from "@/configs";
 import { useMessage } from "@/hooks/useMessage";
 import useRedirect from "@/hooks/useRedirect";
 import { IPhoneRegister } from "@/interfaces";
-import { MapperUser } from "@/mapping/user.mapping";
 import { usePhoneRegisterMutation } from "@/queries";
-import { useAuthStore } from "@/stores";
+import { useAuthActions, useUserStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
@@ -38,15 +37,15 @@ const PhoneRegistrationForm = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending } = usePhoneRegisterMutation();
-  const { setUserInfo } = useAuthStore();
   const message = useMessage();
   const { push } = useRouter();
   const { onRedirect } = useRedirect();
+  const { setAuth } = useAuthActions();
+  const { mutateAsync, isPending } = usePhoneRegisterMutation();
 
   const onSubmit = useCallback(
     (data: { phone: string }) => {
-      const email = useAuthStore.getState().userInfo?.email;
+      const email = useUserStore.getState().userInfo?.email;
       if (!email) {
         message.error("Oops! Something went wrong");
         push(PATHNAME.SIGN_IN);
@@ -61,7 +60,7 @@ const PhoneRegistrationForm = () => {
         onSuccess: (res) => {
           if (res && res?.data) {
             const { ...userInfo } = res.data;
-            setUserInfo(MapperUser(userInfo));
+            setAuth(userInfo);
             onRedirect(userInfo);
             return;
           }
@@ -71,7 +70,7 @@ const PhoneRegistrationForm = () => {
         },
       });
     },
-    [mutateAsync, message, push, setUserInfo, onRedirect]
+    [mutateAsync, message, onRedirect, push, setAuth]
   );
 
   return (

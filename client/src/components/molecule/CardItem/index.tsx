@@ -143,7 +143,7 @@ const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
 
   return (
     <div
-      className={`relative flex flex-col w-[266px] rounded-2xl bg-cardItem shadow-cardItemShadow`}
+      className={`relative flex flex-col w-64 rounded-2xl bg-cardItem shadow-cardItemShadow`}
     >
       <div className="relative w-full h-[136px]">
         <Image

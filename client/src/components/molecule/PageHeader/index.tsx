@@ -9,6 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useAuthActions } from "@/stores";
 import { useState } from "react";
 
 const SelectAddress = () => {
@@ -39,25 +40,18 @@ const SelectAddress = () => {
 };
 
 const PageHeader = () => {
+  const { userInfo } = useAuthActions();
+
   return (
     <div className="flex justify-between h-10">
       <DrawerTrigger>
         <ButtonType type="side-menu" />
       </DrawerTrigger>
-      {/* <div className="flex flex-col items-center h-full text-sm max-w-52">
-        <p>Delivery to</p>
-        <CustomSelect
-          options={[
-            "4102 Pretty View Land 1",
-            "4102 Pretty View Land 2",
-            "4102 Pretty View Land 3",
-            "4102 Pretty View Land 4",
-          ]}
-          placeholder="Choose an option"
-        />
-      </div> */}
       <SelectAddress />
-      <Avatar className="w-10 h-10" />
+      <Avatar
+        avatarURL={userInfo?.avatarUrl}
+        className="w-10 h-10 rounded-xl"
+      />
     </div>
   );
 };

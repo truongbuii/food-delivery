@@ -10,10 +10,9 @@ import { Button } from "@/components/ui/button";
 import { PATHNAME } from "@/configs";
 import Link from "next/link";
 import { useSignInMutation } from "@/queries";
-import { useAuthStore } from "@/stores";
+import { useAuthActions } from "@/stores";
 import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse, ISignIn } from "@/interfaces";
-import { MapperUser } from "@/mapping/user.mapping";
 import useRedirect from "@/hooks/useRedirect";
 import { Input } from "@/components/ui/input";
 
@@ -27,20 +26,19 @@ const SignInForm = () => {
     },
   });
 
-  const { mutateAsync, isPending } = useSignInMutation();
-  const { setUserInfo, setTokens, reset } = useAuthStore();
   const message = useMessage();
   const { onRedirect } = useRedirect();
+  const { setAuth, resetAuth } = useAuthActions();
+  const { mutateAsync, isPending } = useSignInMutation();
 
   const onSubmit = useCallback(
     (value: ISignIn) => {
-      reset();
+      resetAuth();
       mutateAsync(value, {
         onSuccess: (res) => {
           if (res && res?.data) {
-            const { accessToken, ...userInfo } = res.data;
-            setUserInfo(MapperUser(userInfo));
-            setTokens(accessToken);
+            const { ...userInfo } = res.data;
+            setAuth(userInfo);
             onRedirect(userInfo);
             return;
           }
@@ -50,7 +48,7 @@ const SignInForm = () => {
         },
       });
     },
-    [mutateAsync, setUserInfo, setTokens, message, onRedirect, reset]
+    [mutateAsync, message, onRedirect, resetAuth, setAuth]
   );
   return (
     <Form {...form}>
@@ -81,6 +79,7 @@ const SignInForm = () => {
           renderInput={({ id, value, onChange }) => (
             <Input
               id={id}
+              type="password"
               value={value || ""}
               onChange={onChange}
               placeholder="Password"

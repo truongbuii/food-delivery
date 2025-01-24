@@ -94,10 +94,13 @@ const HomeScreen = () => {
             </Link>
           </div>
           <div className="">
-            <Carousel className="w-full max-w-max">
+            <Carousel
+              className="w-full max-w-max"
+              opts={{ align: "start", dragFree: true }}
+            >
               <CarouselContent>
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <CarouselItem key={index} className="basis-5/5">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <CarouselItem key={index} className="basis-5/5 pr-4">
                     <div className="pb-8">
                       <HorizontalCard type="item" />
                     </div>

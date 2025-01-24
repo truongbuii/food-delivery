@@ -10,19 +10,20 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "@/stores";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IApiErrorResponse, IProfile } from "@/interfaces";
 import { useUpdateProfile } from "@/queries/user";
 import { useMessage } from "@/hooks/useMessage";
+import { useAuthActions } from "@/stores";
 
 const ProfileForm = () => {
-  const { userInfo, setUserInfo } = useAuthStore();
-  const { mutateAsync, isPending } = useUpdateProfile();
   const message = useMessage();
+  const { setAuth, userInfo } = useAuthActions();
+  const { mutateAsync, isPending } = useUpdateProfile();
   const [avatarFile, setAvatarFile] = useState<File | undefined>();
+
   const { fullName, phoneNumber, dob, email, avatarUrl } = userInfo || {};
   const handleAvatarUpdate = (newAvatarFile: File) => {
     setAvatarFile(newAvatarFile);
@@ -33,7 +34,7 @@ const ProfileForm = () => {
     mode: "onSubmit",
     defaultValues: {
       fullName: fullName || "",
-      phone: phoneNumber || "",
+      phoneNumber: phoneNumber || "",
       dob: dob || undefined,
     },
   });
@@ -42,7 +43,7 @@ const ProfileForm = () => {
     if (userInfo) {
       form.reset({
         fullName: fullName || "",
-        phone: phoneNumber || "",
+        phoneNumber: phoneNumber || "",
         dob: dob || undefined,
       });
     }
@@ -56,13 +57,14 @@ const ProfileForm = () => {
         avatar: avatarFile,
       };
 
-      console.log(data);
+      console.log(value);
 
       mutateAsync(value, {
         onSuccess: (res) => {
           if (res && res.data) {
             const { ...userInfo } = res.data;
-            setUserInfo(userInfo);
+            setAuth(userInfo);
+            message.success("Update successfully!");
             return;
           }
         },
@@ -71,14 +73,14 @@ const ProfileForm = () => {
         },
       });
     },
-    [avatarFile, mutateAsync, setUserInfo, message, email]
+    [avatarFile, mutateAsync, message, email, setAuth]
   );
 
   return (
     <>
       <AvatarUpload
         currentAvatar={avatarFile ? URL.createObjectURL(avatarFile) : avatarUrl}
-        onAvatarUpdate={handleAvatarUpdate}
+        onAvatarChange={handleAvatarUpdate}
         fullName={userInfo?.fullName || ""}
         className="absolute top-24 left-1/2 transform -translate-x-1/2"
       />
@@ -105,13 +107,14 @@ const ProfileForm = () => {
           />
           <CustomFormField
             control={form.control}
-            name="phone"
+            name="phoneNumber"
             label="Phone Number"
             renderInput={({ id, value, onChange }) => (
               <PhoneInput
                 id={id}
                 value={value}
                 onChange={onChange}
+                international={false}
                 defaultCountry="VN"
                 placeholder="Enter a phone number"
                 className="!mt-0"

@@ -62,6 +62,7 @@ const ChangePasswordForm = () => {
           renderInput={({ id, value, onChange }) => (
             <Input
               id={id}
+              type="password"
               value={value || ""}
               onChange={onChange}
               placeholder="Password"
@@ -81,6 +82,7 @@ const ChangePasswordForm = () => {
           renderInput={({ id, value, onChange }) => (
             <Input
               id={id}
+              type="password"
               value={value || ""}
               onChange={onChange}
               placeholder="Enter your new password again"

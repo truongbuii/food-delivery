@@ -1,5 +1,5 @@
 import axios, { AxiosError, CreateAxiosDefaults, HttpStatusCode } from "axios";
-import { useAuthStore } from "@/stores";
+import { useTokenStore } from "@/stores";
 import { AUTH_STORAGE_KEY, PATHNAME } from "@/configs";
 import { getNewTokenService } from "@/services";
 
@@ -19,7 +19,7 @@ const createHttpClient = (config?: CreateAxiosDefaults) => {
 
   client.interceptors.request.use(
     (config) => {
-      const accessToken = useAuthStore.getState().token;
+      const accessToken = useTokenStore.getState().token;
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -55,10 +55,10 @@ const createHttpClient = (config?: CreateAxiosDefaults) => {
         isRefreshing = true;
 
         try {
-          const { setTokens } = useAuthStore.getState();
+          const { setToken } = useTokenStore.getState();
           const resp = await getNewTokenService();
           if (resp && resp.data) {
-            setTokens(resp.data.token);
+            setToken(resp.data.token);
           }
 
           // Retry queued requests

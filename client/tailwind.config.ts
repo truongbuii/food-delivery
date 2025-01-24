@@ -60,8 +60,8 @@ export default {
       boxShadow: {
         foodShadow: "5px 15px 25px -2px var(--food-shadow)",
         socialBtnShadow: "10px 10px 30px -10px rgba(0, 0, 0, 0.12)",
-        primaryBtnShadow: "2px 10px 25px -4px rgba(254, 114, 76, 0.5)",
-        cardItemShadow: "10px 15px 30px -5px rgba(0, 0, 0, 0.05)",
+        primaryBtnShadow: "0px 10px 30px 0px rgba(254, 114, 76, 0.5)",
+        cardItemShadow: "15px 15px 30px 0px rgba(211, 209, 216, 0.25)",
         badgeNumShadow: "0px 5px 10px 0px rgba(255, 197, 41, 0.5)",
         ratingBadgeShadow: "0px 5px 10px 0px rgba(254, 114, 76, 0.1)",
         avatarShadow: "0px 15px 40px 0px rgba(255, 197, 41, 0.3)",

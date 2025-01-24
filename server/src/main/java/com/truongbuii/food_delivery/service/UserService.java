@@ -68,7 +68,7 @@ public class UserService {
     }
 
     private void validatePhoneNumberDuplicate(String phoneNumber, User user) {
-        if (StringUtils.isNotBlank(phoneNumber) && !phoneNumber.equals(user.getPhoneNumber())) {
+        if (StringUtils.isNotBlank(phoneNumber) && !phoneNumber.isEmpty() && !phoneNumber.equals(user.getPhoneNumber())) {
             Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
             if (userOptional.isPresent() && !userOptional.get().getId().equals(user.getId())) {
                 throw new DuplicateResourceException(ErrorCode.ERR_PHONE_NUMBER_DUPLICATE);

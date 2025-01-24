@@ -8,9 +8,8 @@ import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { SignUpSchema, TSignUpSchema } from "./validSchema";
 import { useSignUpMutation } from "@/queries";
-import { useAuthStore } from "@/stores";
+import { useAuthActions } from "@/stores";
 import { useMessage } from "@/hooks/useMessage";
-import { MapperUser } from "@/mapping/user.mapping";
 import { IApiErrorResponse, ISignUp } from "@/interfaces";
 import useRedirect from "@/hooks/useRedirect";
 import { Input } from "@/components/ui/input";
@@ -28,17 +27,16 @@ const SignUpForm = () => {
 
   const message = useMessage();
   const { onRedirect } = useRedirect();
+  const { setAuth } = useAuthActions();
   const { mutateAsync, isPending } = useSignUpMutation();
-  const { setUserInfo, setTokens } = useAuthStore();
 
   const onSubmit = useCallback(
     (value: ISignUp) => {
       mutateAsync(value, {
         onSuccess: (res) => {
           if (res && res.data) {
-            const { accessToken, ...userInfo } = res.data;
-            setUserInfo(MapperUser(userInfo));
-            setTokens(accessToken);
+            const { ...userInfo } = res.data;
+            setAuth(userInfo);
             onRedirect(userInfo);
             return;
           }
@@ -48,7 +46,7 @@ const SignUpForm = () => {
         },
       });
     },
-    [message, mutateAsync, setTokens, setUserInfo, onRedirect]
+    [mutateAsync, message, onRedirect, setAuth]
   );
 
   return (
@@ -99,6 +97,7 @@ const SignUpForm = () => {
           renderInput={({ id, value, onChange }) => (
             <Input
               id={id}
+              type="password"
               value={value || ""}
               onChange={onChange}
               placeholder="Password"

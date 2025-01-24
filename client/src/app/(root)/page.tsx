@@ -21,6 +21,7 @@ const HomePage = () => {
         setBackgroundColorOnScale={false}
         direction="left"
         aria-hidden={false}
+        data-aria-hidden={false}
       >
         <div vaul-drawer-wrapper="">
           <div className="relative min-h-screen">
