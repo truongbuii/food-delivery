@@ -1,6 +1,9 @@
 package com.truongbuii.food_delivery.model.request.user;
 
+import com.truongbuii.food_delivery.utils.ValidFileSize;
+import com.truongbuii.food_delivery.utils.ValidFileType;
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -17,6 +20,9 @@ public record UserProfilePut(
         String phoneNumber,
         @Past(message = "Date of birth must be in the past")
         LocalDate dob,
-        String avatarUrl
+        @ValidFileType(allowedTypes = {"image/jpeg", "image/png", "image/webp"},
+                message = "File type not allowed. Allowed types are: JPEG, PNG, WEBP")
+        @ValidFileSize(message = "File size must be less than 10MB")
+        MultipartFile avatar
 ) {
 }

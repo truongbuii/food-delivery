@@ -3,15 +3,11 @@ package com.truongbuii.food_delivery.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import com.truongbuii.food_delivery.exception.AppException;
-import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
-import com.truongbuii.food_delivery.model.common.ErrorCode;
-import com.truongbuii.food_delivery.model.enums.MediaFolder;
-import com.truongbuii.food_delivery.model.request.media.MediaPost;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,16 +17,11 @@ import java.util.Map;
 public class MediaService {
     private final Cloudinary cloudinary;
 
-    public String uploadImage(MediaPost mediaPost) {
-        // check folder name
-        Arrays.stream(MediaFolder.values())
-                .filter(folder -> folder.getFolderName().equals(mediaPost.folderName()))
-                .findAny()
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_MEDIA_FOLDER_NOT_FOUND));
+    public String uploadImage(MultipartFile image, String folderName) {
         try {
             HashMap<Object, Object> options = new HashMap<>();
-            options.put("folder", mediaPost.folderName());
-            Map<?, ?> uploaded = cloudinary.uploader().upload(mediaPost.file().getBytes(), options);
+            options.put("folder", folderName);
+            Map<?, ?> uploaded = cloudinary.uploader().upload(image.getBytes(), options);
             String publicId = (String) uploaded.get("public_id");
             return cloudinary
                     .url()

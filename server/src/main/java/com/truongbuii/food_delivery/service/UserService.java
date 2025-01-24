@@ -49,7 +49,7 @@ public class UserService {
         if (userProfilePut.dob() != null && !userProfilePut.dob().equals(user.getDob())) {
             user.setDob(userProfilePut.dob());
         }
-        if (StringUtils.isNotBlank(userProfilePut.avatarUrl()) && !userProfilePut.avatarUrl().isEmpty()) {
+        if (userProfilePut.avatar() != null && !userProfilePut.avatar().isEmpty()) {
             // remove old avatar if exists
             if (user.getAvatarUrl() != null) {
                 mediaService.deleteImage(
@@ -57,7 +57,11 @@ public class UserService {
                         MediaFolder.USER.getFolderName()
                 );
             }
-            user.setAvatarUrl(userProfilePut.avatarUrl());
+            String avatarUrl = mediaService.uploadImage(
+                    userProfilePut.avatar(),
+                    MediaFolder.USER.getFolderName()
+            );
+            user.setAvatarUrl(avatarUrl);
         }
         userRepository.save(user);
         return userMapper.toUserResponse(user);

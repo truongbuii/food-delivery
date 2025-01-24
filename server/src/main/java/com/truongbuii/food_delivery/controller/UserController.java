@@ -28,7 +28,7 @@ public class UserController {
     @PutMapping(value = "/me")
     public ResponseEntity<ApiResponse<UserResponse>> put(
             @Valid
-            @RequestBody UserProfilePut userProfilePut
+            @ModelAttribute UserProfilePut userProfilePut
     ) {
         UserResponse me = userService.put(userProfilePut);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(me).build());
