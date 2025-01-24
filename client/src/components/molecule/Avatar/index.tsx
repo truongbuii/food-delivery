@@ -14,8 +14,6 @@ import Image from "next/image";
 import { FC, useRef } from "react";
 
 interface AvatarProps {
-  width?: number;
-  height?: number;
   className?: string;
 }
 
@@ -26,19 +24,25 @@ interface AvatarUploadProps {
   fullName: string;
 }
 
-const Avatar = ({ width = 40, height = 40, className }: AvatarProps) => {
+const Avatar = ({ className }: AvatarProps) => {
   const { userInfo } = useAuthStore();
   return (
-    <Image
-      src={userInfo?.avatarUrl || IMAGES_CONST.common.defaultAvatar.src}
-      alt="Avatar"
-      className={cn("rounded-full object-cover", className)}
-      width={width}
-      height={height}
-      onError={(e) => {
-        e.currentTarget.src = IMAGES_CONST.common.defaultAvatar.src;
-      }}
-    />
+    <div
+      className={cn(
+        "relative w-[40px] h-[40px] rounded-full overflow-hidden",
+        className
+      )}
+    >
+      <Image
+        src={userInfo?.avatarUrl || IMAGES_CONST.common.defaultAvatar.src}
+        alt="Avatar"
+        fill
+        className="w-full h-full rounded-full object-cover"
+        onError={(e) => {
+          e.currentTarget.src = IMAGES_CONST.common.defaultAvatar.src;
+        }}
+      />
+    </div>
   );
 };
 
@@ -57,8 +61,6 @@ const AvatarUpload: FC<AvatarUploadProps> = ({
   const uploadImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0];
     if (uploadedFile) {
-      const formData = new FormData();
-      formData.append("file", uploadedFile);
       onAvatarUpdate(uploadedFile);
     }
   };
@@ -69,8 +71,8 @@ const AvatarUpload: FC<AvatarUploadProps> = ({
         className
       )}
     >
-      <div className="relative flex justify-center items-center w-[108px] h-[108px] rounded-full bg-background ">
-        <div className="relative w-[90px] h-[90px] rounded-full shadow-avatarShadow overflow-hidden">
+      <div className="relative flex justify-center items-center w-[110px] h-[110px] rounded-full bg-background ">
+        <div className="relative w-[95px] h-[95px] rounded-full shadow-avatarShadow overflow-hidden">
           <Image
             src={currentAvatar || IMAGES_CONST.common.defaultAvatar.src}
             alt="Avatar"
@@ -85,9 +87,9 @@ const AvatarUpload: FC<AvatarUploadProps> = ({
           <Button
             type="submit"
             onClick={handleImageUpload}
-            className="absolute bottom-2 right-0 w-7 h-7 p-0 rounded-full bg-background hover:bg-background"
+            className="absolute bottom-2 right-2 w-7 h-7 p-0 rounded-full bg-background hover:bg-background"
           >
-            <Camera size={18} className="text-lightGray" />
+            <Camera size={15} className="text-lightGray" />
           </Button>
           <input
             type="file"
@@ -110,7 +112,7 @@ const HeaderSideMenu = () => {
   const { userInfo } = useAuthStore();
   return (
     <DrawerHeader className="flex flex-col gap-2 px-6 mt-10">
-      <Avatar width={90} height={90} />
+      <Avatar className="w-[90px] h-[90px]" />
       <div className="flex flex-col gap-2">
         <DrawerTitle className="text-xl text-left">
           {userInfo?.fullName}

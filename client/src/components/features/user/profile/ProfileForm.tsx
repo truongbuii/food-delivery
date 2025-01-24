@@ -22,38 +22,38 @@ const ProfileForm = () => {
   const { userInfo, setUserInfo } = useAuthStore();
   const { mutateAsync, isPending } = useUpdateProfile();
   const message = useMessage();
-  const [avatarURL, setAvatarURL] = useState<File | undefined>();
-
-  const handleAvatarUpdate = (newAvatarURL: File) => {
-    setAvatarURL(newAvatarURL);
+  const [avatarFile, setAvatarFile] = useState<File | undefined>();
+  const { fullName, phoneNumber, dob, email, avatarUrl } = userInfo || {};
+  const handleAvatarUpdate = (newAvatarFile: File) => {
+    setAvatarFile(newAvatarFile);
   };
 
   const form = useForm<TProfileSchema>({
     resolver: zodResolver(ProfileSchema),
     mode: "onSubmit",
     defaultValues: {
-      fullName: userInfo?.fullName || "",
-      phone: userInfo?.phoneNumber || "",
-      dob: userInfo?.dob || undefined,
+      fullName: fullName || "",
+      phone: phoneNumber || "",
+      dob: dob || undefined,
     },
   });
 
   useEffect(() => {
     if (userInfo) {
       form.reset({
-        fullName: userInfo.fullName || "",
-        phone: userInfo.phoneNumber || "",
-        dob: userInfo?.dob || undefined,
+        fullName: fullName || "",
+        phone: phoneNumber || "",
+        dob: dob || undefined,
       });
     }
-  }, [userInfo, form]);
+  }, [userInfo, form, fullName, phoneNumber, dob]);
 
   const onSubmit = useCallback(
     (data: IProfile) => {
       const value: IProfile = {
         ...data,
-        email: userInfo?.email,
-        avatar: avatarURL,
+        email,
+        avatar: avatarFile,
       };
 
       console.log(data);
@@ -71,16 +71,16 @@ const ProfileForm = () => {
         },
       });
     },
-    [avatarURL, mutateAsync, setUserInfo, message, userInfo]
+    [avatarFile, mutateAsync, setUserInfo, message, email]
   );
 
   return (
     <>
       <AvatarUpload
-        currentAvatar={userInfo?.avatarUrl}
+        currentAvatar={avatarFile ? URL.createObjectURL(avatarFile) : avatarUrl}
         onAvatarUpdate={handleAvatarUpdate}
         fullName={userInfo?.fullName || ""}
-        className="absolute top-16 left-1/2 transform -translate-x-1/2"
+        className="absolute top-24 left-1/2 transform -translate-x-1/2"
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -131,7 +131,7 @@ const ProfileForm = () => {
               size={"lg"}
               loading={isPending}
               disabled={isPending}
-              className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
+              className="m-auto mt-4 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
             >
               SAVE
             </Button>

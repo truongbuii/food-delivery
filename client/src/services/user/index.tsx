@@ -22,15 +22,27 @@ export const getProfileService = async (): Promise<
 export const updateProfileService = async (
   value: IProfile
 ): Promise<IApiDataResponse<IUserResponse>> => {
+  const formData = new FormData();
+  appendIfExists(formData, "email", value.email);
+  appendIfExists(formData, "fullName", value.fullName);
+  appendIfExists(formData, "phoneNumber", value.phoneNumber);
+  appendIfExists(formData, "dob", value.dob);
+  appendIfExists(formData, "avatar", value.avatar);
+
   const resp = await httpClient.put<IProfile, IApiDataResponse<IUserResponse>>(
     EndPoints.USER.profile,
+    formData,
     {
-      email: value.email,
-      fullName: value.fullName,
-      phoneNumber: value.phoneNumber,
-      dob: value.dob,
-      avatar: value.avatar,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     }
   );
   return resp;
+};
+
+const appendIfExists = (formData: FormData, key: string, value: any) => {
+  if (value) {
+    formData.append(key, value);
+  }
 };

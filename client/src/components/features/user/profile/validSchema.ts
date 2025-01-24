@@ -15,10 +15,10 @@ const ProfileSchema = z.object({
     .optional(),
   phone: z
     .string()
-    .refine((phone) => !phone || isValidPhoneNumber(phone), {
+    .min(1, { message: "Phone number is required" })
+    .refine((phone) => isValidPhoneNumber(phone), {
       message: "Invalid phone number",
-    })
-    .optional(),
+    }),
   dob: z.string().optional(),
 });
 

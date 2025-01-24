@@ -17,7 +17,11 @@ import { PATHNAME } from "@/configs";
 const HomePage = () => {
   return (
     <>
-      <Drawer setBackgroundColorOnScale={false} direction="left">
+      <Drawer
+        setBackgroundColorOnScale={false}
+        direction="left"
+        aria-hidden={false}
+      >
         <div vaul-drawer-wrapper="">
           <div className="relative min-h-screen">
             <div className="flex flex-col gap-5 px-5 pt-6">
