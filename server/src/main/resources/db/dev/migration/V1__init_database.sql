@@ -6,7 +6,7 @@ CREATE TABLE "user" (
     email_verified BOOLEAN DEFAULT FALSE,
     password VARCHAR(128) NOT NULL DEFAULT '',
     full_name VARCHAR(100) NOT NULL,
-    phone_number VARCHAR(15) UNIQUE,
+    phone_number VARCHAR(15),
     dob DATE,
     avatar_url VARCHAR(255),
     role user_role NOT NULL DEFAULT 'CUSTOMER',
@@ -17,7 +17,7 @@ CREATE TABLE "user" (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE user_address (
+CREATE TABLE deliver_address (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE food_side_food (
     PRIMARY KEY(food_id, side_food_id)
 );
 
-ALTER TABLE IF EXISTS user_address
+ALTER TABLE IF EXISTS deliver_address
     ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user"(id);
 
 ALTER TABLE IF EXISTS restaurant_category
@@ -117,7 +117,7 @@ ALTER TABLE IF EXISTS food_side_food
     ADD CONSTRAINT fk_side_food FOREIGN KEY (side_food_id) REFERENCES side_food(id);
 
 CREATE INDEX idx_user_email ON "user"(email);
-CREATE INDEX idx_user_address_user_id ON user_address(user_id);
+CREATE INDEX idx_deliver_address_user_id ON deliver_address(user_id);
 CREATE INDEX idx_food_name ON food(name);
 CREATE INDEX idx_restaurant_name ON restaurant(name);
 CREATE INDEX idx_category_slug ON category(slug);

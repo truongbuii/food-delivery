@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, ButtonType } from "@/components/molecule";
-import { DrawerTrigger } from "@/components/ui/drawer";
 import {
   Select,
   SelectContent,
@@ -9,6 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { SheetTrigger } from "@/components/ui/sheet";
 import { useAuthActions } from "@/stores";
 import { useState } from "react";
 
@@ -44,9 +44,9 @@ const PageHeader = () => {
 
   return (
     <div className="flex justify-between h-10">
-      <DrawerTrigger>
+      <SheetTrigger>
         <ButtonType type="side-menu" />
-      </DrawerTrigger>
+      </SheetTrigger>
       <SelectAddress />
       <Avatar
         avatarURL={userInfo?.avatarUrl}

@@ -7,14 +7,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponse {
-    Long id;
-    String email;
-    boolean emailVerified;
-    String fullName;
-    String phoneNumber;
-    String dob;
-    String avatarUrl;
-    boolean userActive;
-    String role;
-    String accessToken;
+    private Long id;
+    private String email;
+    private boolean emailVerified;
+    private String fullName;
+    private String phoneNumber;
+    private String dob;
+    private String avatarUrl;
+    private boolean userActive;
+    private String role;
+    private String accessToken;
 }

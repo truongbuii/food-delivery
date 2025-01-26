@@ -34,6 +34,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   useRouterProgress();
   return (
     <div
+      id="main-layout"
       className={`w-full mx-auto min-h-screen relative bg-background ${
         isMobile ? "" : "max-w-[23.4375rem] overflow-hidden"
       }`}

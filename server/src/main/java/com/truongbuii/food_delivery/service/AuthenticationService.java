@@ -16,7 +16,6 @@ import com.truongbuii.food_delivery.repository.UserRepository;
 import com.truongbuii.food_delivery.security.JwtService;
 import com.truongbuii.food_delivery.utils.CookieUtils;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
-import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -212,7 +211,6 @@ public class AuthenticationService {
     public UserResponse setPhoneNumber(UserPhonePatch userPhonePatch) {
         User user = userRepository.findByEmail(userPhonePatch.email())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
-        validatePhoneNumberDuplicate(userPhonePatch.phoneNumber(), user);
         user.setPhoneNumber(userPhonePatch.phoneNumber());
         userRepository.save(user);
         return userMapper.toUserResponse(user);
@@ -236,7 +234,7 @@ public class AuthenticationService {
             case "FACEBOOK":
                 throw new AppException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
             default:
-                throw new AppException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
+                throw new AppException(ErrorCode.ERR_INTERNAL_SERVER_ERROR);
         }
         redirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
         String state = GeneratorUtils.generateStateToken(); // Generate a state parameter for security
@@ -306,15 +304,5 @@ public class AuthenticationService {
 
         NotificationEmail notificationEmail = new NotificationEmail(email, subject, OTP);
         kafkaTemplate.send(topic, notificationEmail);
-    }
-
-    private void validatePhoneNumberDuplicate(String phoneNumber, User user) {
-        if (StringUtils.isNotBlank(phoneNumber) && !phoneNumber.isEmpty()) {
-            Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-            if (userOptional.isPresent() && !userOptional.get().getId().equals(user.getId())) {
-                throw new DuplicateResourceException(ErrorCode.ERR_PHONE_NUMBER_DUPLICATE);
-            }
-            user.setPhoneNumber(phoneNumber);
-        }
     }
 }

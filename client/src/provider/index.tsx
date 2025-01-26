@@ -15,7 +15,7 @@ export function ThemeProvider({
 
 export const useAuthProvider = () => {
   const [client] = React.useState(new QueryClient());
-  useAuthenticated();
+  // useAuthenticated();
   return { client };
 };
 

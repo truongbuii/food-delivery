@@ -13,7 +13,8 @@ public class ErrorCode {
     public static final String ERR_USER_NOT_FOUND = "We couldn't find your email";
     public static final String ERR_USER_DUPLICATE = "This email is already taken";
     public static final String ERR_USER_INVALID_CREDENTIALS = "Email or password is incorrect";
-    public static final String ERR_PHONE_NUMBER_DUPLICATE = "This phone number is already taken";
 
-    
+    // Deliver address error
+    public static final String ERR_DELIVER_ADDRESS_NAME_DUPLICATE = "This address name is existed";
+    public static final String ERR_DELIVER_ADDRESS_NOT_FOUND = "This address is not found";
 }

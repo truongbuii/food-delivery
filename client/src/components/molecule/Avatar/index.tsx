@@ -2,16 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
-import { IMAGES_CONST } from "@/configs";
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/stores";
-import { Camera } from "lucide-react";
 import Image from "next/image";
 import { FC, useRef } from "react";
+import { Camera } from "lucide-react";
+import { IMAGES_CONST } from "@/configs";
 
 interface AvatarProps {
   className?: string;
@@ -100,17 +100,17 @@ const HeaderSideMenu: FC = () => {
   const { userInfo } = useUserStore.getState();
 
   return (
-    <DrawerHeader className="flex flex-col gap-2 px-6 mt-10">
+    <SheetHeader className="flex flex-col gap-2 px-6 mt-10">
       <Avatar avatarURL={userInfo?.avatarUrl} className="w-24 h-24" />
       <div className="flex flex-col gap-2">
-        <DrawerTitle className="text-xl text-left">
+        <SheetTitle className="text-xl text-left">
           {userInfo?.fullName}
-        </DrawerTitle>
-        <DrawerDescription className="text-xs text-left">
+        </SheetTitle>
+        <SheetDescription className="text-xs text-left">
           {userInfo?.email}
-        </DrawerDescription>
+        </SheetDescription>
       </div>
-    </DrawerHeader>
+    </SheetHeader>
   );
 };
 

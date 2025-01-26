@@ -12,7 +12,7 @@ import SwitchMode from "./SwitchMode";
 import FixedFooter from "./FixedFooter";
 import BadgeNumber from "./BadgeNumber";
 import DatePicker from "./DatePicker";
-
+import SideMenu from "./SideMenu";
 export {
   PageTransition,
   SplashScreen,
@@ -31,4 +31,5 @@ export {
   FixedFooter,
   BadgeNumber,
   DatePicker,
+  SideMenu,
 };

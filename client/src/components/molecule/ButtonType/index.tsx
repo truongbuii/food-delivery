@@ -9,9 +9,11 @@ import { useRouter } from "next/navigation";
 const ButtonType = ({
   expectPath,
   type,
+  title,
 }: {
   expectPath?: string;
   type: "side-menu" | "back" | "filter";
+  title?: string;
 }) => {
   const { push } = useRouter();
 
@@ -27,12 +29,17 @@ const ButtonType = ({
         </div>
       ),
       back: (
-        <Button
-          onClick={() => push(expectPath as string)}
-          className="absolute z-[99] bg-secondary w-10 h-10 rounded-[12px] top-6 left-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-primary "
-        >
-          <ChevronLeft size={18} className="text-foreground" />
-        </Button>
+        <div className="relative flex items-center  z-[99] mt-6 w-full h-10">
+          <Button
+            onClick={() => push(expectPath as string)}
+            className="absolute left-6 bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary "
+          >
+            <ChevronLeft size={18} className="text-foreground" />
+          </Button>
+          <p className="w-full h-full text-center leading-10 text-lg font-medium">
+            {title}
+          </p>
+        </div>
       ),
       filter: (
         <Button className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-secondary w-12 h-12 [&_svg]:pointer-events-none [&_svg]:shrink-0 top-6 left-6 shadow-[5px_10px_30px_-2px_rgb(0,0,0,0.1)]">
@@ -46,7 +53,7 @@ const ButtonType = ({
         </Button>
       ),
     }),
-    [expectPath, push]
+    [expectPath, push, title]
   );
   return renderByType[type];
 };

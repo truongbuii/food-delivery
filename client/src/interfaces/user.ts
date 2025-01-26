@@ -6,4 +6,11 @@ interface IProfile {
   avatar?: File;
 }
 
-export type { IProfile };
+interface IDeliveryAddress {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  address: string;
+}
+
+export type { IProfile, IDeliveryAddress };

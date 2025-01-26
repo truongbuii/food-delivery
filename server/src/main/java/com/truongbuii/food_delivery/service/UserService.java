@@ -1,6 +1,5 @@
 package com.truongbuii.food_delivery.service;
 
-import com.truongbuii.food_delivery.exception.DuplicateResourceException;
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.UserMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
@@ -15,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +39,6 @@ public class UserService {
     @Transactional
     public UserResponse put(UserProfilePut userProfilePut) {
         User user = getByEmail(userProfilePut.email());
-        validatePhoneNumberDuplicate(userProfilePut.phoneNumber(), user);
         if (StringUtils.isNotBlank(userProfilePut.fullName()) && !userProfilePut.fullName().equals(user.getFullName())) {
             user.setFullName(userProfilePut.fullName());
         }
@@ -67,13 +63,4 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    private void validatePhoneNumberDuplicate(String phoneNumber, User user) {
-        if (StringUtils.isNotBlank(phoneNumber) && !phoneNumber.isEmpty() && !phoneNumber.equals(user.getPhoneNumber())) {
-            Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-            if (userOptional.isPresent() && !userOptional.get().getId().equals(user.getId())) {
-                throw new DuplicateResourceException(ErrorCode.ERR_PHONE_NUMBER_DUPLICATE);
-            }
-            user.setPhoneNumber(phoneNumber);
-        }
-    }
 }

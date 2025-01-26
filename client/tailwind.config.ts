@@ -65,6 +65,7 @@ export default {
         badgeNumShadow: "0px 5px 10px 0px rgba(255, 197, 41, 0.5)",
         ratingBadgeShadow: "0px 5px 10px 0px rgba(254, 114, 76, 0.1)",
         avatarShadow: "0px 15px 40px 0px rgba(255, 197, 41, 0.3)",
+        backBtnShadow: "5px 10px 20px 0px rgba(211, 209, 216, 0.3)",
       },
       animation: {
         scale: "scaleUp 1.25s ease-in-out infinite",
