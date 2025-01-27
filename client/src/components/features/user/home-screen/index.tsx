@@ -119,6 +119,10 @@ const HomeScreen = () => {
             <VerticalCard type="item" />
             <VerticalCard type="restaurant" />
             <VerticalCard type="restaurant" />
+            <VerticalCard type="item" />
+            <VerticalCard type="item" />
+            <VerticalCard type="restaurant" />
+            <VerticalCard type="restaurant" />
           </div>
         </div>
       </div>

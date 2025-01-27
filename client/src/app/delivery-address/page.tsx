@@ -1,5 +1,5 @@
+import { DeliverAddress } from "@/components/features/user/deliver-address";
 import { ButtonType } from "@/components/molecule";
-import CartAddress from "@/components/molecule/CardAddress";
 import { PATHNAME } from "@/configs";
 
 const DeliveryAddressPage = () => {
@@ -10,7 +10,7 @@ const DeliveryAddressPage = () => {
         title="Delivery Address"
         expectPath={PATHNAME.HOME}
       />
-      <CartAddress />
+      <DeliverAddress />
     </>
   );
 };

@@ -1,6 +1,6 @@
-import { IMAGES_CONST } from '@/configs';
-import Image from 'next/image';
-import { FC, ReactNode } from 'react';
+import { IMAGES_CONST } from "@/configs";
+import Image from "next/image";
+import { FC, ReactNode } from "react";
 
 const BackgroundAuth: FC<{ children: ReactNode }> = ({ children }) => {
   return (

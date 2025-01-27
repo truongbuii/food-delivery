@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.scrollbar-hide,
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -31,9 +46,10 @@
     --tag: 0 0 96%;
     --cart-item: 0 0% 100%;
     --rating-badge: 0 0% 100%;
+    --scale-menu: rgba(234, 234, 234, 0.9);
   }
   .dark {
-    --background: 240, 12%, 20%;
+    --background: 240, 13%, 20%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -59,6 +75,7 @@
     --tag: 240 9% 31%;
     --cart-item: 240 12% 25%;
     --rating-badge: 240 9% 31%;
+    --scale-menu: rgba(57, 57, 72, 0.9);
   }
 }
 @layer base {

@@ -26,49 +26,95 @@ const SideMenu = () => {
   }, []);
 
   return (
-    <SheetContent side={"left"} container={container} className="w-[55%]">
+    <SheetContent
+      side={"left"}
+      container={container}
+      className="w-[55%] h-screen border-none shadow-none"
+    >
       <HeaderSideMenu />
-      <div className="flex flex-col gap-7 pl-6 mt-5 text-sm">
+      <div className="flex flex-col gap-7 px-6 mt-8 text-sm">
         <div className="flex gap-4">
           <FileText size={20} className="text-lightGray" />
           <Link href="" className="flex-1">
-            <p className="">My Orders</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              My Orders
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <UserRound className="text-lightGray w-6 h-6" />
           <Link href={PATHNAME.PROFILE} className="flex-1">
-            <p className="">My Profile</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              My Profile
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <MapPin size={20} className="text-lightGray" />
-          <Link href="" className="flex-1">
-            <p>Delivery Address</p>
+          <Link href={PATHNAME.DELIVERY_ADDRESS} className="flex-1">
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              Delivery Address
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <Wallet size={20} className="text-lightGray" />
           <Link href="" className="flex-1">
-            <p className="">Payment Methods</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              Payment Methods
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <Mail size={20} className="text-lightGray" />
           <Link href="" className="flex-1">
-            <p className="">Contact Us</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              Contact Us
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <Settings size={20} className="text-lightGray" />
           <Link href="" className="flex-1">
-            <p className="">Settings</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              Settings
+            </p>
           </Link>
         </div>
         <div className="flex gap-4">
           <CircleHelp size={20} className="text-lightGray" />
           <Link href="" className="flex-1">
-            <p className="">Help & FAQs</p>
+            <p
+              style={{
+                textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              Help & FAQs
+            </p>
           </Link>
         </div>
         <SwitchMode />

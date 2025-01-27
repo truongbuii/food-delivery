@@ -100,8 +100,8 @@ const HeaderSideMenu: FC = () => {
   const { userInfo } = useUserStore.getState();
 
   return (
-    <SheetHeader className="flex flex-col gap-2 px-6 mt-10">
-      <Avatar avatarURL={userInfo?.avatarUrl} className="w-24 h-24" />
+    <SheetHeader className="flex flex-col gap-1 pl-6 mt-10">
+      <Avatar avatarURL={userInfo?.avatarUrl} className="w-[85px] h-[85px]" />
       <div className="flex flex-col gap-2">
         <SheetTitle className="text-xl text-left">
           {userInfo?.fullName}

@@ -11,6 +11,13 @@ export default {
   ],
   theme: {
     extend: {
+      translate: {
+        "z-8": "8px",
+      },
+      rotate: {
+        "x-50": "50deg",
+        "z-45": "45deg",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -61,11 +68,12 @@ export default {
         foodShadow: "5px 15px 25px -2px var(--food-shadow)",
         socialBtnShadow: "10px 10px 30px -10px rgba(0, 0, 0, 0.12)",
         primaryBtnShadow: "0px 10px 30px 0px rgba(254, 114, 76, 0.5)",
-        cardItemShadow: "15px 15px 30px 0px rgba(211, 209, 216, 0.25)",
+        cardItemShadow: "15px 15px 30px 0px rgba(0, 0, 0, 0.05)",
         badgeNumShadow: "0px 5px 10px 0px rgba(255, 197, 41, 0.5)",
         ratingBadgeShadow: "0px 5px 10px 0px rgba(254, 114, 76, 0.1)",
         avatarShadow: "0px 15px 40px 0px rgba(255, 197, 41, 0.3)",
-        backBtnShadow: "5px 10px 20px 0px rgba(211, 209, 216, 0.3)",
+        backBtnShadow: "5px 10px 20px 0px rgba(0, 0, 0, 0.12)",
+        scaleMenuShadow: "-25px 19px 90px 0px var(--scale-menu)",
       },
       animation: {
         scale: "scaleUp 1.25s ease-in-out infinite",

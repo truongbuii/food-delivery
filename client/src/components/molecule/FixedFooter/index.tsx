@@ -7,15 +7,25 @@ import Link from "next/link";
 import { Bell, Compass, Heart, MapPin, ShoppingBag } from "lucide-react";
 import BadgeNumber from "@/components/molecule/BadgeNumber";
 
-const FixedFooter = () => {
+import { RefObject } from "react";
+
+interface FixedFooterProps {
+  parentRef: RefObject<HTMLDivElement | null>;
+}
+
+const FixedFooter = ({ parentRef }: FixedFooterProps) => {
   const { isMobile } = useScreenMode();
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
-  const threshold = 50;
+  const threshold = 100;
 
   useEffect(() => {
+    if (!parentRef?.current) return;
+
     const handleScroll = throttle(() => {
-      const currentScrollY = window.scrollY;
+      const currentScrollY = parentRef.current
+        ? parentRef.current.scrollTop
+        : 0;
 
       if (currentScrollY - lastScrollY.current > threshold) {
         setIsHidden(true);
@@ -26,16 +36,17 @@ const FixedFooter = () => {
       lastScrollY.current = currentScrollY;
     }, 200);
 
-    window.addEventListener("scroll", handleScroll);
+    const parentElement = parentRef.current;
+    parentElement.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      parentElement.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [parentRef]);
 
   return (
     <footer
-      className={`fixed bottom-[-3px] w-full h-[65px] bg-background text-lightGray p-4 shadow-lg transition-transform duration-300 ${
+      className={`fixed bottom-[-4px] w-full h-[65px] bg-cardItem text-lightGray p-4 transition-transform duration-300 ${
         isMobile ? "" : "max-w-[23.4375rem] mx-auto"
       } ${isHidden ? "translate-y-full" : "translate-y-0"}`}
     >

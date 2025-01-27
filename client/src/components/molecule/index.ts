@@ -1,7 +1,7 @@
 import PageTransition from "./PageTransition";
 import SplashScreen from "./SplashScreen";
 import CustomFormField from "./FormField";
-import PageHeader from "./PageHeader";
+import { PageHeader } from "./PageHeader";
 import { Avatar, HeaderSideMenu, AvatarUpload } from "./Avatar";
 import ButtonType from "./ButtonType";
 import CategoryItem from "./CategoryItem";
@@ -13,6 +13,8 @@ import FixedFooter from "./FixedFooter";
 import BadgeNumber from "./BadgeNumber";
 import DatePicker from "./DatePicker";
 import SideMenu from "./SideMenu";
+import CartAddress from "./CardAddress";
+
 export {
   PageTransition,
   SplashScreen,
@@ -32,4 +34,5 @@ export {
   BadgeNumber,
   DatePicker,
   SideMenu,
+  CartAddress,
 };

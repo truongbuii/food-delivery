@@ -5,15 +5,18 @@ import { Button } from "@/components/ui/button";
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const ButtonType = ({
   expectPath,
   type,
   title,
+  className,
 }: {
   expectPath?: string;
   type: "side-menu" | "back" | "filter";
   title?: string;
+  className?: string;
 }) => {
   const { push } = useRouter();
 
@@ -29,14 +32,19 @@ const ButtonType = ({
         </div>
       ),
       back: (
-        <div className="relative flex items-center  z-[99] mt-6 w-full h-10">
+        <div
+          className={cn(
+            "relative p-6 flex items-center z-[99] w-full",
+            className
+          )}
+        >
           <Button
-            onClick={() => push(expectPath as string)}
-            className="absolute left-6 bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary "
+            onClick={() => expectPath && push(expectPath)}
+            className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary "
           >
             <ChevronLeft size={18} className="text-foreground" />
           </Button>
-          <p className="w-full h-full text-center leading-10 text-lg font-medium">
+          <p className="flex-1 w-full text-center leading-10 text-lg font-medium">
             {title}
           </p>
         </div>
@@ -53,7 +61,7 @@ const ButtonType = ({
         </Button>
       ),
     }),
-    [expectPath, push, title]
+    [expectPath, push, title, className]
   );
   return renderByType[type];
 };
