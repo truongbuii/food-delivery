@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Primary;
 @Primary
 @Mapper(componentModel = "spring")
 public interface DeliveryAddressMapper {
-    @Mapping(target = "userId", source = "userId", qualifiedByName = "mapUserId")
+    @Mapping(target = "user", source = "userId", qualifiedByName = "mapUserId")
     DeliverAddress toDeliverAddress(DeliverAddressPost deliverAddressPost);
-    
+
     @Mapping(target = "deliveryAddress", expression = "java(deliverAddress.getStreet() + \" \" + deliverAddress.getCity() + \" \" + deliverAddress.getState())")
     DeliverAddressResponse toDeliverAddressResponse(DeliverAddress deliverAddress);
 

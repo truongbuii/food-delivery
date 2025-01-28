@@ -23,6 +23,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final MediaService mediaService;
 
+    public User getUserById(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
+    }
+
     public UserResponse getById(Long id) {
         return userRepository
                 .findById(id)

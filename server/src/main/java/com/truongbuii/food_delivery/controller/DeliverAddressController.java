@@ -10,11 +10,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/deliver-address")
 @RequiredArgsConstructor
 public class DeliverAddressController {
     private final DeliverAddressService deliverAddressService;
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<DeliverAddressResponse>>> getAll(
+            @RequestBody Long userId
+    ) {
+        var deliverAddress = deliverAddressService.getAllByUserId(userId);
+        return ResponseEntity.ok(ApiResponse.<List<DeliverAddressResponse>>builder().data(deliverAddress).build());
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<DeliverAddressResponse>> get(
+            @RequestBody Long addressId
+    ) {
+        var deliverAddress = deliverAddressService.getById(addressId);
+        return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> post(

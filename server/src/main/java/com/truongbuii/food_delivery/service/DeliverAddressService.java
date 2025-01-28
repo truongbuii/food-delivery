@@ -5,6 +5,7 @@ import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.DeliveryAddressMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.entity.DeliverAddress;
+import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.address.DeliverAddressPost;
 import com.truongbuii.food_delivery.model.request.address.DeliverAddressPut;
 import com.truongbuii.food_delivery.model.response.DeliverAddressResponse;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -27,10 +29,27 @@ public class DeliverAddressService {
     private final DeliveryAddressMapper deliverAddressMapper;
     private final DeliverAddressRepository deliverAddressRepository;
 
+    public List<DeliverAddressResponse> getAllByUserId(Long userId) {
+        User user = userService.getUserById(userId);
+        List<DeliverAddress> deliverAddresses = deliverAddressRepository.findAllByUserId(user.getId());
+        return deliverAddresses
+                .stream()
+                .map(deliverAddressMapper::toDeliverAddressResponse)
+                .toList();
+    }
+
+    public DeliverAddressResponse getById(Long deliverAddressId) {
+        DeliverAddress deliverAddress = deliverAddressRepository
+                .findById(deliverAddressId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_DELIVER_ADDRESS_NOT_FOUND));
+        return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
+    }
+
     public DeliverAddressResponse post(DeliverAddressPost deliverAddressPost) {
-        userService.getById(deliverAddressPost.userId());
+        User user = userService.getUserById(deliverAddressPost.userId());
         validateDeliverAddressName(deliverAddressPost.name());
         DeliverAddress deliverAddress = deliverAddressMapper.toDeliverAddress(deliverAddressPost);
+        deliverAddress.setUser(user);
         deliverAddressRepository.save(deliverAddress);
         return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
     }
@@ -76,4 +95,6 @@ public class DeliverAddressService {
             setter.accept(newValue);
         }
     }
+
+
 }

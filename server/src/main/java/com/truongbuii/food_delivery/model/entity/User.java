@@ -39,6 +39,10 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private Role role = Role.CUSTOMER;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<DeliverAddress> deliverAddress;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

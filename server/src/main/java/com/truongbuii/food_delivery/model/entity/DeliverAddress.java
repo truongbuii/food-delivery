@@ -18,7 +18,8 @@ public class DeliverAddress extends BaseEntity {
     private String state;
     private String city;
     private String street;
-    @ManyToOne
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 }
