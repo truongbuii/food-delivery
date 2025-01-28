@@ -7,24 +7,70 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { SheetClose } from "@/components/ui/sheet";
+import { useMessage } from "@/hooks/useMessage";
 import { IDeliveryAddress } from "@/interfaces";
+import {
+  useCreateDeliverAddrMutation,
+  useUpdateDeliverAddrMutation,
+} from "@/queries";
+import { useUserStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FC } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 interface IDeliverAddressFormProps {
-  title?: boolean;
+  status?: boolean;
+  address?: IDeliveryAddress;
+  refetchList?: () => void;
 }
 
-const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({ title }) => {
+const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({
+  status,
+  address,
+  refetchList,
+}) => {
+  const message = useMessage();
+  const { id: userId, phoneNumber } = useUserStore(
+    (state) => state.userInfo || {}
+  );
+  const { mutateAsync: createMutate, isPending: createPending } =
+    useCreateDeliverAddrMutation();
+  const { mutateAsync: updateMutate, isPending: updatePending } =
+    useUpdateDeliverAddrMutation();
+
+  const defaultValues = useMemo(
+    () => ({
+      name: address?.name || "",
+      phoneNumber: address?.phoneNumber || phoneNumber || "",
+      state: address?.state || "",
+      city: address?.city || "",
+      street: address?.street || "",
+    }),
+    [address, phoneNumber]
+  );
   const form = useForm<IDeliveryAddress>({
     resolver: zodResolver(DeliverAddressSchema),
     mode: "onSubmit",
+    defaultValues,
   });
 
-  const onSubmit = (data: IDeliveryAddress) => {
-    console.log(data);
-  };
+  const onSubmit = useCallback(
+    async (data: IDeliveryAddress) => {
+      try {
+        if (status) {
+          await updateMutate({ ...data, id: address?.id });
+          message.success("Address updated successfully");
+        } else {
+          await createMutate({ userId: userId!, ...data });
+          message.success("Address added successfully");
+        }
+        refetchList?.();
+      } catch (err: any) {
+        message.error(err.message);
+      }
+    },
+    [status, address, userId, message, refetchList, createMutate, updateMutate]
+  );
 
   return (
     <>
@@ -32,7 +78,7 @@ const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({ title }) => {
         <div>
           <ButtonType
             type="back"
-            title={title ? "Add new address" : "Update address"}
+            title={status ? "Update address" : "Add new address"}
           />
         </div>
       </SheetClose>
@@ -65,9 +111,9 @@ const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({ title }) => {
               renderInput={({ id, value, onChange }) => (
                 <PhoneInput
                   id={id}
-                  value={value}
+                  value={value || ""}
                   onChange={onChange}
-                  international={false}
+                  // international={false}
                   defaultCountry="VN"
                   placeholder="Enter a phone number"
                   className="!mt-0"
@@ -134,8 +180,8 @@ const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({ title }) => {
             <div className="w-full text-center">
               <Button
                 size={"lg"}
-                loading={false}
-                disabled={false}
+                loading={createPending || updatePending}
+                disabled={createPending || updatePending}
                 className="m-auto mt-4 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
               >
                 SAVE

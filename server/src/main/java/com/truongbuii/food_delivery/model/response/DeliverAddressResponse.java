@@ -9,5 +9,8 @@ public class DeliverAddressResponse {
     private Long id;
     private String name;
     private String phoneNumber;
-    private String deliveryAddress;
+    private String state;
+    private String city;
+    private String street;
+    private String fullAddress;
 }

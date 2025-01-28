@@ -15,8 +15,10 @@ public interface DeliveryAddressMapper {
     @Mapping(target = "user", source = "userId", qualifiedByName = "mapUserId")
     DeliverAddress toDeliverAddress(DeliverAddressPost deliverAddressPost);
 
-    @Mapping(target = "deliveryAddress", expression = "java(deliverAddress.getStreet() + \" \" + deliverAddress.getCity() + \" \" + deliverAddress.getState())")
+    @Mapping(target = "fullAddress", expression = "java(deliverAddress.getStreet() + \" \" + deliverAddress.getCity()" +
+            " + \" \" + deliverAddress.getState())")
     DeliverAddressResponse toDeliverAddressResponse(DeliverAddress deliverAddress);
+
 
     @Named("mapUserId")
     default User mapUserId(Long userId) {

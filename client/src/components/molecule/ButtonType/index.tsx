@@ -34,7 +34,7 @@ const ButtonType = ({
       back: (
         <div
           className={cn(
-            "relative p-6 flex items-center z-[99] w-full",
+            "relative p-6 flex items-center z-[50] w-full",
             className
           )}
         >

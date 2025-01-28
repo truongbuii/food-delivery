@@ -20,21 +20,21 @@ public class DeliverAddressController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<DeliverAddressResponse>>> getAll(
-            @RequestBody Long userId
+            @RequestParam Long userId
     ) {
         var deliverAddress = deliverAddressService.getAllByUserId(userId);
         return ResponseEntity.ok(ApiResponse.<List<DeliverAddressResponse>>builder().data(deliverAddress).build());
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> get(
-            @RequestBody Long addressId
+            @RequestParam Long addressId
     ) {
         var deliverAddress = deliverAddressService.getById(addressId);
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> post(
             @Valid
             @RequestBody DeliverAddressPost deliverAddressPost
@@ -43,7 +43,7 @@ public class DeliverAddressController {
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> put(
             @Valid
             @RequestBody DeliverAddressPut deliverAddressPut
@@ -52,11 +52,11 @@ public class DeliverAddressController {
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(
-            @RequestBody Long deliverAddressId
+            @PathVariable Long id
     ) {
-        deliverAddressService.delete(deliverAddressId);
+        deliverAddressService.delete(id);
         return ResponseEntity.ok(ApiResponse.<Void>builder().build());
     }
 }

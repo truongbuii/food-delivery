@@ -56,9 +56,6 @@ const ProfileForm = () => {
         email,
         avatar: avatarFile,
       };
-
-      console.log(value);
-
       mutateAsync(value, {
         onSuccess: (res) => {
           if (res && res.data) {

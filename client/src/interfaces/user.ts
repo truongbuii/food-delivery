@@ -7,19 +7,31 @@ interface IProfile {
 }
 
 interface IDeliveryAddress {
-  id: string;
+  id?: number;
+  name?: string;
+  phoneNumber?: string;
+  state?: string;
+  city?: string;
+  street?: string;
+}
+
+interface IDeliveryAddressPost extends IDeliveryAddress {
+  userId: number;
+}
+
+interface IDeliveryAddressResponse {
+  id: number;
   name: string;
   phoneNumber: string;
   state: string;
   city: string;
   street: string;
+  fullAddress: string;
 }
 
-interface IDeliveryAddressResponse {
-  id: string;
-  name: string;
-  phoneNumber: string;
-  address: string;
-}
-
-export type { IProfile, IDeliveryAddress, IDeliveryAddressResponse };
+export type {
+  IProfile,
+  IDeliveryAddress,
+  IDeliveryAddressResponse,
+  IDeliveryAddressPost,
+};

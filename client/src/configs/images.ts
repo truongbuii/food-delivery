@@ -25,6 +25,7 @@ import starIcon from "@images/common/star_icon.svg";
 import profileBackground1 from "@images/common/pf_background1.svg";
 import profileBackground2 from "@images/common/pf_background2.svg";
 import profileBackground3 from "@images/common/pf_background3.svg";
+import buildingIcon from "@images/common/building_icon.svg";
 
 export const IMAGES_CONST = {
   onboarding: {
@@ -53,5 +54,6 @@ export const IMAGES_CONST = {
     profileBackground1: profileBackground1,
     profileBackground2: profileBackground2,
     profileBackground3: profileBackground3,
+    buildingIcon: buildingIcon,
   },
 };

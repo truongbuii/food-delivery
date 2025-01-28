@@ -9,32 +9,56 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { SheetTrigger } from "@/components/ui/sheet";
-import { useAuthActions } from "@/stores";
-import { useState } from "react";
+import { IDeliveryAddressResponse } from "@/interfaces";
+import { useGetAllDeliverAddr } from "@/queries";
+import { useAuthActions, useUserStore } from "@/stores";
+import { useEffect, useMemo, useState } from "react";
 
 const SelectAddress = () => {
-  const [selectedValue, setSelectedValue] = useState("4102 Pretty View Lane");
+  const userId = useUserStore((state) => state.userInfo?.id);
+  const { data: addresses } = useGetAllDeliverAddr(userId!);
+  const [selectedValue, setSelectedValue] = useState<
+    IDeliveryAddressResponse | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (addresses?.data?.length) {
+      setSelectedValue(addresses.data[0]);
+    }
+  }, [addresses]);
+
+  const addressOptions = useMemo(() => {
+    return addresses?.data?.map((address) => (
+      <SelectItem key={address.id} value={address.fullAddress}>
+        {address.fullAddress}
+      </SelectItem>
+    ));
+  }, [addresses]);
+
+  const selectedDisplay = useMemo(() => {
+    const fullAddress = selectedValue?.fullAddress || "Deliver to";
+    return fullAddress.length > 20
+      ? `${fullAddress.slice(0, 20)}...`
+      : fullAddress;
+  }, [selectedValue]);
+
   return (
     <div className="flex flex-col h-full font-medium ">
-      <Select onValueChange={(value) => setSelectedValue(value)}>
+      <Select
+        onValueChange={(value) =>
+          setSelectedValue(
+            addresses?.data?.find((address) => address.fullAddress === value)
+          )
+        }
+      >
         <SelectTrigger className="flex justify-center items-center w-full p-0 text-sm max-w-40 border-none shadow-none focus:ring-0 focus:ring-none">
           <p className="px-1">Deliver to</p>
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
-            <SelectItem key={1} value="4102 Pretty View Lane">
-              4102 Pretty View Lane
-            </SelectItem>
-            <SelectItem key={2} value="4102 Pretty View Lane 2">
-              4102 Pretty View Lane 2
-            </SelectItem>
-            <SelectItem key={3} value="4102 Pretty View Lane 3">
-              4102 Pretty View Lane 3
-            </SelectItem>
-          </SelectGroup>
+          <SelectGroup>{addressOptions}</SelectGroup>
         </SelectContent>
       </Select>
-      <span className="text-sm text-primary">{selectedValue}</span>
+      <span className="text-sm text-primary">{selectedDisplay}</span>
     </div>
   );
 };

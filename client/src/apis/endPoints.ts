@@ -3,7 +3,7 @@ const API_CONFIG = {
   basePath: "/api",
 };
 
-const createPath = (base: string, endpoints: Record<string, string>) => {
+const createPath = (base: string, endpoints: Record<string, any>) => {
   return Object.fromEntries(
     Object.entries(endpoints).map(([key, path]) => [key, `${base}/${path}`])
   );
@@ -12,6 +12,7 @@ const createPath = (base: string, endpoints: Record<string, string>) => {
 const BASE_API = `${API_CONFIG.basePath}/${API_CONFIG.version}`;
 const BASE_AUTH = `${BASE_API}/auth`;
 const BASE_USER = `${BASE_API}/user`;
+const BASE_ADDRESS = `${BASE_API}/deliver-address`;
 
 const EndPoints = {
   AUTH: createPath(BASE_AUTH, {
@@ -28,6 +29,13 @@ const EndPoints = {
   }),
   USER: createPath(BASE_USER, {
     profile: "me",
+  }),
+  ADDRESS: createPath(BASE_ADDRESS, {
+    get: "get",
+    getAll: "all",
+    create: "create",
+    update: "update",
+    delete: "delete",
   }),
 } as const;
 

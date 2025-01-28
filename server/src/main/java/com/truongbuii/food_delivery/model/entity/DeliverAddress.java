@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class DeliverAddress extends BaseEntity {
     private String state;
     private String city;
     private String street;
-    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
