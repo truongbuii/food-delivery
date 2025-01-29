@@ -5,10 +5,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.SneakyThrows;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 public class FileTypeValidator implements ConstraintValidator<ValidFileType, MultipartFile> {
     private String[] allowedTypes;
     private String message;
@@ -28,12 +24,7 @@ public class FileTypeValidator implements ConstraintValidator<ValidFileType, Mul
 
         for (String type : allowedTypes) {
             if (file.getContentType().equals(type)) {
-                try {
-                    BufferedImage image = ImageIO.read(file.getInputStream());
-                    return image != null;
-                } catch (IOException e) {
-                    return false;
-                }
+                return true;
             }
         }
 

@@ -19,6 +19,7 @@ public class MediaService {
 
     public String uploadImage(MultipartFile image, String folderName) {
         try {
+            log.info("Upload {} ", image.getContentType());
             HashMap<Object, Object> options = new HashMap<>();
             options.put("folder", folderName);
             Map<?, ?> uploaded = cloudinary.uploader().upload(image.getBytes(), options);

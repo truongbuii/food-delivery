@@ -13,6 +13,7 @@ const BASE_API = `${API_CONFIG.basePath}/${API_CONFIG.version}`;
 const BASE_AUTH = `${BASE_API}/auth`;
 const BASE_USER = `${BASE_API}/user`;
 const BASE_ADDRESS = `${BASE_API}/deliver-address`;
+export const BASE_CATEGORY = `${BASE_API}/category`;
 
 const EndPoints = {
   AUTH: createPath(BASE_AUTH, {
@@ -37,6 +38,7 @@ const EndPoints = {
     update: "update",
     delete: "delete",
   }),
+  CATEGORY: {},
 } as const;
 
 export default EndPoints;

@@ -17,4 +17,8 @@ public class ErrorCode {
     // Deliver address error
     public static final String ERR_DELIVER_ADDRESS_NAME_DUPLICATE = "This address name is existed";
     public static final String ERR_DELIVER_ADDRESS_NOT_FOUND = "This address is not found";
+
+    // Category error
+    public static final String ERR_CATEGORY_DUPLICATE = "This category name is already taken";
+    public static final String ERR_CATEGORY_NOT_FOUND = "This category is not found";
 }

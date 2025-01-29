@@ -13,4 +13,9 @@ public class GeneratorUtils {
     public static String generateStateToken() {
         return UUID.randomUUID().toString();
     }
+
+    public static String convertToSlug(String input) {
+        return input.toLowerCase().replaceAll(" ", "-");
+    }
+    
 }

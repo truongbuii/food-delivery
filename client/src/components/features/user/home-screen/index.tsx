@@ -1,7 +1,7 @@
 "use client";
 
+import CategoryCarousel from "@/components/features/category/category-carousel";
 import {
-  CategoryItem,
   HorizontalCard,
   SearchAndFilter,
   VerticalCard,
@@ -11,73 +11,16 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { IMAGES_CONST } from "@/configs";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-
-const categories: {
-  type: "category" | "filter";
-  image: string;
-  title: string;
-}[] = [
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger",
-  },
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger 2",
-  },
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger 3",
-  },
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger 5",
-  },
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger 6",
-  },
-  {
-    type: "category",
-    image: IMAGES_CONST.common.defaultAvatar.src,
-    title: "Burger 3",
-  },
-];
 
 const HomeScreen = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   return (
     <div className="flex flex-col">
       <SearchAndFilter />
       {/* Category */}
-      <div className="flex gap-4 overflow-x-auto mt-4">
-        <Carousel className="w-full max-w-max">
-          <CarouselContent>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <CarouselItem key={index} className="basis-1/5">
-                <div className="p-1">
-                  <CategoryItem
-                    key={categories[index].title}
-                    type={categories[index].type}
-                    image={categories[index].image}
-                    title={categories[index].title}
-                    isSelected={selectedCategory === categories[index].title}
-                    onClick={() => setSelectedCategory(categories[index].title)}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+      <div className="flex mt-4">
+        <CategoryCarousel />
       </div>
 
       <div className="flex flex-col pb-6">

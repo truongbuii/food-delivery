@@ -24,18 +24,22 @@ const CategoryItem: FC<CategoryItemProps> = ({
           className={clsx(
             "flex flex-col w-[58px] h-[90px] p-1 items-center gap-2 rounded-[40px] cursor-pointer transition-all",
             isSelected
-              ? "bg-primary shadow-primaryBtnShadow"
+              ? "bg-primary shadow-[0px_15px_30px_0px_rgb(254,114,76,.25)]"
               : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
           )}
           onClick={onClick}
         >
-          <Image
-            src={image}
-            alt={title}
-            width={48}
-            height={48}
-            className="rounded-full object-cover"
-          />
+          <div className="relative w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden">
+            <Image
+              src={image}
+              alt={title}
+              sizes="100%"
+              fill
+              className="w-full h-full"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+
           <p
             className={`text-xs text-center font-normal ${
               isSelected ? "text-white" : ""
