@@ -1,4 +1,4 @@
-package com.truongbuii.food_delivery.utils;
+package com.truongbuii.food_delivery.utils.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -10,13 +10,13 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FileSizeValidator.class)
-public @interface ValidFileSize {
-    String message() default "File size exceeds the maximum allowed size";
+@Constraint(validatedBy = FileTypeValidator.class)
+public @interface ValidFileType {
+    String message() default "Invalid file type";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    long maxSize() default 10485760;  // 10MB default size limit
+    String[] allowedTypes();
 }

@@ -1,0 +1,1 @@
+ALTER TABLE restaurant RENAME COLUMN has_published TO has_banned;

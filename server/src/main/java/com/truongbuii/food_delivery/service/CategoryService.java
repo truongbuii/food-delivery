@@ -35,26 +35,30 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse create(CategoryPost categoryPost) {
-        validateDuplicateName(categoryPost.name(), null);
-        String slug = GeneratorUtils.convertToSlug(categoryPost.name());
+        validateCategory(categoryPost.name(), null);
+        String imageUrl = "";
         Category category = new Category();
-        category.setName(categoryPost.name());
-        category.setSlug(slug);
-        String imageUrl = mediaService.uploadImage(
-                categoryPost.image(),
-                MediaFolder.CATEGORY.getFolderName()
-        );
+        if (categoryPost.image() != null && !categoryPost.image().isEmpty()) {
+            imageUrl = mediaService.uploadImage(
+                    categoryPost.image(),
+                    MediaFolder.CATEGORY.getFolderName()
+            );
+        }
         category.setImageUrl(imageUrl);
+        category.setName(categoryPost.name());
+        category.setSlug(GeneratorUtils.convertToSlug(categoryPost.name()));
+
         categoryRepository.save(category);
         return categoryMapper.toCategoryResponse(category);
     }
 
     @Transactional
     public CategoryResponse update(CategoryPut categoryPut) {
-        validateDuplicateName(categoryPut.name(), categoryPut.id());
+        validateCategory(categoryPut.name(), categoryPut.id());
         Category category = categoryRepository
                 .findById(categoryPut.id())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_CATEGORY_NOT_FOUND));
+
         if (StringUtils.isNotBlank(categoryPut.name()) && !category.getName().equals(categoryPut.name())) {
             category.setName(categoryPut.name());
             String slug = GeneratorUtils.convertToSlug(categoryPut.name());
@@ -77,7 +81,7 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    private void validateDuplicateName(String name, Integer id) {
+    private void validateCategory(String name, Integer id) {
         if (isNameExist(name, id)) {
             throw new DuplicateResourceException(ErrorCode.ERR_CATEGORY_DUPLICATE);
         }

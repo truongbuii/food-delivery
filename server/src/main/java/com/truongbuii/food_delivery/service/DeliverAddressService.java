@@ -62,10 +62,11 @@ public class DeliverAddressService {
             validateDeliverAddressName(deliverAddressPut.name());
             deliverAddress.setName(deliverAddressPut.name());
         }
-        validateAndUpdateField(deliverAddress::setPhoneNumber, deliverAddressPut.phoneNumber(), deliverAddress.getPhoneNumber());
-        validateAndUpdateField(deliverAddress::setState, deliverAddressPut.state(), deliverAddress.getState());
-        validateAndUpdateField(deliverAddress::setCity, deliverAddressPut.city(), deliverAddress.getCity());
-        validateAndUpdateField(deliverAddress::setStreet, deliverAddressPut.street(), deliverAddress.getStreet());
+        checkAndUpdateField(deliverAddress::setPhoneNumber, deliverAddressPut.phoneNumber(),
+                deliverAddress.getPhoneNumber());
+        checkAndUpdateField(deliverAddress::setState, deliverAddressPut.state(), deliverAddress.getState());
+        checkAndUpdateField(deliverAddress::setCity, deliverAddressPut.city(), deliverAddress.getCity());
+        checkAndUpdateField(deliverAddress::setStreet, deliverAddressPut.street(), deliverAddress.getStreet());
         deliverAddressRepository.save(deliverAddress);
         return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
     }
@@ -86,7 +87,7 @@ public class DeliverAddressService {
         }
     }
 
-    private void validateAndUpdateField(
+    private void checkAndUpdateField(
             Consumer<String> setter,
             String newValue,
             String oldValue

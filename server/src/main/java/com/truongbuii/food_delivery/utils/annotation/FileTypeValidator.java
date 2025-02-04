@@ -1,4 +1,4 @@
-package com.truongbuii.food_delivery.utils;
+package com.truongbuii.food_delivery.utils.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

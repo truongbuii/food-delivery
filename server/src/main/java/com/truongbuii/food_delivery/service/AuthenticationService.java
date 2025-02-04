@@ -245,7 +245,7 @@ public class AuthenticationService {
 
     /*
      * This method handles the authentication for social login by exchanging the authorization code
-     * for an access token from the provider (e.g., Googl).
+     * for an access token from the provider (e.g., Google).
      * It retrieves the user's information from the provider's API and either finds an existing user or creates a new
      * user based on the email.
      * Finally, return user with tokens to client.
@@ -291,8 +291,10 @@ public class AuthenticationService {
                 newUser.setEmailVerified(true);
                 userRepository.save(newUser);
                 return generateUserResponse(newUser, response);
+            case "FACEBOOK":
+                throw new ResourceNotFoundException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
             default:
-                throw new AppException(ErrorCode.ERR_PROVIDER_NOT_SUPPORTED);
+                throw new AppException(ErrorCode.ERR_INTERNAL_SERVER_ERROR);
         }
     }
 

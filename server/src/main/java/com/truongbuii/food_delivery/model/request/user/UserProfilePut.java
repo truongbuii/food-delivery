@@ -1,7 +1,7 @@
 package com.truongbuii.food_delivery.model.request.user;
 
-import com.truongbuii.food_delivery.utils.ValidFileSize;
-import com.truongbuii.food_delivery.utils.ValidFileType;
+import com.truongbuii.food_delivery.utils.annotation.ValidFileSize;
+import com.truongbuii.food_delivery.utils.annotation.ValidFileType;
 import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -21,4 +21,8 @@ public class ErrorCode {
     // Category error
     public static final String ERR_CATEGORY_DUPLICATE = "This category name is already taken";
     public static final String ERR_CATEGORY_NOT_FOUND = "This category is not found";
+
+    // Restaurant error
+    public static final String ERR_RESTAURANT_DUPLICATE = "This restaurant name is already taken";
+    public static final String ERR_RESTAURANT_NOT_FOUND = "This restaurant is not found";
 }

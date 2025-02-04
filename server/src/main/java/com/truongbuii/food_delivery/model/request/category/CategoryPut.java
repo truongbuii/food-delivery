@@ -1,7 +1,7 @@
 package com.truongbuii.food_delivery.model.request.category;
 
-import com.truongbuii.food_delivery.utils.ValidFileSize;
-import com.truongbuii.food_delivery.utils.ValidFileType;
+import com.truongbuii.food_delivery.utils.annotation.ValidFileSize;
+import com.truongbuii.food_delivery.utils.annotation.ValidFileType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
