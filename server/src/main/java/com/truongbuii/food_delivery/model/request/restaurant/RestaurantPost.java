@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class RestaurantPost extends ActivityHour {
@@ -27,4 +29,6 @@ public class RestaurantPost extends ActivityHour {
     private MultipartFile cover;
     @NotNull(message = "Free delivery status is required")
     Boolean freeDelivery;
+    @NotNull(message = "Categories is required")
+    private List<Integer> categoryIds;
 }

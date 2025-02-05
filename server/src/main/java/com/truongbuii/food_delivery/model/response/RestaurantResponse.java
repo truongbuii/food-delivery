@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,4 +23,6 @@ public class RestaurantResponse {
     private boolean hasBanned;
     private boolean hasFeatured;
     private String slug;
+
+    Set<CategoryIdNameResponse> categories;
 }

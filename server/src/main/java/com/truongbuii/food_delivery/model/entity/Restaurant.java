@@ -1,12 +1,11 @@
 package com.truongbuii.food_delivery.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,4 +30,12 @@ public class Restaurant extends BaseEntity {
     private boolean hasBanned;
     private boolean hasFeatured;
     private String slug;
+
+    @ManyToMany
+    @JoinTable(
+            name = "restaurant_category",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 }

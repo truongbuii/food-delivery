@@ -2,13 +2,16 @@ package com.truongbuii.food_delivery.service;
 
 import com.truongbuii.food_delivery.exception.DuplicateResourceException;
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
+import com.truongbuii.food_delivery.mapper.CategoryMapper;
 import com.truongbuii.food_delivery.mapper.RestaurantMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
+import com.truongbuii.food_delivery.model.entity.Category;
 import com.truongbuii.food_delivery.model.entity.Restaurant;
 import com.truongbuii.food_delivery.model.enums.MediaFolder;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPatch;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPost;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPut;
+import com.truongbuii.food_delivery.model.response.CategoryIdNameResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
 import com.truongbuii.food_delivery.repository.RestaurantRepository;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
@@ -17,13 +20,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
     private final MediaService mediaService;
+    private final CategoryMapper categoryMapper;
+    private final CategoryService categoryService;
     private final RestaurantMapper restaurantMapper;
     private final RestaurantRepository restaurantRepository;
 
@@ -33,9 +41,20 @@ public class RestaurantService {
     }
 
     public List<RestaurantResponse> getAll() {
-        return restaurantRepository.findAll().stream()
-                .map(restaurantMapper::toRestaurantResponse)
-                .toList();
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+
+        return restaurants.stream()
+                .map(restaurant -> {
+                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+                            .stream()
+                            .map(categoryMapper::toCategoryIdNameResponse)
+                            .collect(Collectors.toSet());
+
+                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+                    restaurantResponse.setCategories(categories);
+                    return restaurantResponse;
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -56,6 +75,7 @@ public class RestaurantService {
                     MediaFolder.RESTAURANT.getFolderName()
             );
         }
+        // Initialize restaurant
         restaurant.setTotalStars(0F);
         restaurant.setTotalReviews(0);
         restaurant.setCoverUrl(coverUrl);
@@ -69,6 +89,9 @@ public class RestaurantService {
         restaurant.setClosingHour(restaurantPost.getClosingHour());
         restaurant.setFreeDelivery(restaurantPost.getFreeDelivery());
         restaurant.setSlug(GeneratorUtils.convertToSlug(restaurantPost.getName()));
+
+        Set<Category> categories = categoryService.checkCategoryIdExist(restaurantPost.getCategoryIds());
+        restaurant.setCategories(categories);
 
         restaurantRepository.save(restaurant);
         return restaurantMapper.toRestaurantResponse(restaurant);
@@ -113,6 +136,25 @@ public class RestaurantService {
         checkAndUpdateField(restaurant::setClosingHour, restaurantPut.getClosingHour(), restaurant.getClosingHour());
         checkAndUpdateField(restaurant::setFreeDelivery, restaurantPut.getFreeDelivery(), restaurant.isFreeDelivery());
 
+        /*
+         * Filter categories to add and remove
+         * Example: currentCategories: [1, 2, 3] -> newCategories: [2, 3, 4]
+         * categoriesToAdd: [4] -> remove categories in newCategories that are already in currentCategories
+         * same with categoriesToRemove: [1]
+         */
+        Set<Category> newCategories = categoryService.checkCategoryIdExist(restaurantPut.getCategoryIds());
+        Set<Category> currentCategories = restaurant.getCategories();
+
+        Set<Category> categoriesToAdd = new HashSet<>(newCategories);
+        categoriesToAdd.removeAll(currentCategories);
+
+        Set<Category> categoriesToRemove = new HashSet<>(currentCategories);
+        categoriesToRemove.removeAll(newCategories);
+
+        currentCategories.addAll(categoriesToAdd);
+        currentCategories.removeAll(categoriesToRemove);
+
+        restaurant.setCategories(currentCategories);
         restaurantRepository.save(restaurant);
         return restaurantMapper.toRestaurantResponse(restaurant);
     }

@@ -1,6 +1,7 @@
 package com.truongbuii.food_delivery.mapper;
 
 import com.truongbuii.food_delivery.model.entity.Category;
+import com.truongbuii.food_delivery.model.response.CategoryIdNameResponse;
 import com.truongbuii.food_delivery.model.response.CategoryResponse;
 import org.mapstruct.Mapper;
 
@@ -8,4 +9,6 @@ import org.mapstruct.Mapper;
 public interface CategoryMapper {
 
     CategoryResponse toCategoryResponse(Category category);
+
+    CategoryIdNameResponse toCategoryIdNameResponse(Category category);
 }

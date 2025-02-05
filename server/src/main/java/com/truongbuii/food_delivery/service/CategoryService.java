@@ -16,7 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,32 @@ public class CategoryService {
                 .stream()
                 .map(categoryMapper::toCategoryResponse)
                 .toList();
+    }
+
+    public List<Category> getAllByIdIn(List<Integer> categoryIds) {
+        return categoryRepository.findByIdIn(categoryIds);
+    }
+
+
+    /*
+     * Retrieves a list of Category from categoryIds.
+     * Extracts existing categoryIds into a Set and filters out the not found categoryIds.
+     * Throws 404 Error if there are not found categoryIds.
+     */
+    public Set<Category> checkCategoryIdExist(List<Integer> categoryIds) {
+        List<Category> categories = getAllByIdIn(categoryIds);
+        Set<Integer> existingCategoryIds = categories.stream()
+                .map(Category::getId)
+                .collect(Collectors.toSet());
+        List<Integer> notFoundCategoryIds = categoryIds.stream()
+                .filter(id -> !existingCategoryIds.contains(id))
+                .toList();
+
+        if (!notFoundCategoryIds.isEmpty()) {
+            throw new ResourceNotFoundException(ErrorCode.ERR_CATEGORY_NOT_FOUND);
+        }
+
+        return new HashSet<>(categories);
     }
 
     @Transactional
