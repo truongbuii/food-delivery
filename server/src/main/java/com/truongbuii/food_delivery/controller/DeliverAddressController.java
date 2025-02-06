@@ -39,7 +39,7 @@ public class DeliverAddressController {
             @Valid
             @RequestBody DeliverAddressPost deliverAddressPost
     ) {
-        var deliverAddress = deliverAddressService.post(deliverAddressPost);
+        var deliverAddress = deliverAddressService.create(deliverAddressPost);
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
@@ -48,7 +48,7 @@ public class DeliverAddressController {
             @Valid
             @RequestBody DeliverAddressPut deliverAddressPut
     ) {
-        var deliverAddress = deliverAddressService.put(deliverAddressPut);
+        var deliverAddress = deliverAddressService.update(deliverAddressPut);
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 

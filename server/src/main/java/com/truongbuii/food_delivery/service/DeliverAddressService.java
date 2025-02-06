@@ -10,6 +10,7 @@ import com.truongbuii.food_delivery.model.request.address.DeliverAddressPost;
 import com.truongbuii.food_delivery.model.request.address.DeliverAddressPut;
 import com.truongbuii.food_delivery.model.response.DeliverAddressResponse;
 import com.truongbuii.food_delivery.repository.DeliverAddressRepository;
+import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -45,7 +45,7 @@ public class DeliverAddressService {
         return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
     }
 
-    public DeliverAddressResponse post(DeliverAddressPost deliverAddressPost) {
+    public DeliverAddressResponse create(DeliverAddressPost deliverAddressPost) {
         User user = userService.getUserById(deliverAddressPost.userId());
         validateDeliverAddressName(deliverAddressPost.name());
         DeliverAddress deliverAddress = deliverAddressMapper.toDeliverAddress(deliverAddressPost);
@@ -54,7 +54,7 @@ public class DeliverAddressService {
         return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
     }
 
-    public DeliverAddressResponse put(DeliverAddressPut deliverAddressPut) {
+    public DeliverAddressResponse update(DeliverAddressPut deliverAddressPut) {
         DeliverAddress deliverAddress = deliverAddressRepository
                 .findById(deliverAddressPut.id())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_DELIVER_ADDRESS_NOT_FOUND));
@@ -62,11 +62,15 @@ public class DeliverAddressService {
             validateDeliverAddressName(deliverAddressPut.name());
             deliverAddress.setName(deliverAddressPut.name());
         }
-        checkAndUpdateField(deliverAddress::setPhoneNumber, deliverAddressPut.phoneNumber(),
-                deliverAddress.getPhoneNumber());
-        checkAndUpdateField(deliverAddress::setState, deliverAddressPut.state(), deliverAddress.getState());
-        checkAndUpdateField(deliverAddress::setCity, deliverAddressPut.city(), deliverAddress.getCity());
-        checkAndUpdateField(deliverAddress::setStreet, deliverAddressPut.street(), deliverAddress.getStreet());
+        validateUtils.checkAndUpdateField(
+                deliverAddress::setPhoneNumber,
+                deliverAddressPut.phoneNumber(),
+                deliverAddress.getPhoneNumber()
+        );
+        validateUtils.checkAndUpdateField(deliverAddress::setCity, deliverAddressPut.city(), deliverAddress.getCity());
+        validateUtils.checkAndUpdateField(deliverAddress::setState, deliverAddressPut.state(), deliverAddress.getState());
+        validateUtils.checkAndUpdateField(deliverAddress::setStreet, deliverAddressPut.street(), deliverAddress.getStreet());
+
         deliverAddressRepository.save(deliverAddress);
         return deliverAddressMapper.toDeliverAddressResponse(deliverAddress);
     }
@@ -86,16 +90,5 @@ public class DeliverAddressService {
             }
         }
     }
-
-    private void checkAndUpdateField(
-            Consumer<String> setter,
-            String newValue,
-            String oldValue
-    ) {
-        if (StringUtils.isNotBlank(newValue) && !newValue.equals(oldValue)) {
-            setter.accept(newValue);
-        }
-    }
-
 
 }

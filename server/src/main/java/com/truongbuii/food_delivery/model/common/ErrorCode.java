@@ -25,4 +25,8 @@ public class ErrorCode {
     // Restaurant error
     public static final String ERR_RESTAURANT_DUPLICATE = "This restaurant name is already taken";
     public static final String ERR_RESTAURANT_NOT_FOUND = "This restaurant is not found";
+
+    // Food error
+    public static final String ERR_FOOD_DUPLICATE = "This food is existed in this restaurant";
+    public static final String ERR_FOOD_NOT_FOUND = "This food is not found";
 }

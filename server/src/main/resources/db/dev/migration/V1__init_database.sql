@@ -33,7 +33,9 @@ CREATE TABLE category (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(25) UNIQUE NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    slug VARCHAR(255)
+    slug VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurant (
@@ -49,7 +51,7 @@ CREATE TABLE restaurant (
     total_stars FLOAT DEFAULT 0.0 CHECK (total_stars >= 0.0),
     total_reviews INTEGER DEFAULT 0 CHECK (total_reviews >= 0),
     slug VARCHAR(255),
-    has_published BOOLEAN DEFAULT TRUE,
+    has_banned BOOLEAN DEFAULT TRUE,
     has_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -82,8 +84,7 @@ CREATE TABLE side_food (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
-    restaurant_id BIGINT NOT NULL
+    price NUMERIC(10,2) NOT NULL CHECK (price >= 0)
 );
 
 CREATE TABLE food_side_food (
@@ -107,9 +108,6 @@ ALTER TABLE IF EXISTS food
 ALTER TABLE IF EXISTS food
     ADD CONSTRAINT fk_food_category FOREIGN KEY (category_id) REFERENCES category(id);
 
-ALTER TABLE IF EXISTS side_food
-    ADD CONSTRAINT fk_side_food_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurant(id);
-
 ALTER TABLE IF EXISTS food_side_food
     ADD CONSTRAINT fk_food FOREIGN KEY (food_id) REFERENCES food(id);
 
@@ -119,5 +117,7 @@ ALTER TABLE IF EXISTS food_side_food
 CREATE INDEX idx_user_email ON "user"(email);
 CREATE INDEX idx_deliver_address_user_id ON deliver_address(user_id);
 CREATE INDEX idx_food_name ON food(name);
+CREATE INDEX idx_food_slug ON food(slug);
 CREATE INDEX idx_restaurant_name ON restaurant(name);
+CREATE INDEX idx_restaurant_slug ON restaurant(slug);
 CREATE INDEX idx_category_slug ON category(slug);

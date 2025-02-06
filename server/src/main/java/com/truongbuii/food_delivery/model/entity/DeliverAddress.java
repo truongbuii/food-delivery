@@ -10,10 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeliverAddress extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DeliverAddress extends BaseEntity<Long> {
     private String name;
     private String phoneNumber;
     private String state;

@@ -40,6 +40,11 @@ public class CategoryService {
         return categoryRepository.findByIdIn(categoryIds);
     }
 
+    public Category getCategoryById(Integer id) {
+        return categoryRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_CATEGORY_NOT_FOUND));
+    }
 
     /*
      * Check if categoryIds exist in the database.

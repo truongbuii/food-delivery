@@ -37,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse put(UserProfilePut userProfilePut) {
+    public UserResponse update(UserProfilePut userProfilePut) {
         User user = getByEmail(userProfilePut.email());
 
         if (StringUtils.isNotBlank(userProfilePut.fullName()) && !userProfilePut.fullName().equals(user.getFullName())) {

@@ -9,9 +9,12 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { SheetTrigger } from "@/components/ui/sheet";
+import { PATHNAME } from "@/configs";
 import { IDeliveryAddressResponse } from "@/interfaces";
 import { useGetAllDeliverAddr } from "@/queries";
 import { useAuthActions, useUserStore } from "@/stores";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 const SelectAddress = () => {
@@ -36,7 +39,7 @@ const SelectAddress = () => {
   }, [addresses]);
 
   const selectedDisplay = useMemo(() => {
-    const fullAddress = selectedValue?.fullAddress || "Deliver to";
+    const fullAddress = selectedValue?.fullAddress || "";
     return fullAddress.length > 20
       ? `${fullAddress.slice(0, 20)}...`
       : fullAddress;
@@ -51,9 +54,19 @@ const SelectAddress = () => {
           )
         }
       >
-        <SelectTrigger className="flex justify-center items-center w-full p-0 text-sm max-w-40 border-none shadow-none focus:ring-0 focus:ring-none">
-          <p className="px-1">Deliver to</p>
-        </SelectTrigger>
+        {addresses?.data?.length ? (
+          <SelectTrigger className="flex justify-center items-center w-full p-0 text-sm max-w-40 border-none shadow-none focus:ring-0 focus:ring-none">
+            <p className="px-1">Deliver to</p>
+          </SelectTrigger>
+        ) : (
+          <Link
+            href={PATHNAME.DELIVERY_ADDRESS}
+            className="flex items-center h-full "
+          >
+            <p className="text-sm text-primary px-1">Add new address</p>
+            <Plus size={14} className="pt-1" />
+          </Link>
+        )}
         <SelectContent>
           <SelectGroup>{addressOptions}</SelectGroup>
         </SelectContent>

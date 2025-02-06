@@ -1,9 +1,6 @@
 package com.truongbuii.food_delivery.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public class BaseEntity {
+public class BaseEntity<T> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private T id;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

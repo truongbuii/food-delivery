@@ -1,7 +1,7 @@
 "use client";
 
 import { DeliverAddressSchema } from "@/components/features/user/deliver-address/validSchema";
-import { ButtonType, CustomFormField } from "@/components/molecule";
+import { CustomFormField } from "@/components/molecule";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
 } from "@/queries";
 import { useUserStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeft } from "lucide-react";
 import { FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -74,14 +75,16 @@ const DeliverAddressForm: FC<IDeliverAddressFormProps> = ({
 
   return (
     <>
-      <SheetClose asChild>
-        <div>
-          <ButtonType
-            type="back"
-            title={status ? "Update address" : "Add new address"}
-          />
-        </div>
-      </SheetClose>
+      <div className="relative p-6 flex items-center z-[50] w-full">
+        <SheetClose asChild>
+          <Button className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary ">
+            <ChevronLeft size={18} className="text-foreground" />
+          </Button>
+        </SheetClose>
+        <p className="flex-1 w-full text-center leading-10 text-lg font-medium">
+          {status ? "Update Address" : "Add New Address"}
+        </p>
+      </div>
       <div className="flex flex-col gap-5 px-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

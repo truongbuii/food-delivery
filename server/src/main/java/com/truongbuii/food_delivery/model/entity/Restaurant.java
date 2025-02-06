@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,10 +14,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Restaurant extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Restaurant extends BaseEntity<Long> {
     private String name;
     private String address;
     private String avatarUrl;
@@ -38,4 +36,7 @@ public class Restaurant extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "restaurant")
+    private Set<Food> foods = new HashSet<>();
 }

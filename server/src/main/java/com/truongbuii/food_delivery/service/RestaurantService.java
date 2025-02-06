@@ -15,6 +15,7 @@ import com.truongbuii.food_delivery.model.response.CategoryIdNameResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
 import com.truongbuii.food_delivery.repository.RestaurantRepository;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
+import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,10 +131,10 @@ public class RestaurantService {
             restaurant.setName(restaurantPut.getName());
             restaurant.setSlug(GeneratorUtils.convertToSlug(restaurantPut.getName()));
         }
-        checkAndUpdateField(restaurant::setAddress, restaurantPut.getAddress(), restaurant.getAddress());
-        checkAndUpdateField(restaurant::setOpeningHour, restaurantPut.getOpeningHour(), restaurant.getOpeningHour());
-        checkAndUpdateField(restaurant::setClosingHour, restaurantPut.getClosingHour(), restaurant.getClosingHour());
-        checkAndUpdateField(restaurant::setFreeDelivery, restaurantPut.getFreeDelivery(), restaurant.isFreeDelivery());
+        validateUtils.checkAndUpdateField(restaurant::setAddress, restaurantPut.getAddress(), restaurant.getAddress());
+        validateUtils.checkAndUpdateField(restaurant::setOpeningHour, restaurantPut.getOpeningHour(), restaurant.getOpeningHour());
+        validateUtils.checkAndUpdateField(restaurant::setClosingHour, restaurantPut.getClosingHour(), restaurant.getClosingHour());
+        validateUtils.checkAndUpdateField(restaurant::setFreeDelivery, restaurantPut.getFreeDelivery(), restaurant.isFreeDelivery());
 
         /*
          * Filter categories to add and remove
@@ -174,23 +174,13 @@ public class RestaurantService {
     }
 
     private void validateRestaurant(String name, Long id) {
-        if (isNameExist(name, id)) {
+        if (isRestaurantExist(name, id)) {
             throw new DuplicateResourceException(ErrorCode.ERR_RESTAURANT_DUPLICATE);
         }
     }
 
-    private boolean isNameExist(String name, Long id) {
+    private boolean isRestaurantExist(String name, Long id) {
         return restaurantRepository.findExistByName(name, id) != null;
     }
 
-
-    private <T> void checkAndUpdateField(
-            Consumer<T> setter,
-            T newValue,
-            T oldValue
-    ) {
-        if (newValue != null && !newValue.equals(oldValue)) {
-            setter.accept(newValue);
-        }
-    }
 }

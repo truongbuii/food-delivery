@@ -285,10 +285,12 @@ public class AuthenticationService {
                 User newUser = new User();
                 newUser.setEmail(email);
                 newUser.setPassword("");
-                newUser.setFullName(userInfo.get("name").toString());
-                newUser.setGoogleId(userInfo.get("sub").toString());
-                newUser.setAvatarUrl(userInfo.get("picture").toString());
+                newUser.setUserActive(true);
                 newUser.setEmailVerified(true);
+                newUser.setGoogleId(userInfo.get("sub").toString());
+                newUser.setFullName(userInfo.get("name").toString());
+                newUser.setAvatarUrl(userInfo.get("picture").toString());
+
                 userRepository.save(newUser);
                 return generateUserResponse(newUser, response);
             case "FACEBOOK":

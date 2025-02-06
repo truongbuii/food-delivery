@@ -30,7 +30,7 @@ public class UserController {
             @Valid
             @ModelAttribute UserProfilePut userProfilePut
     ) {
-        UserResponse me = userService.put(userProfilePut);
+        UserResponse me = userService.update(userProfilePut);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder().data(me).build());
     }
 }

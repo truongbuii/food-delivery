@@ -43,7 +43,7 @@ const CartAddress: FC<CartAddressProps> = ({
   refetchList,
 }) => {
   const message = useMessage();
-  const [popOverOpen, setPopOverOpen] = useState<boolean>(true);
+  const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const { mutateAsync, isPending } = useDeleteDeliverAddrMutation();
 
