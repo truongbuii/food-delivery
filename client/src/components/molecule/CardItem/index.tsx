@@ -4,6 +4,7 @@ import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
 import { IMAGES_CONST } from "@/configs";
 import useScreenMode from "@/hooks/useScreenMode";
+import { ICategory, IRestaurantResponse } from "@/interfaces";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Bike, CircleCheck, Heart, Timer } from "lucide-react";
@@ -81,14 +82,14 @@ const PriceBadge: FC<{ price: number }> = ({ price }) => {
   );
 };
 
-const FeeAndTimeDelivery: FC<{ fee: number; time: string }> = ({
-  fee,
+const FeeAndTimeDelivery: FC<{ free: boolean; time: string }> = ({
+  free,
   time,
 }) => (
   <div className="flex gap-2 text-lightGray">
     <div className="flex gap-1 items-center">
       <Bike size={12} strokeWidth={2} className="text-primary" />
-      <span className="text-xs">{fee === 0 ? "free" : fee}</span>
+      <span className="text-xs">{free == true ? "free" : "charge"}</span>
     </div>
     <div className="flex gap-1 items-center">
       <Timer size={12} strokeWidth={2} className="text-primary" />
@@ -97,30 +98,48 @@ const FeeAndTimeDelivery: FC<{ fee: number; time: string }> = ({
   </div>
 );
 
-const InfoSection: FC<{ type: "restaurant" | "item" }> = ({ type }) => (
+interface InfoSectionProps {
+  type: "restaurant" | "food";
+  name: string;
+  tags: ICategory[];
+  verifiedBadge: boolean;
+  freeDelivery: boolean;
+  ingredient?: string;
+}
+
+const InfoSection: FC<InfoSectionProps> = ({
+  type,
+  name,
+  tags,
+  verifiedBadge,
+  freeDelivery,
+  ingredient,
+}) => (
   <>
     {type === "restaurant" ? (
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <span className="font-semibold">McDonalds</span>
-          <CircleCheck
-            color="#029094"
-            strokeWidth={3}
-            size={12}
-            className="mt-1"
-          />
+          <span className="font-semibold">{name}</span>
+          {verifiedBadge && (
+            <CircleCheck
+              color="#029094"
+              strokeWidth={3}
+              size={12}
+              className="mt-1"
+            />
+          )}
         </div>
-        <FeeAndTimeDelivery fee={0} time="10-15" />
+        <FeeAndTimeDelivery free={freeDelivery} time="10-15" />
         <div className="flex gap-2">
-          <Tag title="Fast Food" />
-          <Tag title="Chicken" />
-          <Tag title="Burger" />
+          {tags.map((tag, index) => (
+            <Tag key={index} title={tag.name} size={"sm"} />
+          ))}
         </div>
       </div>
     ) : (
       <div className="mt-2">
         <div className="flex items-center gap-1">
-          <span className="font-semibold">McDonalds</span>
+          <span className="font-semibold">{name}</span>
           <CircleCheck
             color="#029094"
             strokeWidth={3}
@@ -128,18 +147,19 @@ const InfoSection: FC<{ type: "restaurant" | "item" }> = ({ type }) => (
             className="mt-1"
           />
         </div>
-        <div className="text-xs text-lightGra">Other type content...</div>
+        <div className="text-xs text-lightGray">{ingredient}</div>
       </div>
     )}
   </>
 );
 
-interface cardItemShadowProps {
-  type: "restaurant" | "item";
+interface cardItemProps {
+  type: "restaurant" | "food";
+  item: IRestaurantResponse | any;
 }
 
-const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
-  const isItem = type === "item";
+const HorizontalCard: FC<cardItemProps> = ({ type, item }) => {
+  const isFood = type === "food";
 
   return (
     <div
@@ -147,18 +167,20 @@ const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
     >
       <div className="relative w-full h-[136px]">
         <Image
-          src={IMAGES_CONST.common.restaurant}
+          src={item.coverUrl}
           alt=""
           fill
+          sizes="100%"
+          priority
           className="object-cover rounded-2xl"
         />
         <HeartButton />
         <RatingBadge
-          rating={4.5}
-          count={25}
+          rating={item.totalStars}
+          count={item.totalReviews}
           className="absolute top-2 left-2 "
         />
-        {isItem && (
+        {isFood && (
           <RatingBadge
             rating={4.9}
             count={25}
@@ -169,14 +191,20 @@ const HorizontalCard: FC<cardItemShadowProps> = ({ type }) => {
       </div>
       <div className="py-2 px-4">
         <div className="flex flex-col">
-          <InfoSection type={type} />
+          <InfoSection
+            type={type}
+            name={item.name}
+            tags={item.categories}
+            verifiedBadge={item.verifiedBadge}
+            freeDelivery={item.freeDelivery}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
+const VerticalCard: FC<cardItemProps> = ({ type }) => {
   const { isMobile } = useScreenMode();
   const renderByType = useMemo(
     () => ({
@@ -216,7 +244,7 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
                 className="mt-1"
               />
             </div>
-            <FeeAndTimeDelivery fee={0} time="10-15" />
+            <FeeAndTimeDelivery free={false} time="10-15" />
             <div className="flex gap-2">
               <Tag title="Chicken" size={"sm"} />
               <Tag title="Burger" size={"sm"} />
@@ -224,7 +252,7 @@ const VerticalCard: FC<cardItemShadowProps> = ({ type }) => {
           </div>
         </div>
       ),
-      item: (
+      food: (
         <div
           className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
         >

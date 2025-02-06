@@ -35,6 +35,7 @@ const CategoryItem: FC<CategoryItemProps> = ({
               alt={title}
               sizes="100%"
               fill
+              priority
               className="w-full h-full"
               style={{ objectFit: "cover" }}
             />

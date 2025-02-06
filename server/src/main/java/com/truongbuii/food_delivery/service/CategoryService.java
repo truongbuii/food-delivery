@@ -42,9 +42,7 @@ public class CategoryService {
 
 
     /*
-     * Retrieves a list of Category from categoryIds.
-     * Extracts existing categoryIds into a Set and filters out the not found categoryIds.
-     * Throws 404 Error if there are not found categoryIds.
+     * Check if categoryIds exist in the database.
      */
     public Set<Category> checkCategoryIdExist(List<Integer> categoryIds) {
         List<Category> categories = getAllByIdIn(categoryIds);

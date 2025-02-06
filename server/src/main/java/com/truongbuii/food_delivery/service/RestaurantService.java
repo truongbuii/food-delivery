@@ -41,7 +41,7 @@ public class RestaurantService {
     }
 
     public List<RestaurantResponse> getAll() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findAllByParams();
 
         return restaurants.stream()
                 .map(restaurant -> {

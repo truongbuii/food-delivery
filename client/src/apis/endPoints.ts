@@ -14,6 +14,7 @@ const BASE_AUTH = `${BASE_API}/auth`;
 const BASE_USER = `${BASE_API}/user`;
 const BASE_ADDRESS = `${BASE_API}/deliver-address`;
 export const BASE_CATEGORY = `${BASE_API}/category`;
+export const BASE_RESTAURANT = `${BASE_API}/restaurant`;
 
 const EndPoints = {
   AUTH: createPath(BASE_AUTH, {
@@ -39,6 +40,7 @@ const EndPoints = {
     delete: "delete",
   }),
   CATEGORY: {},
+  RESTAURANT: createPath(BASE_RESTAURANT, {}),
 } as const;
 
 export default EndPoints;

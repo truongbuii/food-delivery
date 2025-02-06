@@ -11,10 +11,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { useGetRestaurants } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 const HomeScreen = () => {
+  const { data: restaurants } = useGetRestaurants();
+
   return (
     <div className="flex flex-col">
       <SearchAndFilter />
@@ -42,10 +45,10 @@ const HomeScreen = () => {
               opts={{ align: "start", dragFree: true }}
             >
               <CarouselContent>
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <CarouselItem key={index} className="basis-5/5 pr-4">
+                {restaurants?.data?.map((restaurant) => (
+                  <CarouselItem key={restaurant.id} className="basis-5/5 pr-4">
                     <div className="pb-8">
-                      <HorizontalCard type="item" />
+                      <HorizontalCard type="restaurant" item={restaurant} />
                     </div>
                   </CarouselItem>
                 ))}
@@ -58,14 +61,14 @@ const HomeScreen = () => {
         <div className="flex flex-col gap-2">
           <span className="text-lg font-semibold">Popular items</span>
           <div className="grid grid-cols-2 gap-4">
-            <VerticalCard type="item" />
-            <VerticalCard type="item" />
-            <VerticalCard type="restaurant" />
-            <VerticalCard type="restaurant" />
-            <VerticalCard type="item" />
-            <VerticalCard type="item" />
-            <VerticalCard type="restaurant" />
-            <VerticalCard type="restaurant" />
+            <VerticalCard type="food" item={restaurants?.data?.[1]} />
+            <VerticalCard type="food" item={restaurants?.data?.[1]} />
+            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
+            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
+            <VerticalCard type="food" item={restaurants?.data?.[1]} />
+            <VerticalCard type="food" item={restaurants?.data?.[1]} />
+            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
+            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
           </div>
         </div>
       </div>
