@@ -9,7 +9,8 @@ public enum MediaFolder {
     USER("users"),
     RESTAURANT("restaurants"),
     FOOD("foods"),
-    CATEGORY("categories");
+    CATEGORY("categories"),
+    ADDON("addons");
 
     private final String folderName;
 }

@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record FoodPost(
         @NotBlank(message = "Name is required")
@@ -30,6 +31,8 @@ public record FoodPost(
         @NotNull(message = "Restaurant id is required")
         Long restaurantId,
         @NotNull(message = "Category id is required")
-        Integer categoryId
+        Integer categoryId,
+        @NotNull(message = "Categories is required")
+        List<Long> addonIds
 ) {
 }

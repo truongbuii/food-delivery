@@ -1,4 +1,4 @@
-package com.truongbuii.food_delivery.model.request.food;
+package com.truongbuii.food_delivery.model.request.addon;
 
 import com.truongbuii.food_delivery.utils.annotation.ValidFileSize;
 import com.truongbuii.food_delivery.utils.annotation.ValidFileType;
@@ -8,29 +8,18 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-public record FoodPut(
+public record AddonPut(
         @NotNull(message = "Id is required")
         Long id,
         @NotBlank(message = "Name is required")
-        @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
+        @Size(min = 3, max = 50, message = "Name must be between 2 and 50 characters")
         String name,
         @ValidFileType(allowedTypes = {"image/jpeg", "image/png", "image/webp", "image/jpg"},
                 message = "File type not allowed. Allowed types are: JPEG, JPG, PNG, WEBP")
         @ValidFileSize(message = "File size must be less than 10MB")
         MultipartFile image,
         @NotNull(message = "Price is required")
-        BigDecimal price,
-        @Size(max = 255, message = "Description must be less than 255 characters")
-        String description,
-        @Size(max = 50, message = "Ingredient must be less than 50 characters")
-        String ingredient,
-        @NotNull(message = "Restaurant id is required")
-        Long restaurantId,
-        @NotNull(message = "Category id is required")
-        Integer categoryId,
-        @NotNull(message = "Categories is required")
-        List<Long> addonIds
+        BigDecimal price
 ) {
 }

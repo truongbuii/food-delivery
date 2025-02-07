@@ -47,7 +47,8 @@ public class CategoryService {
     }
 
     /*
-     * Check if categoryIds exist in the database.
+     * Check if categoryIds exist in the database
+     * And make sure no duplicate categoryIds
      */
     public Set<Category> checkCategoryIdExist(List<Integer> categoryIds) {
         List<Category> categories = getAllByIdIn(categoryIds);

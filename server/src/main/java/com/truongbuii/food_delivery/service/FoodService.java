@@ -4,6 +4,7 @@ import com.truongbuii.food_delivery.exception.DuplicateResourceException;
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.FoodMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
+import com.truongbuii.food_delivery.model.entity.Addon;
 import com.truongbuii.food_delivery.model.entity.Category;
 import com.truongbuii.food_delivery.model.entity.Food;
 import com.truongbuii.food_delivery.model.entity.Restaurant;
@@ -17,12 +18,17 @@ import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class FoodService {
     private final FoodMapper foodMapper;
     private final MediaService mediaService;
+    private final AddonService addonService;
     private final FoodRepository foodRepository;
     private final CategoryService categoryService;
     private final RestaurantService restaurantService;
@@ -31,14 +37,16 @@ public class FoodService {
         return foodRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
     }
-
+    
     public FoodResponse create(FoodPost foodPost) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPost.restaurantId());
         Category category = categoryService.getCategoryById(foodPost.categoryId());
+        Set<Addon> addons = addonService.checkAddonIdExist(foodPost.addonIds());
         validateFood(foodPost.name(), null, restaurant.getId());
         String imageUrl = "";
 
         Food food = new Food();
+        food.setAddons(addons);
         food.setTotalStars(0F);
         food.setTotalReviews(0);
         food.setCategory(category);
@@ -63,9 +71,9 @@ public class FoodService {
 
     public FoodResponse update(FoodPut foodPut) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPut.restaurantId());
+        Food food = getFoodById(foodPut.id());
         validateFood(foodPut.name(), foodPut.id(), restaurant.getId());
 
-        Food food = getFoodById(foodPut.id());
         if (foodPut.categoryId() != null && !food.getCategory().getId().equals(foodPut.categoryId())) {
             Category category = categoryService.getCategoryById(foodPut.categoryId());
             food.setCategory(category);
@@ -91,6 +99,25 @@ public class FoodService {
         validateUtils.checkAndUpdateField(food::setPrice, foodPut.price(), food.getPrice());
         validateUtils.checkAndUpdateField(food::setIngredient, foodPut.ingredient(), food.getIngredient());
         validateUtils.checkAndUpdateField(food::setDescription, foodPut.description(), food.getDescription());
+
+        /*
+         * Same as restaurantService.update() method
+         */
+        if (!CollectionUtils.isEmpty(foodPut.addonIds())) {
+            Set<Addon> newAddons = addonService.checkAddonIdExist(foodPut.addonIds());
+            Set<Addon> currentAddons = food.getAddons();
+
+            Set<Addon> addonsToAdd = new HashSet<>(newAddons);
+            addonsToAdd.removeAll(currentAddons);
+
+            Set<Addon> addonsToRemove = new HashSet<>(currentAddons);
+            addonsToRemove.removeAll(newAddons);
+
+            currentAddons.addAll(addonsToAdd);
+            currentAddons.removeAll(addonsToRemove);
+
+            food.setAddons(currentAddons);
+        }
 
         foodRepository.save(food);
         return foodMapper.toFoodResponse(food);

@@ -1,9 +1,11 @@
 package com.truongbuii.food_delivery.model.response;
 
+import com.truongbuii.food_delivery.model.entity.Addon;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,4 +20,6 @@ public class FoodResponse {
     private Integer totalReviews;
     private String slug;
     private Long restaurantId;
+
+    Set<Addon> addons;
 }

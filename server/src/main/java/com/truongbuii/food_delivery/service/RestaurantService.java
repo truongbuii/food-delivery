@@ -20,6 +20,7 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -62,6 +63,8 @@ public class RestaurantService {
         validateRestaurant(restaurantPost.getName(), null);
         String avatarUrl = "";
         String coverUrl = "";
+        Set<Category> categories = categoryService.checkCategoryIdExist(restaurantPost.getCategoryIds());
+
         Restaurant restaurant = new Restaurant();
         if (restaurantPost.getAvatar() != null && !restaurantPost.getAvatar().isEmpty()) {
             avatarUrl = mediaService.uploadImage(
@@ -80,6 +83,7 @@ public class RestaurantService {
         restaurant.setTotalReviews(0);
         restaurant.setCoverUrl(coverUrl);
         restaurant.setAvatarUrl(avatarUrl);
+        restaurant.setCategories(categories);
         restaurant.setHasBanned(Boolean.FALSE);
         restaurant.setHasFeatured(Boolean.FALSE);
         restaurant.setVerifiedBadge(Boolean.FALSE);
@@ -89,9 +93,6 @@ public class RestaurantService {
         restaurant.setClosingHour(restaurantPost.getClosingHour());
         restaurant.setFreeDelivery(restaurantPost.getFreeDelivery());
         restaurant.setSlug(GeneratorUtils.convertToSlug(restaurantPost.getName()));
-
-        Set<Category> categories = categoryService.checkCategoryIdExist(restaurantPost.getCategoryIds());
-        restaurant.setCategories(categories);
 
         restaurantRepository.save(restaurant);
         return restaurantMapper.toRestaurantResponse(restaurant);
@@ -142,19 +143,21 @@ public class RestaurantService {
          * categoriesToAdd: [4] -> remove categories in newCategories that are already in currentCategories
          * same with categoriesToRemove: [1]
          */
-        Set<Category> newCategories = categoryService.checkCategoryIdExist(restaurantPut.getCategoryIds());
-        Set<Category> currentCategories = restaurant.getCategories();
+        if (!CollectionUtils.isEmpty(restaurantPut.getCategoryIds())) {
+            Set<Category> newCategories = categoryService.checkCategoryIdExist(restaurantPut.getCategoryIds());
+            Set<Category> currentCategories = restaurant.getCategories();
 
-        Set<Category> categoriesToAdd = new HashSet<>(newCategories);
-        categoriesToAdd.removeAll(currentCategories);
+            Set<Category> categoriesToAdd = new HashSet<>(newCategories);
+            categoriesToAdd.removeAll(currentCategories);
 
-        Set<Category> categoriesToRemove = new HashSet<>(currentCategories);
-        categoriesToRemove.removeAll(newCategories);
+            Set<Category> categoriesToRemove = new HashSet<>(currentCategories);
+            categoriesToRemove.removeAll(newCategories);
 
-        currentCategories.addAll(categoriesToAdd);
-        currentCategories.removeAll(categoriesToRemove);
+            currentCategories.addAll(categoriesToAdd);
+            currentCategories.removeAll(categoriesToRemove);
 
-        restaurant.setCategories(currentCategories);
+            restaurant.setCategories(currentCategories);
+        }
         restaurantRepository.save(restaurant);
         return restaurantMapper.toRestaurantResponse(restaurant);
     }

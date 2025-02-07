@@ -84,7 +84,9 @@ CREATE TABLE side_food (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    price NUMERIC(10,2) NOT NULL CHECK (price >= 0)
+    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE food_side_food (
