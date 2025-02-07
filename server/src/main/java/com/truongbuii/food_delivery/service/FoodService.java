@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,15 @@ public class FoodService {
         return foodRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
     }
-    
+
+    public List<FoodResponse> getAll() {
+        List<Food> foods = foodRepository.findAll();
+
+        return foods.stream()
+                .map(foodMapper::toFoodResponse)
+                .collect(Collectors.toList());
+    }
+
     public FoodResponse create(FoodPost foodPost) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPost.restaurantId());
         Category category = categoryService.getCategoryById(foodPost.categoryId());

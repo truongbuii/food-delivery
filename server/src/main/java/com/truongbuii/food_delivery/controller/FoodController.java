@@ -10,12 +10,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/food")
 @RequiredArgsConstructor
 public class FoodController {
     private final FoodService foodService;
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAll() {
+        var foodResponses = foodService.getAll();
+        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
+    }
+    
     @PostMapping
     public ResponseEntity<ApiResponse<FoodResponse>> create(
             @Valid
