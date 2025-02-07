@@ -2,16 +2,15 @@ import BadgeNumber from "@/components/molecule/BadgeNumber";
 import { IconStar } from "@/components/molecule/svgs";
 import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
-import { IMAGES_CONST } from "@/configs";
 import useScreenMode from "@/hooks/useScreenMode";
-import { ICategory, IRestaurantResponse } from "@/interfaces";
+import { ICategory, IFoodResponse, IRestaurantResponse } from "@/interfaces";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Bike, CircleCheck, Heart, Timer } from "lucide-react";
 import Image from "next/image";
-import { FC, useMemo } from "react";
+import { FC, memo } from "react";
 
-const HeartButton: FC<{ onClick?: () => void }> = ({ onClick }) => (
+const HeartButtonComponent: FC<{ onClick?: () => void }> = ({ onClick }) => (
   <Button
     onClick={onClick}
     className="absolute top-2 right-2 p-0 flex justify-center items-center w-7 h-7 bg-primary rounded-full hover:bg-primary"
@@ -20,12 +19,8 @@ const HeartButton: FC<{ onClick?: () => void }> = ({ onClick }) => (
   </Button>
 );
 
-interface RatingBadgeProps {
-  rating: number;
-  count: number;
-  className?: string;
-  variant?: "default" | "sm";
-}
+export const HeartButton = memo(HeartButtonComponent);
+HeartButton.displayName = "HeartButton";
 
 const ratingBadgeVariants = cva(
   "flex justify-center items-center bg-ratingBadge rounded-2xl",
@@ -33,7 +28,7 @@ const ratingBadgeVariants = cva(
     variants: {
       variant: {
         default: "w-[70px] h-7",
-        sm: "w-[60px] h-5",
+        sm: "w-[60px] h-6",
       },
     },
     defaultVariants: {
@@ -42,38 +37,39 @@ const ratingBadgeVariants = cva(
   }
 );
 
-const RatingBadge: FC<RatingBadgeProps> = ({
-  rating,
-  count,
-  className,
-  variant = "default",
-}) => {
-  return (
-    <div className={clsx(ratingBadgeVariants({ variant }), className)}>
-      <div className="flex text-xs items-center">
-        <span
-          className={clsx(
-            "font-bold mr-1",
-            variant === "sm" ? "text-[10px]" : "text-[12px]"
-          )}
-        >
-          {rating}
-        </span>
-        <IconStar size={9} />
-        <span
-          className={clsx(
-            "text-lightGray",
-            variant === "sm" ? "text-[7px]" : "text-[9px]"
-          )}
-        >
-          (+{count})
-        </span>
-      </div>
+const RatingBadgeComponent: FC<{
+  rating: number;
+  count: number;
+  className?: string;
+  variant?: "default" | "sm";
+}> = ({ rating, count, className, variant = "default" }) => (
+  <div className={clsx(ratingBadgeVariants({ variant }), className)}>
+    <div className="flex gap-[2px] text-xs items-center">
+      <span
+        className={clsx(
+          "font-bold",
+          variant === "sm" ? "text-[10px]" : "text-[12px]"
+        )}
+      >
+        {rating}
+      </span>
+      <IconStar size={10} />
+      <span
+        className={clsx(
+          "text-lightGray",
+          variant === "sm" ? "text-[7px]" : "text-[9px]"
+        )}
+      >
+        (+{count})
+      </span>
     </div>
-  );
-};
+  </div>
+);
 
-const PriceBadge: FC<{ price: number }> = ({ price }) => {
+export const RatingBadge = memo(RatingBadgeComponent);
+RatingBadge.displayName = "RatingBadge";
+
+const PriceBadgeComponent: FC<{ price: number }> = ({ price }) => {
   return (
     <div className="absolute top-2 left-2 w-[70px] h-7 bg-white rounded-2xl text-center font-semibold">
       <span className="text-primary text-xs">$</span>
@@ -82,7 +78,10 @@ const PriceBadge: FC<{ price: number }> = ({ price }) => {
   );
 };
 
-const FeeAndTimeDelivery: FC<{ free: boolean; time: string }> = ({
+export const PriceBadge = memo(PriceBadgeComponent);
+PriceBadge.displayName = "PriceBadge";
+
+const FeeAndTimeDeliveryComponent: FC<{ free: boolean; time: string }> = ({
   free,
   time,
 }) => (
@@ -97,6 +96,9 @@ const FeeAndTimeDelivery: FC<{ free: boolean; time: string }> = ({
     </div>
   </div>
 );
+
+export const FeeAndTimeDelivery = memo(FeeAndTimeDeliveryComponent);
+FeeAndTimeDelivery.displayName = "FeeAndTimeDelivery";
 
 interface InfoSectionProps {
   type: "restaurant" | "food";
@@ -153,12 +155,12 @@ const InfoSection: FC<InfoSectionProps> = ({
   </>
 );
 
-interface cardItemProps {
+interface CardItemProps {
   type: "restaurant" | "food";
-  item: IRestaurantResponse | any;
+  item: IRestaurantResponse | IFoodResponse;
 }
 
-const HorizontalCard: FC<cardItemProps> = ({ type, item }) => {
+const HorizontalCard: FC<CardItemProps> = ({ type, item }) => {
   const isFood = type === "food";
 
   return (
@@ -166,37 +168,47 @@ const HorizontalCard: FC<cardItemProps> = ({ type, item }) => {
       className={`relative flex flex-col w-64 rounded-2xl bg-cardItem shadow-cardItemShadow`}
     >
       <div className="relative w-full h-[136px]">
-        <Image
-          src={item.coverUrl}
-          alt=""
-          fill
-          sizes="100%"
-          priority
-          className="object-cover rounded-2xl"
-        />
+        {isFood ? (
+          <Image
+            src={(item as IFoodResponse).imageUrl}
+            alt=""
+            fill
+            sizes="100%"
+            priority
+            className="object-cover rounded-2xl"
+          />
+        ) : (
+          <Image
+            src={(item as IRestaurantResponse).coverUrl}
+            alt=""
+            fill
+            sizes="100%"
+            priority
+            className="object-cover rounded-2xl"
+          />
+        )}
         <HeartButton />
         <RatingBadge
           rating={item.totalStars}
           count={item.totalReviews}
-          className="absolute top-2 left-2 "
+          className={`${
+            isFood
+              ? "absolute right-4 -bottom-2"
+              : "absolute top-4 left-4 bg-white text-black"
+          }`}
+          variant={isFood ? "sm" : "default"}
         />
-        {isFood && (
-          <RatingBadge
-            rating={4.9}
-            count={25}
-            className="absolute right-4 -bottom-2 shadow-ratingBadgeShadow"
-            variant="sm"
-          />
-        )}
+        {isFood && <PriceBadge price={(item as IFoodResponse).price} />}
       </div>
       <div className="py-2 px-4">
         <div className="flex flex-col">
           <InfoSection
             type={type}
             name={item.name}
-            tags={item.categories}
-            verifiedBadge={item.verifiedBadge}
-            freeDelivery={item.freeDelivery}
+            tags={(item as IRestaurantResponse).categories}
+            verifiedBadge={(item as IRestaurantResponse).verifiedBadge}
+            freeDelivery={(item as IRestaurantResponse).freeDelivery}
+            ingredient={(item as IFoodResponse).ingredient}
           />
         </div>
       </div>
@@ -204,85 +216,88 @@ const HorizontalCard: FC<cardItemProps> = ({ type, item }) => {
   );
 };
 
-const VerticalCard: FC<cardItemProps> = ({ type }) => {
+const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
   const { isMobile } = useScreenMode();
-  const renderByType = useMemo(
-    () => ({
-      restaurant: (
-        <div
-          className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
-          } p-2 shadow-cardItemShadow bg-cardItem rounded-2xl`}
-        >
-          <div className="flex justify-between relative">
-            <div
-              className={`relative flex items-center justify-center ${
-                isMobile ? "w-16 h-16" : "w-14 h-14"
-              } rounded-2xl shadow-socialBtnShadow bg-white`}
-            >
-              <Image
-                src={IMAGES_CONST.common.defaultAvatar}
-                alt=""
-                width={isMobile ? 55 : 42}
-                height={isMobile ? 55 : 42}
-                style={{ objectFit: "cover" }}
-                className="rounded-full"
-              />
-              <BadgeNumber
-                number={4.5}
-                className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
-              />
-            </div>
-            <HeartButton />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1">
-              <span className="font-semibold">Burger King</span>
-              <CircleCheck
-                color="#029094"
-                strokeWidth={2}
-                size={10}
-                className="mt-1"
-              />
-            </div>
-            <FeeAndTimeDelivery free={false} time="10-15" />
-            <div className="flex gap-2">
-              <Tag title="Chicken" size={"sm"} />
-              <Tag title="Burger" size={"sm"} />
-            </div>
-          </div>
-        </div>
-      ),
-      food: (
-        <div
-          className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
-        >
-          <div className="relative w-full h-36 max-h-36 ">
-            <Image
-              src={IMAGES_CONST.common.defaultAvatar}
-              alt=""
-              className="w-full h-full rounded-2xl"
-              style={{ objectFit: "cover" }}
-            />
-            <HeartButton />
-            <RatingBadge
-              rating={4.9}
-              count={25}
-              className="absolute left-2 -bottom-3 shadow-ratingBadgeShadow"
-              variant="default"
-            />
-            <PriceBadge price={25.23} />
-          </div>
-          <div className="flex flex-col gap-1 py-2 px-4 mt-4">
-            <span className="font-semibold text-sm">McDonald</span>
-            <p className="text-xs text-lightGray">Chicken, Cheese</p>
-          </div>
-        </div>
-      ),
-    }),
-    [isMobile]
-  );
 
-  return renderByType[type];
+  const restaurant = item as IRestaurantResponse;
+  const food = item as IFoodResponse;
+
+  const renderByType = () => ({
+    restaurant: (
+      <div
+        className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
+          } p-2 shadow-cardItemShadow bg-cardItem rounded-2xl`}
+      >
+        <div className="flex justify-between relative">
+          <div
+            className={`relative flex items-center justify-center ${
+              isMobile ? "w-16 h-16" : "w-14 h-14"
+            } rounded-2xl shadow-socialBtnShadow bg-white`}
+          >
+            <Image
+              src={restaurant.avatarUrl}
+              alt={restaurant.name}
+              width={isMobile ? 55 : 42}
+              height={isMobile ? 55 : 42}
+              style={{ objectFit: "cover" }}
+              className="rounded-full"
+            />
+            <BadgeNumber
+              number={4.5}
+              className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
+            />
+          </div>
+          <HeartButton />
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-1">
+            <span className="font-semibold">Burger King</span>
+            <CircleCheck
+              color="#029094"
+              strokeWidth={2}
+              size={10}
+              className="mt-1"
+            />
+          </div>
+          <FeeAndTimeDelivery free={false} time="10-15" />
+          <div className="flex gap-2">
+            <Tag title="Chicken" size={"sm"} />
+            <Tag title="Burger" size={"sm"} />
+          </div>
+        </div>
+      </div>
+    ),
+    food: (
+      <div
+        className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
+      >
+        <div className="relative w-full h-36 max-h-36 ">
+          <Image
+            src={food.imageUrl}
+            alt={food.name}
+            fill
+            sizes="100%"
+            className="w-full h-full rounded-2xl"
+            style={{ objectFit: "cover" }}
+          />
+          <HeartButton />
+          <RatingBadge
+            rating={food.totalStars}
+            count={food.totalReviews}
+            className="absolute left-2 -bottom-3 shadow-ratingBadgeShadow"
+            variant="default"
+          />
+          <PriceBadge price={food.price} />
+        </div>
+        <div className="flex flex-col gap-1 py-3 px-3 mt-3">
+          <span className="font-semibold text-sm">{food.name}</span>
+          <p className="text-xs text-lightGray">{food.ingredient}</p>
+        </div>
+      </div>
+    ),
+  });
+
+  return renderByType()[type];
 };
 
 export { HorizontalCard, VerticalCard };

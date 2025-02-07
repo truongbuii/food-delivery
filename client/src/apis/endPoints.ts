@@ -15,6 +15,7 @@ const BASE_USER = `${BASE_API}/user`;
 const BASE_ADDRESS = `${BASE_API}/deliver-address`;
 export const BASE_CATEGORY = `${BASE_API}/category`;
 export const BASE_RESTAURANT = `${BASE_API}/restaurant`;
+export const BASE_FOOD = `${BASE_API}/food`;
 
 const EndPoints = {
   AUTH: createPath(BASE_AUTH, {

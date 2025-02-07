@@ -28,4 +28,7 @@ export const QUERIES_KEY = {
   RESTAURANT: {
     GET_RESTAURANTS: "GET_RESTAURANTS",
   },
+  FOOD: {
+    GET_ALL: "GET_FOODS",
+  },
 };

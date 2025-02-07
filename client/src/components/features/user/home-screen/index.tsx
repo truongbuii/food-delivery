@@ -11,12 +11,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { useGetRestaurants } from "@/queries";
+import { useGetFoods, useGetRestaurants } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 const HomeScreen = () => {
   const { data: restaurants } = useGetRestaurants();
+  const { data: foods } = useGetFoods();
 
   return (
     <div className="flex flex-col">
@@ -61,14 +62,9 @@ const HomeScreen = () => {
         <div className="flex flex-col gap-2">
           <span className="text-lg font-semibold">Popular items</span>
           <div className="grid grid-cols-2 gap-4">
-            <VerticalCard type="food" item={restaurants?.data?.[1]} />
-            <VerticalCard type="food" item={restaurants?.data?.[1]} />
-            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
-            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
-            <VerticalCard type="food" item={restaurants?.data?.[1]} />
-            <VerticalCard type="food" item={restaurants?.data?.[1]} />
-            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
-            <VerticalCard type="restaurant" item={restaurants?.data?.[1]} />
+            {foods?.data?.map((food) => (
+              <VerticalCard key={food.id} type="food" item={food} />
+            ))}
           </div>
         </div>
       </div>
