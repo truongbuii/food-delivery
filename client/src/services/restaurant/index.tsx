@@ -13,3 +13,13 @@ export const getRestaurants = async (): Promise<
   >(BASE_RESTAURANT);
   return resp;
 };
+
+export const getRestaurantBySlug = async (
+  slug: string
+): Promise<IApiDataResponse<IRestaurantResponse>> => {
+  const resp = await httpClient.get<
+    IRestaurantResponse,
+    IApiDataResponse<IRestaurantResponse>
+  >(`${BASE_RESTAURANT}/${slug}`);
+  return resp;
+};

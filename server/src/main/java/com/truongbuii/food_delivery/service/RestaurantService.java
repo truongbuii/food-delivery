@@ -41,6 +41,18 @@ public class RestaurantService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
     }
 
+    public RestaurantResponse getRestaurantBySlug(String slug) {
+        Restaurant restaurant = restaurantRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
+        Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+                .stream()
+                .map(categoryMapper::toCategoryIdNameResponse)
+                .collect(Collectors.toSet());
+        RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+        restaurantResponse.setCategories(categories);
+        return restaurantResponse;
+    }
+
     public List<RestaurantResponse> getAll() {
         List<Restaurant> restaurants = restaurantRepository.findAllByParams();
 

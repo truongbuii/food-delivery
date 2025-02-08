@@ -6,7 +6,7 @@ import { Avatar, HeaderSideMenu, AvatarUpload } from "./Avatar";
 import ButtonType from "./ButtonType";
 import CategoryItem from "./CategoryItem";
 import SearchAndFilter from "./SearchAndFilter";
-import { VerticalCard, HorizontalCard } from "./CardItem";
+import { VerticalCard, HorizontalCard, FeeAndTimeDelivery } from "./CardItem";
 import Tag from "./Tag";
 import SwitchMode from "./SwitchMode";
 import FixedFooter from "./FixedFooter";
@@ -28,6 +28,7 @@ export {
   SearchAndFilter,
   VerticalCard,
   HorizontalCard,
+  FeeAndTimeDelivery,
   Tag,
   SwitchMode,
   FixedFooter,

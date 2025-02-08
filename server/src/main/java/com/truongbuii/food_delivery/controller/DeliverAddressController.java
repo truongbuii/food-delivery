@@ -18,23 +18,23 @@ import java.util.List;
 public class DeliverAddressController {
     private final DeliverAddressService deliverAddressService;
 
-    @GetMapping("/all")
+    @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<DeliverAddressResponse>>> getAll(
-            @RequestParam Long userId
+            @PathVariable Long userId
     ) {
         var deliverAddress = deliverAddressService.getAllByUserId(userId);
         return ResponseEntity.ok(ApiResponse.<List<DeliverAddressResponse>>builder().data(deliverAddress).build());
     }
 
-    @GetMapping("/get")
+    @GetMapping("/{addressId}")
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> get(
-            @RequestParam Long addressId
+            @PathVariable Long addressId
     ) {
         var deliverAddress = deliverAddressService.getById(addressId);
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> post(
             @Valid
             @RequestBody DeliverAddressPost deliverAddressPost
@@ -43,7 +43,7 @@ public class DeliverAddressController {
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<ApiResponse<DeliverAddressResponse>> put(
             @Valid
             @RequestBody DeliverAddressPut deliverAddressPut
@@ -52,7 +52,7 @@ public class DeliverAddressController {
         return ResponseEntity.ok(ApiResponse.<DeliverAddressResponse>builder().data(deliverAddress).build());
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(
             @PathVariable Long id
     ) {

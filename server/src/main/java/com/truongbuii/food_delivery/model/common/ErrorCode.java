@@ -29,6 +29,8 @@ public class ErrorCode {
     // Food error
     public static final String ERR_FOOD_DUPLICATE = "This food is existed in this restaurant";
     public static final String ERR_FOOD_NOT_FOUND = "This food is not found";
+    public static final String ERR_CATEGORY_NOT_MATCH = "This category is not matched with this restaurant";
+
 
     // Addon error
     public static final String ERR_ADDON_DUPLICATE = "This addon name is existed";

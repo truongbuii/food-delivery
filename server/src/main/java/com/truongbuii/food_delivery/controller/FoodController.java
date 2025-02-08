@@ -23,7 +23,24 @@ public class FoodController {
         var foodResponses = foodService.getAll();
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
-    
+
+    @GetMapping("/featured/{restaurantSlug}")
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getFeaturedFoodByRestaurantId(
+            @PathVariable String restaurantSlug
+    ) {
+        var foodResponses = foodService.getFeaturedFoodByRestaurantSlug(restaurantSlug);
+        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
+    }
+
+    @GetMapping("/by-category")
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodByCategoryId(
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam String restaurantSlug
+    ) {
+        var foodResponses = foodService.getByRestaurantAndCategory(restaurantSlug, categoryId);
+        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<FoodResponse>> create(
             @Valid

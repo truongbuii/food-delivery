@@ -1,4 +1,4 @@
-import { EndPoints } from "@/apis";
+import { BASE_ADDRESS } from "@/apis/endPoints";
 import createHttpClient from "@/apis/httpClient";
 import {
   IApiDataResponse,
@@ -15,7 +15,7 @@ export const getAllDeliverAddrService = async (
   const resp = await httpClient.get<
     IDeliveryAddressResponse[],
     IApiDataResponse<IDeliveryAddressResponse[]>
-  >(EndPoints.ADDRESS.getAll, { params: { userId: userId } });
+  >(`${BASE_ADDRESS}/${userId}`);
   return resp;
 };
 
@@ -25,7 +25,7 @@ export const getDeliverAddrService = async (
   const resp = await httpClient.get<
     IDeliveryAddress,
     IApiDataResponse<IDeliveryAddress>
-  >(EndPoints.ADDRESS.get, { params: { addressId: addressId } });
+  >(`${BASE_ADDRESS}/${addressId}`);
   return resp;
 };
 
@@ -35,7 +35,7 @@ export const createDeliverAddrService = async (
   const resp = await httpClient.post<
     IDeliveryAddressResponse,
     IApiDataResponse<IDeliveryAddressResponse>
-  >(EndPoints.ADDRESS.create, {
+  >(BASE_ADDRESS, {
     userId: value.userId,
     name: value.name,
     phoneNumber: value.phoneNumber,
@@ -52,7 +52,7 @@ export const updateDeliverAddrService = async (
   const resp = await httpClient.put<
     IDeliveryAddressResponse,
     IApiDataResponse<IDeliveryAddressResponse>
-  >(EndPoints.ADDRESS.update, {
+  >(BASE_ADDRESS, {
     id: value.id,
     name: value.name,
     phoneNumber: value.phoneNumber,
@@ -67,7 +67,7 @@ export const deleteDeliverAddrService = async (
   addressId: number
 ): Promise<IApiDataResponse<void>> => {
   const resp = await httpClient.delete<number, IApiDataResponse<void>>(
-    `${EndPoints.ADDRESS.delete}/${addressId}`
+    `${BASE_ADDRESS}/${addressId}`
   );
   return resp;
 };

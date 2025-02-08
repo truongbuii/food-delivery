@@ -20,9 +20,17 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> get() {
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll() {
         var restaurant = restaurantService.getAll();
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<ApiResponse<RestaurantResponse>> getBySlug(
+            @PathVariable String slug
+    ) {
+        var restaurant = restaurantService.getRestaurantBySlug(slug);
+        return ResponseEntity.ok(ApiResponse.<RestaurantResponse>builder().data(restaurant).build());
     }
 
     @PostMapping

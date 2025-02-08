@@ -38,6 +38,7 @@ const Avatar: FC<AvatarProps> = ({ className, avatarURL }) => {
         alt="Avatar"
         fill
         sizes="100vw"
+        priority
         className="w-full h-full object-cover"
         onError={(e) => {
           e.currentTarget.src = IMAGES_CONST.common.defaultAvatar.src;

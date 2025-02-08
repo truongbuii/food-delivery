@@ -1,5 +1,5 @@
 import BadgeNumber from "@/components/molecule/BadgeNumber";
-import { IconStar } from "@/components/molecule/svgs";
+import { IconChecked, IconStar } from "@/components/molecule/svgs";
 import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
 import useScreenMode from "@/hooks/useScreenMode";
@@ -81,23 +81,37 @@ const PriceBadgeComponent: FC<{ price: number }> = ({ price }) => {
 export const PriceBadge = memo(PriceBadgeComponent);
 PriceBadge.displayName = "PriceBadge";
 
-const FeeAndTimeDeliveryComponent: FC<{ free: boolean; time: string }> = ({
-  free,
-  time,
-}) => (
-  <div className="flex gap-2 text-lightGray">
+const FeeAndTimeDeliveryComponent: FC<{
+  free: boolean;
+  time: string;
+  variant?: "default" | "lg";
+}> = ({ free, time, variant = "default" }) => (
+  <div
+    className={clsx(
+      "flex gap-2 text-lightGray",
+      variant === "lg" ? "text-sm" : "text-xs"
+    )}
+  >
     <div className="flex gap-1 items-center">
-      <Bike size={12} strokeWidth={2} className="text-primary" />
-      <span className="text-xs">{free == true ? "free" : "charge"}</span>
+      <Bike
+        size={variant === "lg" ? 14 : 12}
+        strokeWidth={2}
+        className="text-primary"
+      />
+      <span>{free == true ? "free delivery" : "charge fee"}</span>
     </div>
     <div className="flex gap-1 items-center">
-      <Timer size={12} strokeWidth={2} className="text-primary" />
-      <span className="text-xs">{time} mins</span>
+      <Timer
+        size={variant === "lg" ? 14 : 12}
+        strokeWidth={2}
+        className="text-primary"
+      />
+      <span>{time} mins</span>
     </div>
   </div>
 );
 
-export const FeeAndTimeDelivery = memo(FeeAndTimeDeliveryComponent);
+const FeeAndTimeDelivery = memo(FeeAndTimeDeliveryComponent);
 FeeAndTimeDelivery.displayName = "FeeAndTimeDelivery";
 
 interface InfoSectionProps {
@@ -123,12 +137,7 @@ const InfoSection: FC<InfoSectionProps> = ({
         <div className="flex items-center gap-2">
           <span className="font-semibold">{name}</span>
           {verifiedBadge && (
-            <CircleCheck
-              color="#029094"
-              strokeWidth={3}
-              size={12}
-              className="mt-1"
-            />
+            <IconChecked width={12} height={12} className="mt-1" />
           )}
         </div>
         <FeeAndTimeDelivery free={freeDelivery} time="10-15" />
@@ -300,4 +309,4 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
   return renderByType()[type];
 };
 
-export { HorizontalCard, VerticalCard };
+export { HorizontalCard, VerticalCard, FeeAndTimeDelivery };

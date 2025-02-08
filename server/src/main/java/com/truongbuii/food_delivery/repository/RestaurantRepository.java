@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
@@ -15,4 +16,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     @Query("SELECT r from Restaurant r WHERE r.hasBanned = false")
     List<Restaurant> findAllByParams();
+
+    Optional<Restaurant> findBySlug(String slug);
 }

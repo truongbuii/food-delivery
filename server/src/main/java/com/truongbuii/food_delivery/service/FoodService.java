@@ -48,11 +48,25 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
+    public List<FoodResponse> getByRestaurantAndCategory(String restaurantSlug, Integer categoryId) {
+        return foodRepository.findByRestaurantSlugAndCategoryId(restaurantSlug, categoryId).stream()
+                .map(foodMapper::toFoodResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<FoodResponse> getFeaturedFoodByRestaurantSlug(String restaurantSlug) {
+        List<Food> foods = foodRepository.findFeaturedByRestaurantSlug(restaurantSlug);
+
+        return foods.stream()
+                .map(foodMapper::toFoodResponse)
+                .collect(Collectors.toList());
+    }
+
     public FoodResponse create(FoodPost foodPost) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPost.restaurantId());
         Category category = categoryService.getCategoryById(foodPost.categoryId());
         Set<Addon> addons = addonService.checkAddonIdExist(foodPost.addonIds());
-        validateFood(foodPost.name(), null, restaurant.getId());
+        validateFood(foodPost.name(), null, restaurant, foodPost.categoryId());
         String imageUrl = "";
 
         Food food = new Food();
@@ -82,7 +96,7 @@ public class FoodService {
     public FoodResponse update(FoodPut foodPut) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPut.restaurantId());
         Food food = getFoodById(foodPut.id());
-        validateFood(foodPut.name(), foodPut.id(), restaurant.getId());
+        validateFood(foodPut.name(), foodPut.id(), restaurant, foodPut.categoryId());
 
         if (foodPut.categoryId() != null && !food.getCategory().getId().equals(foodPut.categoryId())) {
             Category category = categoryService.getCategoryById(foodPut.categoryId());
@@ -133,13 +147,20 @@ public class FoodService {
         return foodMapper.toFoodResponse(food);
     }
 
-    private void validateFood(String name, Long foodId, Long restaurantId) {
-        if (isFoodExist(name, foodId, restaurantId)) {
+    private void validateFood(String name, Long foodId, Restaurant restaurant, Integer categoryId) {
+        if (isFoodExist(name, foodId, restaurant.getId())) {
             throw new DuplicateResourceException(ErrorCode.ERR_FOOD_DUPLICATE);
         }
+        checkCategoryInRestaurant(categoryId, restaurant);
     }
 
     private boolean isFoodExist(String name, Long foodId, Long restaurantId) {
         return foodRepository.findExistByName(name, foodId, restaurantId) != null;
+    }
+
+    private void checkCategoryInRestaurant(Integer categoryId, Restaurant restaurant) {
+        if (restaurant.getCategories().stream().noneMatch(c -> c.getId().equals(categoryId))) {
+            throw new ResourceNotFoundException(ErrorCode.ERR_CATEGORY_NOT_MATCH);
+        }
     }
 }
