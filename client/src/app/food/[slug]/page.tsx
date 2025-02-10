@@ -1,8 +1,8 @@
-import RestaurantProfile from "@/components/features/restaurant/restaurant-profile";
+import FoodProfile from "@/components/features/food/food-profile";
 import { ButtonType } from "@/components/molecule";
 import { PATHNAME } from "@/configs";
 
-const RestaurantDetailPage = () => {
+const FoodDetailPage = () => {
   return (
     <>
       <ButtonType
@@ -11,10 +11,10 @@ const RestaurantDetailPage = () => {
         expectPath={PATHNAME.HOME}
       />
       <div className="px-6 py-6">
-        <RestaurantProfile />
+        <FoodProfile />
       </div>
     </>
   );
 };
 
-export default RestaurantDetailPage;
+export default FoodDetailPage;

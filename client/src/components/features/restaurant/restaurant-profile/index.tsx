@@ -5,6 +5,7 @@ import RestaurantFoods from "@/components/features/restaurant/restaurant-foods";
 import { Avatar, Tag } from "@/components/molecule";
 import { FeeAndTimeDelivery } from "@/components/molecule";
 import { IconChecked, IconStar } from "@/components/molecule/svgs";
+import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 
 import { useGetRestaurantBySlug } from "@/queries";
 import Image from "next/image";
@@ -14,16 +15,19 @@ import { useParams } from "next/navigation";
 const RestaurantProfile = () => {
   const param = useParams();
   const { data: restaurant } = useGetRestaurantBySlug(param.slug as string);
+  const _restaurant = restaurant?.data
+    ? MapperRestaurant(restaurant.data)
+    : null;
 
   return (
     <div className="flex flex-col w-full">
-      {restaurant?.data && (
+      {_restaurant && (
         <>
           <div className="relative flex">
             <div className="relative w-full h-36 rounded-2xl overflow-hidden">
               <Image
-                src={restaurant.data.coverUrl}
-                alt={restaurant.data.name}
+                src={_restaurant.coverUrl}
+                alt={_restaurant.name}
                 fill
                 sizes="100%"
                 priority
@@ -34,9 +38,9 @@ const RestaurantProfile = () => {
               <div className="relative">
                 <Avatar
                   className="w-20 h-20"
-                  avatarURL={restaurant.data.avatarUrl}
+                  avatarURL={_restaurant.avatarUrl}
                 />
-                {restaurant.data.freeDelivery && (
+                {_restaurant.freeDelivery && (
                   <div className="absolute w-[22px] h-[22px] flex justify-center items-center bg-background rounded-full bottom-0 right-1">
                     <IconChecked width={15} height={15} />
                   </div>
@@ -47,29 +51,27 @@ const RestaurantProfile = () => {
 
           <div className="flex flex-col gap-5 mt-14">
             <div className="flex flex-col items-center gap-1">
-              <h1 className="font-semibold text-xl">{restaurant.data.name}</h1>
-              <p className="text-lightGray text-xs">
-                {restaurant.data.address}
-              </p>
+              <h1 className="font-semibold text-xl">{_restaurant.name}</h1>
+              <p className="text-lightGray text-xs">{_restaurant.address}</p>
 
-              {restaurant.data.categories && (
+              {_restaurant.categories && (
                 <div className="flex gap-2 p-2">
-                  {restaurant.data.categories.map((category) => (
+                  {_restaurant.categories.map((category) => (
                     <Tag key={category.id} size="sm" title={category.name} />
                   ))}
                 </div>
               )}
 
               <FeeAndTimeDelivery
-                free={restaurant.data.freeDelivery}
+                free={_restaurant.freeDelivery}
                 time="10-15"
                 variant="lg"
               />
               <div className="flex items-center gap-2 text-sm">
                 <IconStar width={15} height={15} />
-                <span>{restaurant.data.totalStars}</span>
+                <span>{_restaurant.totalStars}</span>
                 <span className="text-lightGray">
-                  ({restaurant.data.totalReviews}+)
+                  ({_restaurant.totalReviews}+)
                 </span>
                 <Link href="" className="text-primary text-xs underline">
                   See Review
@@ -79,7 +81,7 @@ const RestaurantProfile = () => {
             <div>
               <RestaurantFeaturedItems restaurantSlug={param.slug as string} />
               <RestaurantFoods
-                categories={restaurant.data.categories}
+                categories={_restaurant.categories}
                 restaurantSlug={param.slug as string}
               />
             </div>

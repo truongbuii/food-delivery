@@ -7,10 +7,10 @@ import { QUERIES_KEY } from "@/queries/key";
 import { getRestaurantBySlug, getRestaurants } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetRestaurants = () => {
+export const useGetRestaurants = (categoryId: number | null) => {
   return useQuery<IApiDataResponse<IRestaurantResponse[]>, IApiErrorResponse>({
-    queryKey: [QUERIES_KEY.RESTAURANT.GET_RESTAURANTS],
-    queryFn: () => getRestaurants(),
+    queryKey: [QUERIES_KEY.RESTAURANT.GET_RESTAURANTS, categoryId],
+    queryFn: () => getRestaurants(categoryId),
   });
 };
 

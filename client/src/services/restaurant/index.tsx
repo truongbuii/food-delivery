@@ -4,13 +4,17 @@ import { IApiDataResponse, IRestaurantResponse } from "@/interfaces";
 
 const httpClient = createHttpClient();
 
-export const getRestaurants = async (): Promise<
-  IApiDataResponse<IRestaurantResponse[]>
-> => {
+export const getRestaurants = async (
+  categoryId: number | null
+): Promise<IApiDataResponse<IRestaurantResponse[]>> => {
   const resp = await httpClient.get<
     IRestaurantResponse[],
     IApiDataResponse<IRestaurantResponse[]>
-  >(BASE_RESTAURANT);
+  >(BASE_RESTAURANT, {
+    params: {
+      categoryId,
+    },
+  });
   return resp;
 };
 

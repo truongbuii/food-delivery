@@ -15,7 +15,7 @@ export const getAllDeliverAddrService = async (
   const resp = await httpClient.get<
     IDeliveryAddressResponse[],
     IApiDataResponse<IDeliveryAddressResponse[]>
-  >(`${BASE_ADDRESS}/${userId}`);
+  >(`${BASE_ADDRESS}/user/${userId}`);
   return resp;
 };
 

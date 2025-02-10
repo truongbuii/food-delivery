@@ -17,7 +17,7 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
   const { isMobile } = useScreenMode();
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
-  const threshold = 100;
+  const threshold = 50;
 
   useEffect(() => {
     if (!parentRef?.current) return;

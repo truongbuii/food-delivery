@@ -14,6 +14,16 @@ export const getFoods = async (): Promise<
   return resp;
 };
 
+export const getFoodBySlug = async (
+  slug: string
+): Promise<IApiDataResponse<IFoodResponse>> => {
+  const resp = await httpClient.get<
+    IFoodResponse,
+    IApiDataResponse<IFoodResponse>
+  >(`${BASE_FOOD}/${slug}`);
+  return resp;
+};
+
 export const getFeaturedFoodsByRestaurantSlug = async (
   restaurantSlug: string
 ): Promise<IApiDataResponse<IFoodResponse[]>> => {
@@ -24,13 +34,13 @@ export const getFeaturedFoodsByRestaurantSlug = async (
   return resp;
 };
 
-export const getFoodsByRestaurantAndCategory = async (
-  restaurantSlug: string,
-  categoryId: number | null
+export const getFoodsByParams = async (
+  categoryId: number | null,
+  restaurantSlug: string | null
 ): Promise<IApiDataResponse<IFoodResponse[]>> => {
   const resp = await httpClient.get<
     IFoodResponse[],
     IApiDataResponse<IFoodResponse[]>
-  >(`${BASE_FOOD}/by-category`, { params: { restaurantSlug, categoryId } });
+  >(`${BASE_FOOD}/by-params`, { params: { restaurantSlug, categoryId } });
   return resp;
 };

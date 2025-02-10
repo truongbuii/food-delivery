@@ -2,7 +2,7 @@
 
 import { VerticalCard } from "@/components/molecule";
 import { ICategory } from "@/interfaces";
-import { useGetFoodsByRestaurantAndCategory } from "@/queries";
+import { useGetFoodsByParams } from "@/queries";
 import { FC, useState } from "react";
 
 const RestaurantFoods: FC<{
@@ -10,10 +10,7 @@ const RestaurantFoods: FC<{
   restaurantSlug: string;
 }> = ({ categories, restaurantSlug }) => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const { data: foods } = useGetFoodsByRestaurantAndCategory(
-    restaurantSlug,
-    categoryId
-  );
+  const { data: foods } = useGetFoodsByParams(categoryId, restaurantSlug);
 
   const handleClick = (id: number) => {
     setCategoryId(id);

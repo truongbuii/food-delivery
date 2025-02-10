@@ -67,4 +67,5 @@ export type {
   ICategoryResponse,
   IRestaurantResponse,
   IFoodResponse,
+  IAddon,
 };

@@ -7,12 +7,24 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { ICategory } from "@/interfaces";
+import { MapperCategory } from "@/mapping/category.mapping";
 import { useGetCategories } from "@/queries";
-import { useState } from "react";
+import { FC, useMemo, useState } from "react";
 
-const CategoryCarousel = () => {
+const CategoryCarousel: FC<{ onClick: (id: number | null) => void }> = ({
+  onClick,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const { data: categories } = useGetCategories();
+  const _categories = useMemo(
+    () => categories?.data?.map((category) => MapperCategory(category)) ?? [],
+    [categories]
+  );
+
+  const handleSelectCategory = (id: number) => {
+    setSelectedCategory(id);
+    onClick(id);
+  };
 
   return (
     <Carousel
@@ -20,7 +32,7 @@ const CategoryCarousel = () => {
       opts={{ align: "start", dragFree: true }}
     >
       <CarouselContent>
-        {categories?.data?.map((category: ICategory) => (
+        {_categories.map((category: ICategory) => (
           <CarouselItem key={category.id} className="basis-5/5 pl-4">
             <div className="px-[2px]">
               <CategoryItem
@@ -29,7 +41,7 @@ const CategoryCarousel = () => {
                 image={category.imageUrl}
                 title={category.name}
                 isSelected={selectedCategory === category.id}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => handleSelectCategory(category.id)}
               />
             </div>
           </CarouselItem>

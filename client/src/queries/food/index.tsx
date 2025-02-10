@@ -7,7 +7,8 @@ import { QUERIES_KEY } from "@/queries/key";
 import {
   getFoods,
   getFeaturedFoodsByRestaurantSlug,
-  getFoodsByRestaurantAndCategory,
+  getFoodsByParams,
+  getFoodBySlug,
 } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 
@@ -18,6 +19,13 @@ export const useGetFoods = () => {
   });
 };
 
+export const useGetFoodBySlug = (slug: string) => {
+  return useQuery<IApiDataResponse<IFoodResponse>, IApiErrorResponse>({
+    queryKey: [QUERIES_KEY.FOOD.GET_BY_SLUG],
+    queryFn: () => getFoodBySlug(slug),
+  });
+};
+
 export const useFeaturedFoods = (restaurantSlug: string) => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
     queryKey: [QUERIES_KEY.FOOD.GET_FEATURED_BY_RESTAURANT_SLUG],
@@ -25,12 +33,12 @@ export const useFeaturedFoods = (restaurantSlug: string) => {
   });
 };
 
-export const useGetFoodsByRestaurantAndCategory = (
-  restaurantSlug: string,
-  categoryId: number | null
+export const useGetFoodsByParams = (
+  categoryId: number | null,
+  restaurantSlug: string | null
 ) => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
-    queryKey: [QUERIES_KEY.FOOD.GET_BY_CATEGORY, categoryId],
-    queryFn: () => getFoodsByRestaurantAndCategory(restaurantSlug, categoryId),
+    queryKey: [QUERIES_KEY.FOOD.GET_BY_CATEGORY, categoryId, restaurantSlug],
+    queryFn: () => getFoodsByParams(categoryId, restaurantSlug),
   });
 };

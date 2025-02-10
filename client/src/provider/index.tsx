@@ -5,6 +5,7 @@ import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useAuthenticated from "../hooks/useAuthenticated";
 import { SnackbarProvider } from "notistack";
+import { AddonsProvider } from "@/contexts/AddonsContext";
 
 export function ThemeProvider({
   children,
@@ -30,7 +31,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+        <QueryClientProvider client={client}>
+          <AddonsProvider>{children}</AddonsProvider>
+        </QueryClientProvider>
       </ThemeProvider>
     </SnackbarProvider>
   );
