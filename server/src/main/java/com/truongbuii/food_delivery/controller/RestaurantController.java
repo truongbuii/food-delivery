@@ -20,8 +20,10 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll() {
-        var restaurant = restaurantService.getAll();
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll(
+            @RequestParam(required = false) Integer categoryId
+    ) {
+        var restaurant = restaurantService.getAllByParams(categoryId);
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
     }
 

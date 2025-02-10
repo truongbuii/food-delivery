@@ -18,7 +18,7 @@ import java.util.List;
 public class DeliverAddressController {
     private final DeliverAddressService deliverAddressService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse<List<DeliverAddressResponse>>> getAll(
             @PathVariable Long userId
     ) {

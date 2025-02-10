@@ -40,6 +40,12 @@ public class FoodService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
     }
 
+    public FoodResponse getFoodBySlug(String slug) {
+        Food food = foodRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
+        return foodMapper.toFoodResponse(food);
+    }
+
     public List<FoodResponse> getAll() {
         List<Food> foods = foodRepository.findAll();
 
@@ -48,8 +54,8 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodResponse> getByRestaurantAndCategory(String restaurantSlug, Integer categoryId) {
-        return foodRepository.findByRestaurantSlugAndCategoryId(restaurantSlug, categoryId).stream()
+    public List<FoodResponse> getAllByParams(String restaurantSlug, Integer categoryId) {
+        return foodRepository.findAllByParams(categoryId, restaurantSlug).stream()
                 .map(foodMapper::toFoodResponse)
                 .collect(Collectors.toList());
     }

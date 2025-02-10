@@ -24,6 +24,14 @@ public class FoodController {
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
+    @GetMapping("/{slug}")
+    public ResponseEntity<ApiResponse<FoodResponse>> getFoodBySlug(
+            @PathVariable String slug
+    ) {
+        var foodResponse = foodService.getFoodBySlug(slug);
+        return ResponseEntity.ok(ApiResponse.<FoodResponse>builder().data(foodResponse).build());
+    }
+
     @GetMapping("/featured/{restaurantSlug}")
     public ResponseEntity<ApiResponse<List<FoodResponse>>> getFeaturedFoodByRestaurantId(
             @PathVariable String restaurantSlug
@@ -32,12 +40,12 @@ public class FoodController {
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
-    @GetMapping("/by-category")
-    public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodByCategoryId(
+    @GetMapping("/by-params")
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodsByParams(
             @RequestParam(required = false) Integer categoryId,
-            @RequestParam String restaurantSlug
+            @RequestParam(required = false) String restaurantSlug
     ) {
-        var foodResponses = foodService.getByRestaurantAndCategory(restaurantSlug, categoryId);
+        var foodResponses = foodService.getAllByParams(restaurantSlug, categoryId);
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
