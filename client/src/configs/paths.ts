@@ -17,6 +17,7 @@ export const ROOT_PATH = {
   LIST: {
     FOOD_BY: "/list/food",
     RESTAURANT_BY: "/list/restaurant",
+    SEARCH: "/list/search",
   },
 };
 export const PATHNAME = { ...PUBLIC_PATH, ...ROOT_PATH };

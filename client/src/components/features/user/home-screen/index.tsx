@@ -14,7 +14,7 @@ import {
 import { PATHNAME } from "@/configs";
 import { MapperFood } from "@/mapping/food.mapping";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
-import { useGetFoodsByParams, useGetRestaurants } from "@/queries";
+import { useGetFoodsByParams, useGetRestaurantsByParams } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,7 +22,7 @@ import { useState } from "react";
 const HomeScreen = () => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
-  const { data: restaurants } = useGetRestaurants(categoryId);
+  const { data: restaurants } = useGetRestaurantsByParams(categoryId);
 
   const { data: foods } = useGetFoodsByParams(categoryId, null);
 

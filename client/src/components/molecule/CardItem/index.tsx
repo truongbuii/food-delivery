@@ -85,7 +85,8 @@ const FeeAndTimeDeliveryComponent: FC<{
   free: boolean;
   time: string;
   variant?: "default" | "lg";
-}> = ({ free, time, variant = "default" }) => (
+  type?: "horizontal" | "vertical";
+}> = ({ free, time, variant = "default", type = "horizontal" }) => (
   <div
     className={clsx(
       "flex gap-2 text-lightGray",
@@ -98,7 +99,15 @@ const FeeAndTimeDeliveryComponent: FC<{
         strokeWidth={2}
         className="text-primary"
       />
-      <span>{free == true ? "free delivery" : "charge fee"}</span>
+      <span>
+        {type === "horizontal"
+          ? free
+            ? "Free delivery"
+            : "Charge fee"
+          : free
+          ? "Free"
+          : "Charge"}
+      </span>
     </div>
     <div className="flex gap-1 items-center">
       <Timer
@@ -243,22 +252,24 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
     restaurant: (
       <div
         className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
-          } p-2 shadow-cardItemShadow bg-cardItem rounded-2xl`}
+          } px-2 py-3 shadow-cardItemShadow bg-cardItem rounded-2xl`}
       >
         <div className="flex justify-between relative">
           <div
             className={`relative flex items-center justify-center ${
               isMobile ? "w-16 h-16" : "w-14 h-14"
-            } rounded-2xl shadow-socialBtnShadow bg-white`}
+            } rounded-2xl shadow-[10px_15px_20px_rgb(211,209,216,0.5)] bg-white`}
           >
-            <Image
-              src={restaurant.avatarUrl}
-              alt={restaurant.name}
-              width={isMobile ? 55 : 42}
-              height={isMobile ? 55 : 42}
-              style={{ objectFit: "cover" }}
-              className="rounded-full"
-            />
+            <div className={`relative ${isMobile ? "w-14 h-14" : "w-10 h-10"}`}>
+              <Image
+                src={restaurant.avatarUrl}
+                alt={restaurant.name}
+                fill
+                sizes="100%"
+                style={{ objectFit: "cover" }}
+                className="rounded-full"
+              />
+            </div>
             <BadgeNumber
               number={4.5}
               className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
@@ -276,7 +287,11 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
               className="mt-1"
             />
           </div>
-          <FeeAndTimeDelivery free={false} time="10-15" />
+          <FeeAndTimeDelivery
+            free={(item as IRestaurantResponse).freeDelivery}
+            time="10-15"
+            type="vertical"
+          />
           <div className="flex gap-2">
             <Tag title="Chicken" size={"sm"} />
             <Tag title="Burger" size={"sm"} />
