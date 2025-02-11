@@ -11,6 +11,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { PATHNAME } from "@/configs";
 import { MapperFood } from "@/mapping/food.mapping";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetFoodsByParams, useGetRestaurants } from "@/queries";
@@ -44,7 +45,7 @@ const HomeScreen = () => {
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold">Featured restaurants</span>
             <Link
-              href="/restaurants"
+              href={`${PATHNAME.LIST.RESTAURANT_BY}?category=${categoryId}`}
               className="flex gap-[2px] items-center text-xs text-primary font-medium"
             >
               View All
@@ -71,7 +72,20 @@ const HomeScreen = () => {
 
         {/* Featured items */}
         <div className="flex flex-col gap-2">
-          <span className="text-lg font-semibold">Popular items</span>
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-semibold">Popular items</span>
+            <Link
+              href={
+                categoryId
+                  ? `${PATHNAME.LIST.FOOD_BY}?category=${categoryId}`
+                  : PATHNAME.LIST.FOOD_BY
+              }
+              className="flex gap-[2px] items-center text-xs text-primary font-medium"
+            >
+              View All
+              <ChevronRight size={10} className="mt-[2px]" />
+            </Link>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {_foods?.map((food) => (
               <VerticalCard key={food.id} type="food" item={food} />

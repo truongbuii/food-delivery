@@ -52,11 +52,25 @@ const CategoryItem: FC<CategoryItemProps> = ({
       </div>
     ),
     filter: (
-      <div className="flex flex-col items-center gap-2">
-        <div className="rounded-full bg-primary w-12 h-12 flex items-center justify-center">
-          <Image src={image} alt={title} width={24} height={24} />
+      <div
+        className={clsx(
+          "flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer",
+          isSelected ? "bg-primary" : "bg-secondary "
+        )}
+        onClick={onClick}
+      >
+        <div className="relative w-8 h-8 bg-white rounded-full flex items-center justify-center overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            sizes="100%"
+            fill
+            priority
+            className="w-full h-full"
+            style={{ objectFit: "cover" }}
+          />
         </div>
-        <p className="text-xs text-center">{title}</p>
+        <p className="text-xs text-center px-3">{title}</p>
       </div>
     ),
   };

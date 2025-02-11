@@ -148,7 +148,7 @@ const InfoSection: FC<InfoSectionProps> = ({
         </div>
       </div>
     ) : (
-      <div className="mt-2">
+      <div className="flex flex-col gap-1 mt-2">
         <div className="flex items-center gap-1">
           <span className="font-semibold">{name}</span>
           <CircleCheck
@@ -167,42 +167,50 @@ const InfoSection: FC<InfoSectionProps> = ({
 interface CardItemProps {
   type: "restaurant" | "food";
   item: IRestaurantResponse | IFoodResponse;
+  className?: string;
+  variant?: "default" | "lg";
 }
 
-const HorizontalCard: FC<CardItemProps> = ({ type, item }) => {
+const HorizontalCard: FC<CardItemProps> = ({
+  type,
+  item,
+  className,
+  variant = "default",
+}) => {
   const isFood = type === "food";
 
   return (
     <div
-      className={`relative flex flex-col w-64 rounded-2xl bg-cardItem shadow-cardItemShadow`}
+      className={clsx(
+        "relative flex flex-col w-64 rounded-2xl bg-cardItem shadow-cardItemShadow",
+        className
+      )}
     >
-      <div className="relative w-full h-[136px]">
-        {isFood ? (
-          <Image
-            src={(item as IFoodResponse).imageUrl}
-            alt=""
-            fill
-            sizes="100%"
-            priority
-            className="object-cover rounded-2xl"
-          />
-        ) : (
-          <Image
-            src={(item as IRestaurantResponse).coverUrl}
-            alt=""
-            fill
-            sizes="100%"
-            priority
-            className="object-cover rounded-2xl"
-          />
+      <div
+        className={clsx(
+          "relative w-full",
+          variant === "lg" ? "h-[165px]" : "h-[136px]"
         )}
+      >
+        <Image
+          src={
+            isFood
+              ? (item as IFoodResponse).imageUrl
+              : (item as IRestaurantResponse).avatarUrl
+          }
+          alt=""
+          fill
+          sizes="100%"
+          priority
+          className="object-cover rounded-2xl"
+        />
         <HeartButton />
         <RatingBadge
           rating={item.totalStars}
           count={item.totalReviews}
           className={`${
             isFood
-              ? "absolute right-4 -bottom-2"
+              ? "absolute left-4 -bottom-3"
               : "absolute top-4 left-4 bg-white text-black"
           }`}
           variant={isFood ? "sm" : "default"}

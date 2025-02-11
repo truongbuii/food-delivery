@@ -14,6 +14,7 @@ import BadgeNumber from "./BadgeNumber";
 import DatePicker from "./DatePicker";
 import SideMenu from "./SideMenu";
 import CartAddress from "./CardAddress";
+import FilterForm from "./FilterForm";
 
 export {
   PageTransition,
@@ -36,4 +37,5 @@ export {
   DatePicker,
   SideMenu,
   CartAddress,
+  FilterForm,
 };
