@@ -21,9 +21,13 @@ public class RestaurantController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll(
-            @RequestParam(required = false) Integer categoryId
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Float rating,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") Boolean freeDelivery,
+            @RequestParam(required = false, defaultValue = "false") Boolean popular
     ) {
-        var restaurant = restaurantService.getAllByParams(categoryId);
+        var restaurant = restaurantService.getAllByParams(rating, keyword, popular, categoryId, freeDelivery);
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
     }
 
