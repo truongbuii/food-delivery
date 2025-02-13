@@ -1,7 +1,7 @@
 "use client";
 
 import { SplashScreen } from "@/components/molecule";
-import { PATHNAME, PUBLIC_PATH } from "@/configs";
+import { PATHNAME, PUBLIC_PATH, VIEWER_CONTAINER_ID } from "@/configs";
 import useRouterProgress from "@/hooks/useRouterProgress";
 import useScreenMode from "@/hooks/useScreenMode";
 import { usePathname } from "next/navigation";
@@ -34,7 +34,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   useRouterProgress();
   return (
     <div
-      id="main-layout"
+      id={VIEWER_CONTAINER_ID}
       className={`w-full mx-auto min-h-screen relative bg-background ${
         isMobile ? "" : "max-w-[23.4375rem] overflow-hidden"
       }`}

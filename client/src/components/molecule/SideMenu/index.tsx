@@ -4,7 +4,7 @@ import LogOut from "@/components/features/user/log-out";
 import { SwitchMode } from "@/components/molecule";
 import { HeaderSideMenu } from "@/components/molecule/Avatar";
 import { SheetContent } from "@/components/ui/sheet";
-import { PATHNAME } from "@/configs";
+import { PATHNAME, VIEWER_CONTAINER_ID } from "@/configs";
 import {
   CircleHelp,
   FileText,
@@ -18,8 +18,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const SideMenu = () => {
-  const VIEWER_CONTAINER_ID = "main-layout";
-
   const [container, setContainer] = useState<HTMLElement | null>(null);
   useEffect(() => {
     setContainer(document.getElementById(VIEWER_CONTAINER_ID));

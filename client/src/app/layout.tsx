@@ -19,7 +19,11 @@ export default function RootLayout({
       <body className="bg-accent">
         <Providers>
           <MainLayout>
-            <PageTransition>{children}</PageTransition>
+            <PageTransition>
+              <div className="h-screen overflow-auto hide-scrollbar">
+                {children}
+              </div>
+            </PageTransition>
           </MainLayout>
         </Providers>
       </body>

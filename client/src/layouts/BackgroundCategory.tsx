@@ -9,9 +9,9 @@ const BackgroundCategory: FC<{ children: ReactNode }> = ({ children }) => {
         <Image
           src={IMAGES_CONST.common.pizzaCategoryBackground}
           alt={IMAGES_CONST.common.pizzaCategoryBackground.toString()}
-          width={280}
-          height={334}
-          className="absolute top-[-5px] -right-2 z-1"
+          width={335}
+          height={300}
+          className="absolute top-[-70px] -right-20 z-1"
         />
       </div>
       {children}

@@ -10,21 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { MapperFood } from "@/mapping/food.mapping";
 import { useGetFoodsByParams } from "@/queries";
 import { SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-
-const VIEWER_CONTAINER_ID = "sheet-id";
 
 const FoodsByCategory = () => {
   const param = useSearchParams();
@@ -34,24 +24,22 @@ const FoodsByCategory = () => {
   const { data: foods } = useGetFoodsByParams(categoryId, null);
   const _foods = foods?.data?.map((food) => MapperFood(food));
 
-  const [container, setContainer] = useState<HTMLElement | null>(null);
-  useEffect(() => {
-    setContainer(document.getElementById(VIEWER_CONTAINER_ID));
-  }, []);
-
   return (
-    <Sheet>
-      <div className="w-full" id={VIEWER_CONTAINER_ID}>
+    <Sheet key="right">
+      <div className="w-full">
         <div className="flex flex-col gap-14">
-          <div className="font-semibold text-lightGray">
-            <p className="text-2xl">There&apos;re</p>
-            <p className="text-3xl">more than </p>
+          <div className="flex flex-col text-lightGray">
+            <div className="font-bold text-primary">
+              <p className="text-[43px] leading-10">Food</p>
+              <p className="text-[43px]">Delivery</p>
+            </div>
             <div>
-              <span className="text-4xl text-primary">{_foods?.length}</span>{" "}
-              <span className="text-4xl">food items</span>
+              <span className="text-xl text-lightGray">
+                {_foods?.length} types of food
+              </span>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-5">
             <div className="flex justify-between h-5">
               <div className="flex w-full h-5 gap-2">
                 <span className="text-sm">Short by: </span>
@@ -79,7 +67,7 @@ const FoodsByCategory = () => {
                   variant={"link"}
                 >
                   <SlidersHorizontal
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                     size={20}
                     style={{
                       color: "hsl(var(--primary))",
@@ -103,17 +91,7 @@ const FoodsByCategory = () => {
           </div>
         </div>
       </div>
-      <SheetContent
-        side={"right"}
-        container={container}
-        className="w-full z-[150]"
-      >
-        <SheetHeader>
-          <SheetTitle></SheetTitle>
-          <SheetDescription></SheetDescription>
-        </SheetHeader>
-        <FilterForm />
-      </SheetContent>
+      <FilterForm />
     </Sheet>
   );
 };

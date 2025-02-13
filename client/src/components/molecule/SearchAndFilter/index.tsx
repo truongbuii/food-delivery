@@ -1,6 +1,7 @@
 "use client";
 
 import ButtonType from "@/components/molecule/ButtonType";
+import { SheetTrigger } from "@/components/ui/sheet";
 import { PATHNAME } from "@/configs";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,11 @@ const SearchAndFilter = () => {
           onKeyDown={handleSearch}
         />
       </div>
-      <ButtonType type="filter" />
+      <SheetTrigger asChild>
+        <div>
+          <ButtonType type="filter" />
+        </div>
+      </SheetTrigger>
     </div>
   );
 };

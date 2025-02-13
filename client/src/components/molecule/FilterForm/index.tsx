@@ -4,13 +4,20 @@ import CategoryItem from "@/components/molecule/CategoryItem";
 import { ShortByOptions } from "@/components/molecule/FilterForm/data";
 import { IconStar } from "@/components/molecule/svgs";
 import { Button } from "@/components/ui/button";
-import { SheetClose } from "@/components/ui/sheet";
+import {
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
+import { VIEWER_CONTAINER_ID } from "@/configs";
 import { cn } from "@/lib/utils";
 import { MapperCategory } from "@/mapping/category.mapping";
 import { useGetCategories } from "@/queries";
 import { ChevronLeft } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 interface FilterFormProps {
   categoryId?: number;
@@ -22,8 +29,13 @@ interface FilterFormProps {
 const FilterForm: FC<FilterFormProps> = ({}) => {
   const [priceValues, setPriceValues] = useState([0, 500]);
   const [rating, setRating] = useState<number | null>(null);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
   const [selectedShortBy, setSelectedShortBy] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  useEffect(() => {
+    setContainer(document.getElementById(VIEWER_CONTAINER_ID));
+  }, []);
 
   const { data: category } = useGetCategories();
   const _categories = category?.data?.map((category) =>
@@ -55,17 +67,26 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
   };
 
   return (
-    <>
-      <div className="relative p-6 flex items-center z-[50] w-full">
-        <SheetClose asChild>
-          <Button className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary ">
-            <ChevronLeft size={18} className="text-foreground" />
-          </Button>
-        </SheetClose>
-        <h2 className="flex-1 w-full text-center leading-10 text-lg font-medium">
-          Filter
-        </h2>
-      </div>
+    <SheetContent
+      side={"right"}
+      container={container}
+      className="w-full z-[150]"
+    >
+      <SheetHeader>
+        <SheetTitle>
+          <div className="relative p-6 flex items-center z-[50] w-full">
+            <SheetClose asChild>
+              <Button className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary ">
+                <ChevronLeft size={18} className="text-foreground" />
+              </Button>
+            </SheetClose>
+            <h2 className="flex-1 w-full text-center leading-10 text-lg font-medium">
+              Filter
+            </h2>
+          </div>
+        </SheetTitle>
+        <SheetDescription></SheetDescription>
+      </SheetHeader>
       <div className="flex flex-col px-6 gap-10">
         <div className="flex flex-col gap-5">
           <p className="text-lg font-semibold">Cuisines</p>
@@ -94,8 +115,8 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
                 className={cn(
                   "flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer px-3",
                   selectedShortBy === option.key
-                    ? "bg-primary text-white"
-                    : "bg-secondary"
+                    ? "bg-primary text-white shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
+                    : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
                 )}
                 onClick={() => handleSelectShortBy(option.key)}
               >
@@ -107,18 +128,20 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
 
         <div className="flex flex-col gap-5">
           <p className="text-lg font-semibold">Rating</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-between">
             {[5, 4, 3, 2, 1].map((star) => (
               <Button
                 key={star}
                 className={cn(
                   "text-xs text-center px-2 bg-secondary w-14 h-10 p-1 rounded-[40px]",
-                  rating === star ? "bg-primary text-white" : ""
+                  rating === star
+                    ? "bg-primary text-white shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
+                    : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
                 )}
                 variant={"ghost"}
                 onClick={() => handleSelectRating(star)}
               >
-                {star}
+                <span className="text-accent-foreground">{star}</span>
                 <IconStar size={13} />
               </Button>
             ))}
@@ -147,7 +170,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
           <Button
             size={"md"}
             variant={"outline"}
-            className="m-auto w-36 h-14 mt-2 rounded-[40px] hover:bg-primary bg-secondary border-primary"
+            className="m-auto w-36 h-14 mt-2 rounded-[40px] hover:bg-secondary bg-secondary border-primary"
             onClick={() => {
               setPriceValues([0, 500]);
               setRating(null);
@@ -155,7 +178,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
               setSelectedCategory(null);
             }}
           >
-            Reset
+            <span className="text-primary">Reset</span>
           </Button>
           <Button
             size={"md"}
@@ -166,7 +189,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
           </Button>
         </div>
       </div>
-    </>
+    </SheetContent>
   );
 };
 

@@ -54,8 +54,10 @@ const CategoryItem: FC<CategoryItemProps> = ({
     filter: (
       <div
         className={clsx(
-          "flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer",
-          isSelected ? "bg-primary" : "bg-secondary "
+          "flex items-center w-auto h-10 p-1 mb-2 rounded-[40px] cursor-pointer",
+          isSelected
+            ? "bg-primary shadow-[16px_16px_50px_0px_rgb(254,114,76,.25)] z-20"
+            : "bg-secondary shadow-[0px_10px_25px_0px_rgb(0,0,0,.06)]"
         )}
         onClick={onClick}
       >

@@ -1,7 +1,13 @@
 "use client";
 
-import { Avatar, SearchAndFilter, VerticalCard } from "@/components/molecule";
+import {
+  Avatar,
+  FilterForm,
+  SearchAndFilter,
+  VerticalCard,
+} from "@/components/molecule";
 import { Button } from "@/components/ui/button";
+import { Sheet } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PATHNAME } from "@/configs";
 import { MapperFood } from "@/mapping/food.mapping";
@@ -26,7 +32,7 @@ const SearchTabScreen = () => {
   };
 
   return (
-    <div>
+    <Sheet key="right">
       <div className="relative py-6 flex items-center z-[50] w-full">
         <Button
           className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary"
@@ -82,7 +88,8 @@ const SearchTabScreen = () => {
           </div>
         </Tabs>
       </div>
-    </div>
+      <FilterForm />
+    </Sheet>
   );
 };
 
