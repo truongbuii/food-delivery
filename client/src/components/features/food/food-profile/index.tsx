@@ -57,7 +57,7 @@ const FoodProfile = () => {
                     if (quantity > 0) setQuantity(quantity - 1);
                   }}
                 >
-                  -
+                  <span className="text-lightGray">-</span>
                 </Button>
                 <span className="!leading-9 h-full text-base text-center font-semibold min-w-5">
                   {quantity}
@@ -67,7 +67,7 @@ const FoodProfile = () => {
                   className="rounded-full border-lightGray w-9 h-9 hover:bg-primary"
                   onClick={() => setQuantity(quantity + 1)}
                 >
-                  +
+                  <span className="text-lightGray">+</span>
                 </Button>
               </div>
             </div>

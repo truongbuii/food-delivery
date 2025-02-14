@@ -258,9 +258,9 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
           <div
             className={`relative flex items-center justify-center ${
               isMobile ? "w-16 h-16" : "w-14 h-14"
-            } rounded-2xl shadow-[10px_15px_20px_rgb(211,209,216,0.5)] bg-white`}
+            } rounded-2xl shadow-[10px_15px_20px_rgb(0,0,0,0.1)] bg-white`}
           >
-            <div className={`relative ${isMobile ? "w-14 h-14" : "w-10 h-10"}`}>
+            <div className={`relative ${isMobile ? "w-14 h-14" : "w-11 h-11"}`}>
               <Image
                 src={restaurant.avatarUrl}
                 alt={restaurant.name}
@@ -271,7 +271,7 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
               />
             </div>
             <BadgeNumber
-              number={4.5}
+              number={restaurant.totalStars}
               className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
             />
           </div>
@@ -279,22 +279,26 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-1">
-            <span className="font-semibold">Burger King</span>
-            <CircleCheck
-              color="#029094"
-              strokeWidth={2}
-              size={10}
-              className="mt-1"
-            />
+            <span className="font-semibold">{restaurant.name}</span>
+            {restaurant.verifiedBadge && (
+              <CircleCheck
+                color="#029094"
+                strokeWidth={2}
+                size={10}
+                className="mt-1"
+              />
+            )}
           </div>
           <FeeAndTimeDelivery
             free={(item as IRestaurantResponse).freeDelivery}
             time="10-15"
             type="vertical"
           />
-          <div className="flex gap-2">
-            <Tag title="Chicken" size={"sm"} />
-            <Tag title="Burger" size={"sm"} />
+          <div className="flex gap-2 flex-wrap">
+            {restaurant.categories &&
+              restaurant.categories.map((tag) => (
+                <Tag title={tag.name} key={tag.id} size={"sm"} />
+              ))}
           </div>
         </div>
       </div>

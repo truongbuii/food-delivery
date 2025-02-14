@@ -12,6 +12,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { VIEWER_CONTAINER_ID } from "@/configs";
 import { cn } from "@/lib/utils";
 import { MapperCategory } from "@/mapping/category.mapping";
@@ -19,19 +20,21 @@ import { useGetCategories } from "@/queries";
 import { ChevronLeft } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 
-interface FilterFormProps {
-  categoryId?: number;
-  shortBy?: string;
-  rating?: number;
-  priceRange?: any;
-}
-
-const FilterForm: FC<FilterFormProps> = ({}) => {
-  const [priceValues, setPriceValues] = useState([0, 500]);
-  const [rating, setRating] = useState<number | null>(null);
+const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
+  onFilterChange,
+}) => {
   const [container, setContainer] = useState<HTMLElement | null>(null);
-  const [selectedShortBy, setSelectedShortBy] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [filters, setFilters] = useState<{
+    categoryId: number | null;
+    rating: number | null;
+    priceValues: number[];
+    selectedSortOptions: string[];
+  }>({
+    categoryId: null,
+    rating: null,
+    priceValues: [0, 500],
+    selectedSortOptions: [],
+  });
 
   useEffect(() => {
     setContainer(document.getElementById(VIEWER_CONTAINER_ID));
@@ -42,27 +45,44 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
     MapperCategory(category)
   );
   const handleSelectCategory = (id: number) => {
-    setSelectedCategory(id);
-  };
-
-  const handleSelectShortBy = (shortBy: string) => {
-    setSelectedShortBy(shortBy);
+    setFilters((prev) => ({ ...prev, categoryId: id }));
   };
 
   const handleSelectRating = (rating: number) => {
-    setRating(rating);
+    setFilters((prev) => ({ ...prev, rating }));
   };
 
   const handleValueChange = (newValues: any) => {
-    setPriceValues(newValues);
+    setFilters((prev) => ({ ...prev, priceValues: newValues }));
+  };
+
+  const handleSortByChange = (selected: string[]) => {
+    setFilters((prev) => ({ ...prev, selectedSortOptions: selected }));
   };
 
   const handleApplyFilter = () => {
-    console.log({
-      selectedCategory,
-      selectedShortBy,
-      rating,
-      priceValues,
+    const value = {
+      categoryId: filters.categoryId,
+      rating: filters.rating,
+      freeDelivery: filters.selectedSortOptions.includes("freeDelivery"),
+      popular: filters.selectedSortOptions.includes("popular"),
+      priceValues: filters.priceValues,
+    };
+    onFilterChange?.(value);
+  };
+
+  const handleResetFilter = () => {
+    setFilters({
+      priceValues: [0, 500],
+      rating: null,
+      categoryId: null,
+      selectedSortOptions: [],
+    });
+    onFilterChange?.({
+      categoryId: null,
+      rating: null,
+      freeDelivery: null,
+      popular: null,
     });
   };
 
@@ -97,7 +117,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
                 type="filter"
                 image={category.imageUrl}
                 title={category.name}
-                isSelected={selectedCategory === category.id}
+                isSelected={filters.categoryId === category.id}
                 onClick={() => {
                   handleSelectCategory(category.id);
                 }}
@@ -109,20 +129,21 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
         <div className="flex flex-col gap-5">
           <p className="text-lg font-semibold">Short by</p>
           <div className="flex flex-wrap gap-3">
-            {ShortByOptions.map((option) => (
-              <div
-                key={option.key}
-                className={cn(
-                  "flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer px-3",
-                  selectedShortBy === option.key
-                    ? "bg-primary text-white shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
-                    : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
-                )}
-                onClick={() => handleSelectShortBy(option.key)}
-              >
-                <p className="text-xs text-center">{option.value}</p>
-              </div>
-            ))}
+            <ToggleGroup
+              type="multiple"
+              value={filters.selectedSortOptions}
+              onValueChange={handleSortByChange}
+            >
+              {ShortByOptions.map((option) => (
+                <ToggleGroupItem
+                  key={option.key}
+                  value={option.key}
+                  className="flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer px-3 bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
+                >
+                  <p className="text-xs text-center">{option.value}</p>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
           </div>
         </div>
 
@@ -134,7 +155,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
                 key={star}
                 className={cn(
                   "text-xs text-center px-2 bg-secondary w-14 h-10 p-1 rounded-[40px]",
-                  rating === star
+                  filters.rating === star
                     ? "bg-primary text-white shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
                     : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
                 )}
@@ -152,12 +173,12 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
           <div className="flex justify-between">
             <p className="text-lg font-semibold">Price Range</p>
             <p className="text-base font-light">
-              {`$${priceValues[0]} - $${priceValues[1]}`}{" "}
+              {`$${filters.priceValues[0]} - $${filters.priceValues[1]}`}{" "}
             </p>
           </div>
           <Slider
-            defaultValue={priceValues}
-            value={priceValues}
+            defaultValue={filters.priceValues}
+            value={filters.priceValues}
             minStepsBetweenThumbs={10}
             max={500}
             min={0}
@@ -171,12 +192,7 @@ const FilterForm: FC<FilterFormProps> = ({}) => {
             size={"md"}
             variant={"outline"}
             className="m-auto w-36 h-14 mt-2 rounded-[40px] hover:bg-secondary bg-secondary border-primary"
-            onClick={() => {
-              setPriceValues([0, 500]);
-              setRating(null);
-              setSelectedShortBy(null);
-              setSelectedCategory(null);
-            }}
+            onClick={handleResetFilter}
           >
             <span className="text-primary">Reset</span>
           </Button>

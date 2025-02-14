@@ -5,7 +5,11 @@ import { IApiDataResponse, IRestaurantResponse } from "@/interfaces";
 const httpClient = createHttpClient();
 
 export const getRestaurants = async (
-  categoryId: number | null
+  categoryId: number | null,
+  rating: number | null,
+  keyword: string | null,
+  freeDelivery: boolean | null,
+  popular: boolean | null
 ): Promise<IApiDataResponse<IRestaurantResponse[]>> => {
   const resp = await httpClient.get<
     IRestaurantResponse[],
@@ -13,6 +17,10 @@ export const getRestaurants = async (
   >(BASE_RESTAURANT, {
     params: {
       categoryId,
+      rating,
+      keyword,
+      freeDelivery,
+      popular,
     },
   });
   return resp;

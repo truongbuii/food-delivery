@@ -4,7 +4,6 @@ import HomeScreen from "@/components/features/user/home-screen";
 import {
   Avatar,
   ButtonType,
-  FilterForm,
   FixedFooter,
   SideMenu,
 } from "@/components/molecule";
@@ -47,7 +46,6 @@ const HomePage = () => {
         </div>
         <Sheet key="right">
           <HomeScreen />
-          <FilterForm />
         </Sheet>
       </div>
       <FixedFooter parentRef={parentRef} />

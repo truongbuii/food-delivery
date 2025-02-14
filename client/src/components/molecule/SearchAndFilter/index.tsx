@@ -4,18 +4,30 @@ import ButtonType from "@/components/molecule/ButtonType";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { PATHNAME } from "@/configs";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SearchAndFilter = () => {
   const [keyword, setKeyword] = useState<string>("");
   const router = useRouter();
-
+  const pathname = usePathname();
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && keyword.trim() !== "") {
-      router.push(
-        `${PATHNAME.LIST.SEARCH}?query=${encodeURIComponent(keyword)}`
-      );
+    if (e.key === "Enter") {
+      const trimmedKeyword = keyword.trim();
+
+      if (pathname === PATHNAME.LIST.SEARCH) {
+        router.replace(
+          `${PATHNAME.LIST.SEARCH}?keyword=${encodeURIComponent(
+            trimmedKeyword
+          )}`
+        );
+      } else if (trimmedKeyword !== "") {
+        router.push(
+          `${PATHNAME.LIST.SEARCH}?keyword=${encodeURIComponent(
+            trimmedKeyword
+          )}`
+        );
+      }
     }
   };
 

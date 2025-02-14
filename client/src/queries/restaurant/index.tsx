@@ -7,10 +7,24 @@ import { QUERIES_KEY } from "@/queries/key";
 import { getRestaurantBySlug, getRestaurants } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetRestaurantsByParams = (categoryId: number | null) => {
+export const useGetRestaurantsByParams = (
+  categoryId: number | null,
+  rating: number | null,
+  keyword: string | null,
+  freeDelivery: boolean | null,
+  popular: boolean | null
+) => {
   return useQuery<IApiDataResponse<IRestaurantResponse[]>, IApiErrorResponse>({
-    queryKey: [QUERIES_KEY.RESTAURANT.GET_RESTAURANTS, categoryId],
-    queryFn: () => getRestaurants(categoryId),
+    queryKey: [
+      QUERIES_KEY.RESTAURANT.GET_RESTAURANTS,
+      categoryId,
+      rating,
+      keyword,
+      freeDelivery,
+      popular,
+    ],
+    queryFn: () =>
+      getRestaurants(categoryId, rating, keyword, freeDelivery, popular),
   });
 };
 

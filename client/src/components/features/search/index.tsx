@@ -14,14 +14,39 @@ import { MapperFood } from "@/mapping/food.mapping";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetFoodsByParams, useGetRestaurantsByParams } from "@/queries";
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SearchTabScreen = () => {
   const router = useRouter();
+  const searchParam = useSearchParams();
+
+  const [filters, setFilters] = useState({
+    categoryId: null,
+    rating: null,
+    keyword: searchParam.get("keyword") || null,
+    freeDelivery: null,
+    popular: null,
+  });
+
+  useEffect(() => {
+    const keyword = searchParam.get("keyword");
+    setFilters((prev) => ({
+      ...prev,
+      keyword: keyword?.trim() ? keyword : null,
+    }));
+  }, [searchParam]);
+
   const [selectedTab, setSelectedTab] = useState<string>("restaurant");
   const { data: foods } = useGetFoodsByParams(null, null);
-  const { data: restaurants } = useGetRestaurantsByParams(null);
+  const { data: restaurants } = useGetRestaurantsByParams(
+    filters.categoryId,
+    filters.rating,
+    filters.keyword,
+    filters.freeDelivery,
+    filters.popular
+  );
+
   const _restaurants = restaurants?.data?.map((restaurant) =>
     MapperRestaurant(restaurant)
   );
@@ -30,6 +55,9 @@ const SearchTabScreen = () => {
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
   };
+
+  const handleFilterChange = (newFilters: any) =>
+    setFilters((prev) => ({ ...prev, ...newFilters }));
 
   return (
     <Sheet key="right">
@@ -88,7 +116,7 @@ const SearchTabScreen = () => {
           </div>
         </Tabs>
       </div>
-      <FilterForm />
+      <FilterForm onFilterChange={handleFilterChange} />
     </Sheet>
   );
 };
