@@ -27,6 +27,7 @@ const SearchTabScreen = () => {
     keyword: searchParam.get("keyword") || null,
     freeDelivery: null,
     popular: null,
+    priceValues: [0, 200],
   });
 
   useEffect(() => {
@@ -38,7 +39,16 @@ const SearchTabScreen = () => {
   }, [searchParam]);
 
   const [selectedTab, setSelectedTab] = useState<string>("restaurant");
-  const { data: foods } = useGetFoodsByParams(null, null);
+  const { data: foods } = useGetFoodsByParams(
+    filters.categoryId,
+    null,
+    filters.rating,
+    filters.keyword,
+    filters.popular,
+    null,
+    filters.priceValues[0],
+    filters.priceValues[1]
+  );
   const { data: restaurants } = useGetRestaurantsByParams(
     filters.categoryId,
     filters.rating,

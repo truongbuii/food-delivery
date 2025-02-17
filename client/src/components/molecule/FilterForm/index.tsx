@@ -32,7 +32,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
   }>({
     categoryId: null,
     rating: null,
-    priceValues: [0, 500],
+    priceValues: [0, 200],
     selectedSortOptions: [],
   });
 
@@ -73,7 +73,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
 
   const handleResetFilter = () => {
     setFilters({
-      priceValues: [0, 500],
+      priceValues: [0, 200],
       rating: null,
       categoryId: null,
       selectedSortOptions: [],
@@ -83,6 +83,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
       rating: null,
       freeDelivery: null,
       popular: null,
+      priceValues: [0, 200],
     });
   };
 
@@ -180,7 +181,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
             defaultValue={filters.priceValues}
             value={filters.priceValues}
             minStepsBetweenThumbs={10}
-            max={500}
+            max={200}
             min={0}
             step={1}
             onValueChange={handleValueChange}

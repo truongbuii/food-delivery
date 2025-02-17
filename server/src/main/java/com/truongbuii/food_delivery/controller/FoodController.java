@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -43,9 +44,16 @@ public class FoodController {
     @GetMapping("/by-params")
     public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodsByParams(
             @RequestParam(required = false) Integer categoryId,
-            @RequestParam(required = false) String restaurantSlug
+            @RequestParam(required = false) String restaurantSlug,
+            @RequestParam(required = false) Float rating,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "false") Boolean popular,
+            @RequestParam(required = false, defaultValue = "false") Boolean sortAsc,
+            @RequestParam(required = false, defaultValue = "0") BigDecimal minPrice,
+            @RequestParam(required = false, defaultValue = "200") BigDecimal maxPrice
     ) {
-        var foodResponses = foodService.getAllByParams(restaurantSlug, categoryId);
+        var foodResponses = foodService.getAllByParams(
+                restaurantSlug, categoryId, rating, keyword, popular, sortAsc, minPrice, maxPrice);
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 

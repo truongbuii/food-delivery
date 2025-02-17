@@ -27,7 +27,7 @@ const HomeScreen = () => {
     rating: null,
     freeDelivery: null,
     popular: null,
-    priceValues: [0, 500],
+    priceValues: [0, 200],
   });
 
   const { data: restaurants } = useGetRestaurantsByParams(
@@ -40,7 +40,16 @@ const HomeScreen = () => {
 
   console.log(filters);
 
-  const { data: foods } = useGetFoodsByParams(categoryId, null);
+  const { data: foods } = useGetFoodsByParams(
+    filters.categoryId,
+    null,
+    filters.rating,
+    null,
+    filters.popular,
+    null,
+    filters.priceValues[0],
+    filters.priceValues[1]
+  );
 
   const _restaurants = restaurants?.data?.map((restaurant) =>
     MapperRestaurant(restaurant)

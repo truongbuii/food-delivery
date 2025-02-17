@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,8 +55,19 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodResponse> getAllByParams(String restaurantSlug, Integer categoryId) {
-        return foodRepository.findAllByParams(categoryId, restaurantSlug).stream()
+    public List<FoodResponse> getAllByParams(
+            String restaurantSlug,
+            Integer categoryId,
+            Float rating,
+            String keyword,
+            Boolean popular,
+            Boolean sortAsc,
+            BigDecimal minPrice,
+            BigDecimal maxPrice
+    ) {
+        return foodRepository
+                .findAllByParams(categoryId, restaurantSlug, rating, keyword, popular, sortAsc, minPrice, maxPrice)
+                .stream()
                 .map(foodMapper::toFoodResponse)
                 .collect(Collectors.toList());
     }

@@ -36,11 +36,28 @@ export const getFeaturedFoodsByRestaurantSlug = async (
 
 export const getFoodsByParams = async (
   categoryId: number | null,
-  restaurantSlug: string | null
+  restaurantSlug: string | null,
+  rating: number | null,
+  keyword: string | null,
+  popular: boolean | null,
+  sortAsc: boolean | null,
+  minPrice: number | null,
+  maxPrice: number | null
 ): Promise<IApiDataResponse<IFoodResponse[]>> => {
   const resp = await httpClient.get<
     IFoodResponse[],
     IApiDataResponse<IFoodResponse[]>
-  >(`${BASE_FOOD}/by-params`, { params: { restaurantSlug, categoryId } });
+  >(`${BASE_FOOD}/by-params`, {
+    params: {
+      restaurantSlug,
+      categoryId,
+      rating,
+      keyword,
+      popular,
+      sortAsc,
+      minPrice,
+      maxPrice,
+    },
+  });
   return resp;
 };

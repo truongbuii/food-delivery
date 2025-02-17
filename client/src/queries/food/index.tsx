@@ -35,10 +35,36 @@ export const useFeaturedFoods = (restaurantSlug: string) => {
 
 export const useGetFoodsByParams = (
   categoryId: number | null,
-  restaurantSlug: string | null
+  restaurantSlug: string | null,
+  rating: number | null,
+  keyword: string | null,
+  popular: boolean | null,
+  sortAsc: boolean | null,
+  minPrice: number | null,
+  maxPrice: number | null
 ) => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
-    queryKey: [QUERIES_KEY.FOOD.GET_BY_CATEGORY, categoryId, restaurantSlug],
-    queryFn: () => getFoodsByParams(categoryId, restaurantSlug),
+    queryKey: [
+      QUERIES_KEY.FOOD.GET_BY_CATEGORY,
+      categoryId,
+      restaurantSlug,
+      rating,
+      keyword,
+      popular,
+      sortAsc,
+      minPrice,
+      maxPrice,
+    ],
+    queryFn: () =>
+      getFoodsByParams(
+        categoryId,
+        restaurantSlug,
+        rating,
+        keyword,
+        popular,
+        sortAsc,
+        minPrice,
+        maxPrice
+      ),
   });
 };
