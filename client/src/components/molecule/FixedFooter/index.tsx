@@ -4,10 +4,12 @@ import useScreenMode from "@/hooks/useScreenMode";
 import { useEffect, useState, useRef, memo } from "react";
 import throttle from "lodash/throttle";
 import Link from "next/link";
-import { Bell, Compass, Heart, MapPin, ShoppingBag } from "lucide-react";
+import { Bell, Compass, Heart, MapPin } from "lucide-react";
 import BadgeNumber from "@/components/molecule/BadgeNumber";
 
 import { RefObject } from "react";
+import { IconBag } from "@/components/molecule/svgs";
+import { PATHNAME } from "@/configs";
 
 interface FixedFooterProps {
   parentRef: RefObject<HTMLDivElement | null>;
@@ -57,8 +59,8 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
         <Link href="/">
           <MapPin size={23} strokeWidth={2} />
         </Link>
-        <Link href="/" className="relative">
-          <ShoppingBag size={23} strokeWidth={2} className="text-primary" />
+        <Link href={PATHNAME.CART} className="relative">
+          <IconBag className="text-primary" width={23} height={23} />
           <BadgeNumber
             number={4}
             className="absolute -top-2 -right-3 w-[15px] h-[15px] text-[10px] leading-[15px] rounded-md"

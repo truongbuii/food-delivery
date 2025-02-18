@@ -19,5 +19,6 @@ export const ROOT_PATH = {
     RESTAURANT_BY: "/list/restaurant",
     SEARCH: "/list/search",
   },
+  CART: "/cart",
 };
 export const PATHNAME = { ...PUBLIC_PATH, ...ROOT_PATH };
