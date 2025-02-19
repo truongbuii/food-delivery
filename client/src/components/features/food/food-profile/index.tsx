@@ -17,7 +17,22 @@ const FoodProfile = () => {
   const { data: food } = useGetFoodBySlug(param.slug as string);
   const _food = food?.data ? MapperFood(food.data) : null;
   const { selectedAddons } = useAddons();
-  console.log(selectedAddons);
+
+  const handleAddToCart = () => {
+    if (!_food) return;
+
+    const cartItem = {
+      productId: _food.id,
+      quantity,
+      selectedAddons: selectedAddons.map((addon) => ({
+        id: addon.id,
+        name: addon.name,
+        price: addon.price,
+      })),
+    };
+
+    console.log(cartItem);
+  };
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -82,6 +97,7 @@ const FoodProfile = () => {
       <Button
         size={"lg"}
         className="w-auto m-auto mt-2 rounded-[40px] px-3 text-left hover:bg-primary shadow-primaryBtnShadow"
+        onClick={handleAddToCart}
       >
         <div className="flex justify-center items-center w-10 h-10 bg-white rounded-full">
           <IconBag />

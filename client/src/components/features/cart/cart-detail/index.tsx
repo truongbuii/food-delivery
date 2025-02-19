@@ -7,11 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { PATHNAME } from "@/configs";
+import { MapperCartItem } from "@/mapping/cartItem.mapping";
+import { useGetCartItems } from "@/queries/cart";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 const CartDetail = () => {
   const router = useRouter();
+
+  const { data: cartItems } = useGetCartItems();
+  const _cartItems = useMemo(
+    () => cartItems?.data?.map((category) => MapperCartItem(category)) ?? [],
+    [cartItems]
+  );
+
+  const subtotal = useMemo(() => {
+    return _cartItems.reduce((total, item) => {
+      const addonsTotal =
+        item.selectedAddons?.reduce((sum, addon) => sum + addon.price, 0) || 0;
+      return total + (item.foodPrice + addonsTotal) * item.quantity;
+    }, 0);
+  }, [_cartItems]);
+
   return (
     <>
       <div className="relative py-6 flex items-center z-[50] w-full">
@@ -33,13 +51,13 @@ const CartDetail = () => {
         </div>
       </div>
       <div className="flex flex-col gap-8">
-        <CartItem />
-        <div className="flex items-center h-16 p-2 bg-secondary rounded-[40px]">
+        <CartItem cartItems={_cartItems} />
+        <div className="flex items-center h-16 p-2 bg-secondary rounded-[40px] shadow-cardItemShadow">
           <Input
             placeholder="Promo code"
-            className="border-none focus-visible:ring-none focus-visible:ring-0"
+            className="border-none focus-visible:ring-none focus-visible:ring-0 shadow-none"
           />
-          <Button className="h-12 w-28 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow">
+          <Button className="h-12 w-28 rounded-[40px] hover:bg-primary  ">
             Apply
           </Button>
         </div>
@@ -47,7 +65,7 @@ const CartDetail = () => {
           <div className="px-2">
             <div className="flex justify-between py-4">
               <span>Subtotal</span>
-              <span>$52.50</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
             <Separator />
           </div>
@@ -62,7 +80,7 @@ const CartDetail = () => {
             <div className="flex justify-between py-4">
               <span>Total</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm">(3 items)</span>
+                <span className="text-sm">({_cartItems.length} items)</span>
                 <span className="font-bold">$60.02</span>
               </div>
             </div>

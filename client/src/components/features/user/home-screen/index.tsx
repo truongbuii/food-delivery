@@ -38,8 +38,6 @@ const HomeScreen = () => {
     null
   );
 
-  console.log(filters);
-
   const { data: foods } = useGetFoodsByParams(
     filters.categoryId,
     null,

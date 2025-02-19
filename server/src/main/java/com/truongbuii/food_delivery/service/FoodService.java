@@ -181,4 +181,8 @@ public class FoodService {
             throw new ResourceNotFoundException(ErrorCode.ERR_CATEGORY_NOT_MATCH);
         }
     }
+
+    public boolean existFoodById(Long foodId) {
+        return getFoodById(foodId) != null;
+    }
 }

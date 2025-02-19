@@ -35,4 +35,7 @@ public class ErrorCode {
     // Addon error
     public static final String ERR_ADDON_DUPLICATE = "This addon name is existed";
     public static final String ERR_ADDON_NOT_FOUND = "This addon is not found";
+
+    // Cart error
+    public static final String ERR_CART_ITEM_NOT_FOUND = "This cart item is not found";
 }

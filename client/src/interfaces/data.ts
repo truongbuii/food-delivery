@@ -59,6 +59,28 @@ interface IFoodResponse {
   addons: IAddon[];
 }
 
+interface ISelectedAddon {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface ICartItem {
+  cartItemId: number;
+  foodId: number;
+  quantity: number;
+}
+interface ICartItemResponse {
+  id: number;
+  userId: number;
+  foodId: number;
+  foodName: string;
+  foodImageUrl: string;
+  foodPrice: number;
+  quantity: number;
+  selectedAddons: ISelectedAddon[];
+}
+
 export type {
   IApiDataResponse,
   IApiErrorResponse,
@@ -68,4 +90,6 @@ export type {
   IRestaurantResponse,
   IFoodResponse,
   IAddon,
+  ICartItem,
+  ICartItemResponse,
 };
