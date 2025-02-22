@@ -27,6 +27,9 @@ import profileBackground2 from "@images/common/pf_background2.svg";
 import profileBackground3 from "@images/common/pf_background3.svg";
 import buildingIcon from "@images/common/building_icon.svg";
 import pizzaCategoryBackground from "@images/common/pizza_background.png";
+import addressMap from "@images/common/address_map.png";
+import IconVnPay from "@images/common/vnpay.png";
+import IconCod from "@images/common/cod.png";
 
 export const IMAGES_CONST = {
   onboarding: {
@@ -57,5 +60,8 @@ export const IMAGES_CONST = {
     profileBackground3: profileBackground3,
     buildingIcon: buildingIcon,
     pizzaCategoryBackground: pizzaCategoryBackground,
+    addressMap: addressMap,
+    IconVnPay: IconVnPay,
+    IconCod: IconCod,
   },
 };

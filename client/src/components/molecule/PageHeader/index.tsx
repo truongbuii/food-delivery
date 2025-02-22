@@ -10,28 +10,19 @@ import {
 } from "@/components/ui/select";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { PATHNAME } from "@/configs";
-import { IDeliveryAddressResponse } from "@/interfaces";
-import { useGetAllDeliverAddr } from "@/queries";
-import { useAuthActions, useUserStore } from "@/stores";
+import { useDeliveryAddresses } from "@/hooks/useAddress";
+import { useAuthActions } from "@/stores";
+import { useAddressStore } from "@/stores/address/address.store";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 const SelectAddress = () => {
-  const userId = useUserStore((state) => state.userInfo?.id);
-  const { data: addresses } = useGetAllDeliverAddr(userId!);
-  const [selectedValue, setSelectedValue] = useState<
-    IDeliveryAddressResponse | undefined
-  >(undefined);
-
-  useEffect(() => {
-    if (addresses?.data?.length) {
-      setSelectedValue(addresses.data[0]);
-    }
-  }, [addresses]);
+  const { addresses } = useDeliveryAddresses();
+  const { setAddress, shippingAddress, resetAddress } = useAddressStore();
 
   const addressOptions = useMemo(() => {
-    return addresses?.data?.map((address) => (
+    return addresses?.map((address) => (
       <SelectItem key={address.id} value={address.fullAddress}>
         {address.fullAddress}
       </SelectItem>
@@ -39,22 +30,22 @@ const SelectAddress = () => {
   }, [addresses]);
 
   const selectedDisplay = useMemo(() => {
-    const fullAddress = selectedValue?.fullAddress || "";
+    const fullAddress = shippingAddress?.fullAddress || "";
     return fullAddress.length > 20
       ? `${fullAddress.slice(0, 20)}...`
       : fullAddress;
-  }, [selectedValue]);
+  }, [shippingAddress]);
 
   return (
     <div className="flex flex-col h-full font-medium ">
       <Select
-        onValueChange={(value) =>
-          setSelectedValue(
-            addresses?.data?.find((address) => address.fullAddress === value)
-          )
-        }
+        onValueChange={(value) => {
+          resetAddress();
+          const selected = addresses.find((addr) => addr.fullAddress === value);
+          if (selected) setAddress(selected);
+        }}
       >
-        {addresses?.data?.length ? (
+        {addresses.length ? (
           <SelectTrigger className="flex justify-center items-center w-full p-0 text-sm max-w-40 border-none shadow-none focus:ring-0 focus:ring-none">
             <p className="px-1">Deliver to</p>
           </SelectTrigger>

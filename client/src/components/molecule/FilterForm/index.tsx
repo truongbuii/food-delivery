@@ -139,7 +139,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
                 <ToggleGroupItem
                   key={option.key}
                   value={option.key}
-                  className="flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer px-3 bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
+                  className="flex items-center w-auto h-10 p-1 rounded-[40px] cursor-pointer px-3 bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)] data-[state=on]:shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
                 >
                   <p className="text-xs text-center">{option.value}</p>
                 </ToggleGroupItem>
