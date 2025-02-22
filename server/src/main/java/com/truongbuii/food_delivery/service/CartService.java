@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +39,12 @@ public class CartService {
                             return cartItemMapper.toCartItemResponse(cartItem, food);
                         }
                 )
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public CartItemResponse create(Long userId, CartItemPost cartItemPost) {
-        validateFood(cartItemPost.foodId());
+        validateFood(cartItemPost.foodId(), userId);
         UserResponse user = userService.getById(userId);
         Food food = foodService.getFoodById(cartItemPost.foodId());
 
@@ -76,7 +77,7 @@ public class CartService {
 
     @Transactional
     public CartItemResponse update(CartItemPut cartItemPut) {
-        validateFood(cartItemPut.foodId());
+        validateFood(cartItemPut.foodId(), null);
         CartItem cartItem = cartItemRepository.findById(cartItemPut.cartItemId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_CART_ITEM_NOT_FOUND));
         cartItem.setQuantity(cartItemPut.quantity());
@@ -92,9 +93,25 @@ public class CartService {
         cartItemRepository.delete(cartItem);
     }
 
-    private void validateFood(Long foodId) {
+    private void validateFood(Long foodId, Long userId) {
         if (!foodService.existFoodById(foodId)) {
             throw new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND);
+        }
+        if (userId != null) {
+            isFoodFromSameRestaurant(userId, foodId);
+        }
+    }
+
+    private void isFoodFromSameRestaurant(Long userId, Long foodId) {
+        Long currentRestaurantId = 0L;
+        List<CartItemResponse> cartItems = getAll(userId);
+        if (!cartItems.isEmpty()) {
+            Food _food = foodService.getFoodById(cartItems.getFirst().getFoodId());
+            currentRestaurantId = _food.getRestaurant().getId();
+        }
+        Food food = foodService.getFoodById(foodId);
+        if (!food.getRestaurant().getId().equals(currentRestaurantId)) {
+            throw new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FROM_SAME_RESTAURANT);
         }
     }
 }
