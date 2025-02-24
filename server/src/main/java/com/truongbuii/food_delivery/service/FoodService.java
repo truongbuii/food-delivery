@@ -4,25 +4,25 @@ import com.truongbuii.food_delivery.exception.DuplicateResourceException;
 import com.truongbuii.food_delivery.exception.ResourceNotFoundException;
 import com.truongbuii.food_delivery.mapper.FoodMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
-import com.truongbuii.food_delivery.model.entity.Addon;
-import com.truongbuii.food_delivery.model.entity.Category;
-import com.truongbuii.food_delivery.model.entity.Food;
-import com.truongbuii.food_delivery.model.entity.Restaurant;
+import com.truongbuii.food_delivery.model.entity.*;
 import com.truongbuii.food_delivery.model.enums.MediaFolder;
 import com.truongbuii.food_delivery.model.request.food.FoodPost;
 import com.truongbuii.food_delivery.model.request.food.FoodPut;
 import com.truongbuii.food_delivery.model.response.FoodResponse;
+import com.truongbuii.food_delivery.repository.FavoriteFoodRepository;
 import com.truongbuii.food_delivery.repository.FoodRepository;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
 import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,11 +30,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FoodService {
     private final FoodMapper foodMapper;
+    private final UserService userService;
     private final MediaService mediaService;
     private final AddonService addonService;
     private final FoodRepository foodRepository;
     private final CategoryService categoryService;
     private final RestaurantService restaurantService;
+    private final FavoriteFoodRepository favoriteFoodRepository;
 
     public Food getFoodById(Long id) {
         return foodRepository.findById(id)
@@ -47,11 +49,15 @@ public class FoodService {
         return foodMapper.toFoodResponse(food);
     }
 
-    public List<FoodResponse> getAll() {
+    public List<FoodResponse> getAll(Long userId) {
         List<Food> foods = foodRepository.findAll();
-
+        Set<FavoriteFood> favoriteFoods = favoriteFoodRepository.findByUserId((userId));
         return foods.stream()
-                .map(foodMapper::toFoodResponse)
+                .map(food -> {
+                    FoodResponse foodResponse = foodMapper.toFoodResponse(food);
+                    foodResponse.setFavorite(favoriteFoods.stream().anyMatch(f -> f.getFood().getId().equals(food.getId())));
+                    return foodResponse;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -163,6 +169,23 @@ public class FoodService {
 
         foodRepository.save(food);
         return foodMapper.toFoodResponse(food);
+    }
+
+    @Transactional
+    public List<FoodResponse> addFoodToFavorite(Long userId, Long foodId) {
+        Food food = getFoodById(foodId);
+        User user = userService.getUserById(userId);
+
+        Optional<FavoriteFood> favoriteFoodOptional = favoriteFoodRepository.findByUserIdAndFoodId(userId, foodId);
+        if (favoriteFoodOptional.isPresent()) {
+            favoriteFoodRepository.deleteByUserAndFood(user, food);
+        } else {
+            FavoriteFood favoriteFood = new FavoriteFood();
+            favoriteFood.setUser(user);
+            favoriteFood.setFood(food);
+            favoriteFoodRepository.save(favoriteFood);
+        }
+        return getAll(userId);
     }
 
     private void validateFood(String name, Long foodId, Restaurant restaurant, Integer categoryId) {

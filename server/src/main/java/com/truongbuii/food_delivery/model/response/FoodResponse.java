@@ -20,6 +20,7 @@ public class FoodResponse {
     private Integer totalReviews;
     private String slug;
     private Long restaurantId;
+    private boolean favorite;
 
     Set<Addon> addons;
 }

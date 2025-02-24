@@ -17,5 +17,14 @@ public class GeneratorUtils {
     public static String convertToSlug(String input) {
         return input.toLowerCase().replaceAll(" ", "-");
     }
-    
+
+    public static String generateRandomNums(int length) {
+        Random random = new Random();
+        String chars = "0123456789";
+        StringBuilder result = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            result.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return result.toString();
+    }
 }

@@ -39,4 +39,7 @@ public class ErrorCode {
     // Cart error
     public static final String ERR_CART_ITEM_NOT_FOUND = "This cart item is not found";
     public static final String ERR_FOOD_NOT_FROM_SAME_RESTAURANT = "This food is not from the same restaurant. Do you want to clear your cart and add this food?";
+
+    // Payment error
+    public static final String ERR_PAYMENT_INVALID_SIGNATURE = "Invalid signature";
 }

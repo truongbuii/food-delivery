@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.controller;
 
+import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.food.FoodPost;
 import com.truongbuii.food_delivery.model.request.food.FoodPut;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
@@ -8,6 +9,7 @@ import com.truongbuii.food_delivery.service.FoodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -20,8 +22,10 @@ public class FoodController {
     private final FoodService foodService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAll() {
-        var foodResponses = foodService.getAll();
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAll(
+            @AuthenticationPrincipal User principal
+    ) {
+        var foodResponses = foodService.getAll(principal.getId());
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
@@ -73,5 +77,14 @@ public class FoodController {
     ) {
         var foodResponse = foodService.update(foodPut);
         return ResponseEntity.ok(ApiResponse.<FoodResponse>builder().data(foodResponse).build());
+    }
+
+    @PostMapping("/favorite")
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> favoriteFood(
+            @AuthenticationPrincipal User principal,
+            @RequestParam Long foodId
+    ) {
+        var list = foodService.addFoodToFavorite(principal.getId(), foodId);
+        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(list).build());
     }
 }
