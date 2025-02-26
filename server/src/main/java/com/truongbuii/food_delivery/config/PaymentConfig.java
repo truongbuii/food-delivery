@@ -36,7 +36,6 @@ public class PaymentConfig {
         vnpParamsMap.put("vnp_Command", this.vnp_Command);
         vnpParamsMap.put("vnp_TmnCode", this.vnp_TmnCode);
         vnpParamsMap.put("vnp_CurrCode", "VND");
-        vnpParamsMap.put("vnp_TxnRef", GeneratorUtils.generateRandomNums(8));
         vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" + GeneratorUtils.generateRandomNums(8));
         vnpParamsMap.put("vnp_OrderType", this.vnp_OrderType);
         vnpParamsMap.put("vnp_Locale", "vn");

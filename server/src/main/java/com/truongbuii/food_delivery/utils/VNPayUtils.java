@@ -23,8 +23,8 @@ public class VNPayUtils {
         StringBuilder data = new StringBuilder();
         for (Map.Entry<String, String> entry : sortedParams.entrySet()) {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
-                data.append(URLEncoder.encode(entry.getKey(), "UTF-8")).append("=")
-                        .append(URLEncoder.encode(entry.getValue(), "UTF-8")).append("&");
+                data.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8)).append("=")
+                        .append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)).append("&");
             }
         }
 
@@ -55,8 +55,6 @@ public class VNPayUtils {
             data.setLength(data.length() - 1);
         }
         String generatedHash = hmacSHA512(hashSecret, data.toString());
-        log.info("Generated Hash: {}", generatedHash);
-        log.info("Provided Hash: {}", providedHash);
         return generatedHash.equals(providedHash);
     }
 

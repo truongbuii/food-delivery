@@ -42,4 +42,5 @@ public class ErrorCode {
 
     // Payment error
     public static final String ERR_PAYMENT_INVALID_SIGNATURE = "Invalid signature";
+    public static final String ERR_ORDER_NOT_FOUND = "This order is not found";
 }

@@ -8,13 +8,12 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class CartItemResponse {
+public class OrderItemResponse {
     private Long id;
-    private Long userId;
     private Long foodId;
     private String foodName;
-    private String foodImageUrl;
-    private BigDecimal foodPrice;
+    private String foodImage;
     private int quantity;
-    private JsonNode selectedAddons;
+    private BigDecimal foodPrice;
+    private JsonNode foodAddons;
 }
