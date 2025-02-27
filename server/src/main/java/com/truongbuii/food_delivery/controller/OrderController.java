@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.truongbuii.food_delivery.model.entity.Order;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.order.OrderPost;
@@ -28,12 +29,12 @@ public class OrderController {
             @AuthenticationPrincipal User principal,
             @RequestBody OrderPost orderPost,
             HttpServletRequest request
-    ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         var orderResponse = orderService.create(principal.getId(), orderPost, request);
         return ResponseEntity.ok(ApiResponse.<String>builder().data(orderResponse).build());
     }
 
-    @PutMapping("/payment/callback")
+    @GetMapping("/payment/callback")
     public ResponseEntity<ApiResponse<Void>> vnpayCallback(
             @RequestParam Map<String, String> queryParams
     ) {

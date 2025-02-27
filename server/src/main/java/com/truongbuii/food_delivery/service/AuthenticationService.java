@@ -27,6 +27,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -308,5 +309,16 @@ public class AuthenticationService {
 
         NotificationEmail notificationEmail = new NotificationEmail(email, subject, OTP);
         kafkaTemplate.send(topic, notificationEmail);
+    }
+
+    public Long getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return userRepository.findByEmail(userDetails.getUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND))
+                    .getId();
+        } else {
+            throw new AppException(ErrorCode.ERR_UNAUTHORIZED);
+        }
     }
 }

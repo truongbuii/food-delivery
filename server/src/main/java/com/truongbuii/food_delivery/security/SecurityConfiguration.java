@@ -27,7 +27,7 @@ public class SecurityConfiguration {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/auth/sign-up", "/auth/sign-in", "/auth/forgot-password", "/auth/change-password",
             "/auth/refresh-access-token", "/auth/social-login", "/auth/social-callback",
-            "/payment/vnpay/callback"
+            "/order/payment/callback"
     };
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

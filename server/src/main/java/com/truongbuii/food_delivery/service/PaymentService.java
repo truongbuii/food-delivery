@@ -1,8 +1,6 @@
 package com.truongbuii.food_delivery.service;
 
 import com.truongbuii.food_delivery.config.PaymentConfig;
-import com.truongbuii.food_delivery.exception.AppException;
-import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.utils.VNPayUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ public class PaymentService {
             HttpServletRequest request,
             String bank_code,
             BigDecimal amount,
-            Long orderId
+            String orderKey
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
         Map<String, String> vnpParams = paymentConfig.VNPayConfig();
         vnpParams.put("vnp_Amount", String.valueOf(amount.multiply(BigDecimal.valueOf(100))));
@@ -33,29 +31,10 @@ public class PaymentService {
             vnpParams.put("vnp_BankCode", "NCB");
         }
         vnpParams.put("vnp_IpAddr", VNPayUtils.getClientIp(request));
-        vnpParams.put("vnp_TxnRef", String.valueOf(orderId));
+        vnpParams.put("vnp_TxnRef", orderKey);
         String queryUrl = VNPayUtils.createQueryUrl(vnpParams, paymentConfig.getVnp_HashSecret());
 
         return paymentConfig.getVnp_PayUrl() + "?" + queryUrl;
     }
 
-    public String vnpayCallback(Map<String, String> queryParams, HttpServletRequest request) {
-        try {
-            String vnpResponseCode = queryParams.get("vnp_ResponseCode");
-            String orderId = queryParams.get("vnp_TxnRef");
-            String secureHash = queryParams.get("vnp_SecureHash");
-            boolean isValid = VNPayUtils.isValidSignature(queryParams, paymentConfig.getVnp_HashSecret(), secureHash);
-            if (!isValid) {
-                throw new AppException(ErrorCode.ERR_PAYMENT_INVALID_SIGNATURE);
-            }
-
-            if (vnpResponseCode.equals("00")) {
-                return "Payment success";
-            } else {
-                return "Payment failed";
-            }
-        } catch (Exception e) {
-            throw new AppException(e.getMessage());
-        }
-    }
 }

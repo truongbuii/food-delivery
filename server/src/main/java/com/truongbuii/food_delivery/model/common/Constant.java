@@ -18,6 +18,7 @@ public final class Constant {
     public static final class Redis {
         public static final String REDIS_OTP_PREFIX = "user:otp:";
         public static final String REDIS_BLACKLIST_TAG = "user:blacklist";
+        public static final String REDIS_ORDER_PREFIX = "order:";
     }
 
     public static final class Kafka {
@@ -26,5 +27,5 @@ public final class Constant {
         public static final String KAFKA_OTP_GROUP_ID = "otp-group";
         public static final String KAFKA_FORGOT_PASSWORD_GROUP_ID = "fg-pwd-group";
     }
-    
+
 }
