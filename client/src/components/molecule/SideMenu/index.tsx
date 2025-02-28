@@ -33,7 +33,7 @@ const SideMenu = () => {
       <div className="flex flex-col gap-7 px-6 mt-8 text-sm">
         <div className="flex gap-4">
           <FileText size={20} className="text-lightGray" />
-          <Link href="" className="flex-1">
+          <Link href={PATHNAME.ORDER.MY_ORDERS} className="flex-1">
             <p
               style={{
                 textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",

@@ -5,15 +5,17 @@ import { useEffect } from "react";
 
 export const useDeliveryAddresses = () => {
   const userId = useUserStore((state) => state.userInfo?.id);
-  const { setAddress } = useAddressStore();
+  const { setAddress, getShippingAddress } = useAddressStore();
 
   const { data: listAddress, refetch } = useGetAllDeliverAddr(userId!);
 
   useEffect(() => {
-    if (listAddress?.data?.length) {
-      setAddress(listAddress?.data[0]);
+    if (!listAddress?.data?.length) return;
+    const currentAddress = getShippingAddress();
+    if (!currentAddress || Object.keys(currentAddress).length === 0) {
+      setAddress(listAddress.data[0]);
     }
-  }, [setAddress]);
+  }, [setAddress, listAddress, getShippingAddress]);
 
   return {
     addresses: listAddress?.data ?? [],

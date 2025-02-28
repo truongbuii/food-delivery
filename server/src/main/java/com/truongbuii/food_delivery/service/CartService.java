@@ -103,14 +103,15 @@ public class CartService {
     }
 
     private void isFoodFromSameRestaurant(Long userId, Long foodId) {
-        Long currentRestaurantId = 0L;
         List<CartItemResponse> cartItems = getAll(userId);
-        if (!cartItems.isEmpty()) {
-            Food _food = foodService.getFoodById(cartItems.getFirst().getFoodId());
-            currentRestaurantId = _food.getRestaurant().getId();
+        if (cartItems.isEmpty()) {
+            return;
         }
-        Food food = foodService.getFoodById(foodId);
-        if (!food.getRestaurant().getId().equals(currentRestaurantId)) {
+        Food firstFood = foodService.getFoodById(cartItems.getFirst().getFoodId());
+        Long currentRestaurantId = firstFood.getRestaurant().getId();
+        Food newFood = foodService.getFoodById(foodId);
+        Long newRestaurantId = newFood.getRestaurant().getId();
+        if (!newRestaurantId.equals(currentRestaurantId)) {
             throw new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FROM_SAME_RESTAURANT);
         }
     }

@@ -6,16 +6,20 @@ import { persist } from "zustand/middleware";
 interface IAddressState {
   shippingAddress: IDeliveryAddressResponse;
   setAddress: (address: IDeliveryAddressResponse) => void;
+  getShippingAddress: () => IDeliveryAddressResponse;
   resetAddress: () => void;
 }
 
 export const useAddressStore = create<IAddressState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       shippingAddress: {} as IDeliveryAddressResponse,
 
-      setAddress: (address: IDeliveryAddressResponse) =>
-        set(() => ({ shippingAddress: address })),
+      setAddress: (address: IDeliveryAddressResponse) => {
+        set(() => ({ shippingAddress: address }));
+      },
+
+      getShippingAddress: () => get().shippingAddress,
       resetAddress: () => {
         set(() => ({ shippingAddress: {} as IDeliveryAddressResponse }));
       },

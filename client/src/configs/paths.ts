@@ -20,5 +20,9 @@ export const ROOT_PATH = {
     SEARCH: "/list/search",
   },
   CART: "/cart",
+  ORDER: {
+    CHECKOUT: "/order/checkout",
+    MY_ORDERS: "/order/my-orders",
+  },
 };
 export const PATHNAME = { ...PUBLIC_PATH, ...ROOT_PATH };

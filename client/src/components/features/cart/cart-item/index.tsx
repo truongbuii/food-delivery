@@ -31,8 +31,6 @@ const CartItem: FC<{ cartItems: ICartItemResponse[] }> = ({ cartItems }) => {
   };
 
   const handleUpdate = async (item: ICartItem) => {
-    console.log(item);
-
     updateCartItem(item, {
       onError: (error: IApiErrorResponse) => {
         message.error(error.message);
@@ -114,12 +112,13 @@ const CartItem: FC<{ cartItems: ICartItemResponse[] }> = ({ cartItems }) => {
                     variant={"outline"}
                     className="rounded-full bg-white w-7 h-7 p-0 hover:bg-white"
                     onClick={() => {
-                      if (item.quantity >= 1)
+                      if (item.quantity > 1) {
                         handleUpdate({
                           cartItemId: item.id,
                           foodId: item.foodId,
                           quantity: item.quantity - 1,
                         });
+                      }
                     }}
                   >
                     <span className="text-black">-</span>

@@ -54,7 +54,7 @@ const SelectAddress = () => {
             href={PATHNAME.DELIVERY_ADDRESS}
             className="flex items-center h-full "
           >
-            <p className="text-sm text-primary px-1">Add new address</p>
+            <p className="text-sm px-1">Add new address</p>
             <Plus size={14} className="pt-1" />
           </Link>
         )}

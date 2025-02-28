@@ -1,4 +1,4 @@
-import PaymentMethod from "@/components/features/payment/payment-method";
+import PaymentMethod from "@/components/features/order/checkout";
 
 const PaymentPage = () => {
   return (

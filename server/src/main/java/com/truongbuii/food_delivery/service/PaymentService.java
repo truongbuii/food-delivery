@@ -16,20 +16,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentConfig paymentConfig;
+    private static final BigDecimal USD_TO_VND_RATE = BigDecimal.valueOf(24000);
 
     public String createPayment(
             HttpServletRequest request,
-            String bank_code,
             BigDecimal amount,
             String orderKey
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
         Map<String, String> vnpParams = paymentConfig.VNPayConfig();
-        vnpParams.put("vnp_Amount", String.valueOf(amount.multiply(BigDecimal.valueOf(100))));
-        if (bank_code != null && !bank_code.isEmpty()) {
-            vnpParams.put("vnp_BankCode", bank_code);
-        } else {
-            vnpParams.put("vnp_BankCode", "NCB");
-        }
+        BigDecimal amountInVND = amount.multiply(USD_TO_VND_RATE).multiply(BigDecimal.valueOf(100));
+        vnpParams.put("vnp_Amount", amountInVND.toBigInteger().toString());
         vnpParams.put("vnp_IpAddr", VNPayUtils.getClientIp(request));
         vnpParams.put("vnp_TxnRef", orderKey);
         String queryUrl = VNPayUtils.createQueryUrl(vnpParams, paymentConfig.getVnp_HashSecret());

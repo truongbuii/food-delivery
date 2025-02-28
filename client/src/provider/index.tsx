@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useAuthenticated from "../hooks/useAuthenticated";
 import { SnackbarProvider } from "notistack";
 import { AddonsProvider } from "@/contexts/AddonsContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 export function ThemeProvider({
   children,
@@ -32,7 +33,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <QueryClientProvider client={client}>
-          <AddonsProvider>{children}</AddonsProvider>
+          <CartProvider>
+            <AddonsProvider>{children}</AddonsProvider>
+          </CartProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </SnackbarProvider>

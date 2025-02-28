@@ -81,6 +81,14 @@ interface ICartItemResponse {
   selectedAddons: ISelectedAddon[];
 }
 
+interface ICheckout {
+  paymentMethod: string;
+  address: string;
+  discount: number;
+  totalPrice: number;
+  numberItem: number;
+}
+
 export type {
   IApiDataResponse,
   IApiErrorResponse,
@@ -92,4 +100,5 @@ export type {
   IAddon,
   ICartItem,
   ICartItemResponse,
+  ICheckout,
 };

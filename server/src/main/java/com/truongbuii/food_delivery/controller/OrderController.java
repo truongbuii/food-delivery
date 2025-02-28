@@ -8,11 +8,13 @@ import com.truongbuii.food_delivery.model.request.order.OrderStatusPatch;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
 import com.truongbuii.food_delivery.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -35,11 +37,12 @@ public class OrderController {
     }
 
     @GetMapping("/payment/callback")
-    public ResponseEntity<ApiResponse<Void>> vnpayCallback(
-            @RequestParam Map<String, String> queryParams
-    ) {
+    public void vnpayCallback(
+            @RequestParam Map<String, String> queryParams,
+            HttpServletResponse response
+    ) throws IOException {
         orderService.updatePaymentStatus(queryParams);
-        return ResponseEntity.ok(ApiResponse.<Void>builder().build());
+        response.sendRedirect("http://localhost:3000/order/my-orders");
     }
 
     @PatchMapping("/status")

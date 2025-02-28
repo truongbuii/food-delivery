@@ -41,4 +41,7 @@ export const QUERIES_KEY = {
     UPDATE: "UPDATE_CART_ITEM",
     DELETE: "DELETE_CART_ITEM",
   },
+  ORDER: {
+    CHECKOUT: "CHECKOUT",
+  },
 };

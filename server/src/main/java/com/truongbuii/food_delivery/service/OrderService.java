@@ -41,7 +41,6 @@ public class OrderService {
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final AuthenticationService authenticationService;
 
     @Transactional
     public String create(Long userId, OrderPost orderPost, HttpServletRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
@@ -58,7 +57,7 @@ public class OrderService {
         String redisOrderKey = Constant.Redis.REDIS_ORDER_PREFIX + GeneratorUtils.generateRandomNums(6);
         String orderJson = new ObjectMapper().writeValueAsString(order);
         redisService.setTimeToLive(redisOrderKey, orderJson, 900_000);
-        return paymentService.createPayment(request, orderPost.bankCode(), order.getTotalPrice(), redisOrderKey);
+        return paymentService.createPayment(request, order.getTotalPrice(), redisOrderKey);
     }
 
 

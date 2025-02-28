@@ -12,23 +12,71 @@ import {
 } from "@/components/ui/dialog";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { IMAGES_CONST, PATHNAME } from "@/configs";
+import { useCart } from "@/contexts/CartContext";
 import { useDeliveryAddresses } from "@/hooks/useAddress";
+import { useMessage } from "@/hooks/useMessage";
+import { IApiErrorResponse, IDeliveryAddressResponse } from "@/interfaces";
+import { useCheckoutMutation } from "@/queries";
 import { useAddressStore } from "@/stores/address/address.store";
 import { ChevronLeft, Ellipsis } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
 
 const PaymentMethod = () => {
   const router = useRouter();
+  const params = useSearchParams();
   const { addresses } = useDeliveryAddresses();
-  const { shippingAddress } = useAddressStore();
+  const { shippingAddress, setAddress } = useAddressStore();
+  const { subTotal, totalQuantity } = useCart();
+  const discount = parseFloat(params.get("discount") || "0");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const totalPay = parseFloat(
+    (subTotal - (subTotal * discount) / 100).toFixed(4)
+  );
+  const { mutateAsync } = useCheckoutMutation();
+  const message = useMessage();
+
+  const handleAddressChange = (address: IDeliveryAddressResponse) => {
+    setAddress(address);
+  };
+
+  const handleConfirmOrder = useCallback(() => {
+    mutateAsync(
+      {
+        paymentMethod: paymentMethod,
+        address: shippingAddress.fullAddress,
+        discount,
+        totalPrice: totalPay,
+        numberItem: totalQuantity,
+      },
+      {
+        onSuccess: (res) => {
+          if (res && res.data) {
+            window.location.href = res.data;
+          }
+        },
+        onError: (err: IApiErrorResponse) => {
+          message.error(err?.message);
+        },
+      }
+    );
+  }, [
+    paymentMethod,
+    shippingAddress,
+    discount,
+    totalPay,
+    totalQuantity,
+    mutateAsync,
+    message,
+  ]);
 
   return (
     <>
       <div className="relative py-6 flex items-center z-[50] w-full">
         <Button
           className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary"
-          onClick={() => router.push(PATHNAME.HOME)}
+          onClick={() => router.push(PATHNAME.CART)}
         >
           <ChevronLeft size={18} className="text-foreground" />
         </Button>
@@ -51,7 +99,11 @@ const PaymentMethod = () => {
                 <DialogDescription></DialogDescription>
               </DialogHeader>
               {addresses.map((address) => (
-                <div key={address.id} className="mt-1 cursor-pointer">
+                <div
+                  key={address.id}
+                  className="mt-1 cursor-pointer"
+                  onClick={() => handleAddressChange(address)}
+                >
                   <CartAddress key={address.id} address={address} />
                 </div>
               ))}
@@ -75,10 +127,14 @@ const PaymentMethod = () => {
         <div className="mt-4">
           <p className="text-lg font-semibold">Payment Method</p>
           <div className="mt-3">
-            <ToggleGroup type="single" className="justify-start">
+            <ToggleGroup
+              type="single"
+              className="justify-start"
+              onValueChange={(value) => setPaymentMethod(value)}
+            >
               <ToggleGroupItem
                 className="relative flex items-center w-20 h-[67px] p-1 cursor-pointer border border-lightGray data-[state=on]:bg-secondary data-[state=on]:border-primary"
-                value="vnpay"
+                value="VNPAY"
               >
                 <Image
                   src={IMAGES_CONST.common.IconVnPay}
@@ -90,7 +146,7 @@ const PaymentMethod = () => {
               </ToggleGroupItem>
               <ToggleGroupItem
                 className="relative flex items-center w-20 h-[67px] p-1 cursor-pointer border border-lightGray data-[state=on]:bg-secondary data-[state=on]:border-primary"
-                value="cod"
+                value="COD"
               >
                 <Image
                   src={IMAGES_CONST.common.IconCod}
@@ -105,11 +161,12 @@ const PaymentMethod = () => {
         </div>
         <div className="flex justify-between mt-4">
           <span className="text-lg font-semibold">Total Pay</span>
-          <span>$58.90</span>
+          <span>${totalPay}</span>
         </div>
         <Button
           size={"lg"}
           className="m-auto mt-10 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
+          onClick={handleConfirmOrder}
         >
           CONFIRM ORDER
         </Button>

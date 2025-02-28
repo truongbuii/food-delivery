@@ -10,6 +10,7 @@ import BadgeNumber from "@/components/molecule/BadgeNumber";
 import { RefObject } from "react";
 import { IconBag } from "@/components/molecule/svgs";
 import { PATHNAME } from "@/configs";
+import { useCart } from "@/contexts/CartContext";
 
 interface FixedFooterProps {
   parentRef: RefObject<HTMLDivElement | null>;
@@ -20,6 +21,7 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
   const threshold = 50;
+  const { totalQuantity } = useCart();
 
   useEffect(() => {
     if (!parentRef?.current) return;
@@ -62,7 +64,7 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
         <Link href={PATHNAME.CART} className="relative">
           <IconBag className="text-primary" width={23} height={23} />
           <BadgeNumber
-            number={4}
+            number={totalQuantity}
             className="absolute -top-2 -right-3 w-[15px] h-[15px] text-[10px] leading-[15px] rounded-md"
           />
         </Link>
