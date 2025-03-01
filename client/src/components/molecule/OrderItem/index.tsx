@@ -18,8 +18,8 @@ const OrderItem = () => {
               style={{ objectFit: "cover" }}
             />
           </div>
-          <div className="flex flex-col">
-            <div className="flex justify-between gap-8">
+          <div className="flex flex-col flex-1">
+            <div className="flex justify-between">
               <div className="flex items-center text-xs text-lightGray">
                 <span>20 jun, 10.30</span>
                 <span className="mx-2 text-base">•</span>

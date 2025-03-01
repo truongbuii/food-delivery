@@ -1,10 +1,10 @@
-import { PageTransition } from '@/components/molecule';
-import { Button } from '@/components/ui/button';
-import { IMAGES_CONST, PATHNAME } from '@/configs';
+import { PageTransition } from "@/components/molecule";
+import { Button } from "@/components/ui/button";
+import { IMAGES_CONST, PATHNAME } from "@/configs";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { FC } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { FC } from "react";
 
 interface IWelcomeProps {
   onNext: () => void;
@@ -15,7 +15,7 @@ const Welcome: FC<IWelcomeProps> = ({ onNext }) => {
     <PageTransition>
       <div
         style={{
-          backgroundImage: `url(${IMAGES_CONST.onboarding.background.src})`
+          backgroundImage: `url(${IMAGES_CONST.onboarding.background.src})`,
         }}
         className="h-[100vh] bg-cover bg-no-repeat flex flex-col items-start justify-between p-8 gap-4 relative"
       >
@@ -27,6 +27,7 @@ const Welcome: FC<IWelcomeProps> = ({ onNext }) => {
             height={111}
             src={IMAGES_CONST.onboarding.title}
             alt={IMAGES_CONST.onboarding.title.toString()}
+            priority
           />
           <p className="text-lg text-[#30384F] max-w-[266px]">
             Your favorites foods delivered fast at your door.
@@ -60,11 +61,11 @@ const Welcome: FC<IWelcomeProps> = ({ onNext }) => {
             </div>
           </div>
           <Button
-            size={'lg'}
+            size={"lg"}
             className="h-12 rounded-[100px]"
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              border: '1px solid #FFFFFF'
+              backgroundColor: "rgba(255, 255, 255, 0.3)",
+              border: "1px solid #FFFFFF",
             }}
             onClick={onNext}
           >
@@ -76,7 +77,7 @@ const Welcome: FC<IWelcomeProps> = ({ onNext }) => {
               href={PATHNAME.SIGN_IN}
               className="px-2 font-normal text-sm text-primary underline"
             >
-              Sign in{' '}
+              Sign in{" "}
             </Link>
           </div>
         </div>
