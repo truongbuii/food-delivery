@@ -5,7 +5,11 @@ import com.truongbuii.food_delivery.model.entity.Order;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.order.OrderPost;
 import com.truongbuii.food_delivery.model.request.order.OrderStatusPatch;
+import com.truongbuii.food_delivery.model.request.order.ReOrderPost;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
+import com.truongbuii.food_delivery.model.response.CartItemResponse;
+import com.truongbuii.food_delivery.model.response.CheckoutResponse;
+import com.truongbuii.food_delivery.model.response.OrderResponse;
 import com.truongbuii.food_delivery.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,14 +31,22 @@ import java.util.Map;
 public class OrderController {
     private final OrderService orderService;
 
+    @GetMapping("/my-orders")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyOrders(
+            @AuthenticationPrincipal User principal
+    ) {
+        var orders = orderService.getMyOrders(principal.getId());
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder().data(orders).build());
+    }
+
     @PostMapping("/checkout")
-    public ResponseEntity<ApiResponse<String>> createOrder(
+    public ResponseEntity<ApiResponse<CheckoutResponse>> createOrder(
             @AuthenticationPrincipal User principal,
             @RequestBody OrderPost orderPost,
             HttpServletRequest request
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         var orderResponse = orderService.create(principal.getId(), orderPost, request);
-        return ResponseEntity.ok(ApiResponse.<String>builder().data(orderResponse).build());
+        return ResponseEntity.ok(ApiResponse.<CheckoutResponse>builder().data(orderResponse).build());
     }
 
     @GetMapping("/payment/callback")
@@ -41,8 +54,17 @@ public class OrderController {
             @RequestParam Map<String, String> queryParams,
             HttpServletResponse response
     ) throws IOException {
-        orderService.updatePaymentStatus(queryParams);
-        response.sendRedirect("http://localhost:3000/order/my-orders");
+        var orderId = orderService.OrderPaymentCallBack(queryParams);
+        response.sendRedirect("http://localhost:3000/order/" + orderId);
+    }
+
+    @PostMapping("/re-order")
+    public ResponseEntity<ApiResponse<List<CartItemResponse>>> reOrder(
+            @AuthenticationPrincipal User principal,
+            @RequestBody ReOrderPost reOrderPost
+    ) {
+        var orderResponse = orderService.reOrder(principal.getId(), reOrderPost);
+        return ResponseEntity.ok(ApiResponse.<List<CartItemResponse>>builder().data(orderResponse).build());
     }
 
     @PatchMapping("/status")

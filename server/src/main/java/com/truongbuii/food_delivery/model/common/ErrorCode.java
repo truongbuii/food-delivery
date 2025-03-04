@@ -31,16 +31,17 @@ public class ErrorCode {
     public static final String ERR_FOOD_NOT_FOUND = "This food is not found";
     public static final String ERR_CATEGORY_NOT_MATCH = "This category is not matched with this restaurant";
 
-
     // Addon error
     public static final String ERR_ADDON_DUPLICATE = "This addon name is existed";
     public static final String ERR_ADDON_NOT_FOUND = "This addon is not found";
 
     // Cart error
     public static final String ERR_CART_ITEM_NOT_FOUND = "This cart item is not found";
-    public static final String ERR_FOOD_NOT_FROM_SAME_RESTAURANT = "This food is not from the same restaurant. Do you want to clear your cart and add this food?";
+    public static final String ERR_FOOD_NOT_FROM_SAME_RESTAURANT = "Clear cart before adding from another restaurant";
 
-    // Payment error
+    // Order error
     public static final String ERR_PAYMENT_INVALID_SIGNATURE = "Invalid signature";
     public static final String ERR_ORDER_NOT_FOUND = "This order is not found";
+    public static final String ERR_ORDER_PENDING = "You have a pending order!";
+
 }

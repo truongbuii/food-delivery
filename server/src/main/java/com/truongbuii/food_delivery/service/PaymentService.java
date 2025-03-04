@@ -21,13 +21,13 @@ public class PaymentService {
     public String createPayment(
             HttpServletRequest request,
             BigDecimal amount,
-            String orderKey
+            Long orderId
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
         Map<String, String> vnpParams = paymentConfig.VNPayConfig();
         BigDecimal amountInVND = amount.multiply(USD_TO_VND_RATE).multiply(BigDecimal.valueOf(100));
         vnpParams.put("vnp_Amount", amountInVND.toBigInteger().toString());
         vnpParams.put("vnp_IpAddr", VNPayUtils.getClientIp(request));
-        vnpParams.put("vnp_TxnRef", orderKey);
+        vnpParams.put("vnp_TxnRef", orderId.toString());
         String queryUrl = VNPayUtils.createQueryUrl(vnpParams, paymentConfig.getVnp_HashSecret());
 
         return paymentConfig.getVnp_PayUrl() + "?" + queryUrl;

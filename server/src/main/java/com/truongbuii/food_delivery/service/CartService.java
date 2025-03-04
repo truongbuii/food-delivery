@@ -93,6 +93,12 @@ public class CartService {
         cartItemRepository.delete(cartItem);
     }
 
+    @Transactional
+    public void deleteAll(Long userId) {
+        UserResponse user = userService.getById(userId);
+        cartItemRepository.deleteAllByUserId(user.getId());
+    }
+
     private void validateFood(Long foodId, Long userId) {
         if (!foodService.existFoodById(foodId)) {
             throw new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND);
