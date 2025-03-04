@@ -1,13 +1,17 @@
+"use client";
+
 import BadgeNumber from "@/components/molecule/BadgeNumber";
 import { IconChecked, IconStar } from "@/components/molecule/svgs";
 import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
+import { PATHNAME } from "@/configs";
 import useScreenMode from "@/hooks/useScreenMode";
 import { ICategory, IFoodResponse, IRestaurantResponse } from "@/interfaces";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Bike, CircleCheck, Heart, Timer } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FC, memo } from "react";
 
 const HeartButtonComponent: FC<{ onClick?: () => void }> = ({ onClick }) => (
@@ -244,7 +248,7 @@ const HorizontalCard: FC<CardItemProps> = ({
 
 const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
   const { isMobile } = useScreenMode();
-
+  const router = useRouter();
   const restaurant = item as IRestaurantResponse;
   const food = item as IFoodResponse;
 
@@ -252,7 +256,8 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
     restaurant: (
       <div
         className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
-          } px-2 py-3 shadow-cardItemShadow bg-cardItem rounded-2xl`}
+          } px-2 py-3 shadow-cardItemShadow bg-cardItem rounded-2xl cursor-pointer`}
+        onClick={() => router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)}
       >
         <div className="flex justify-between relative">
           <div
@@ -305,7 +310,8 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
     ),
     food: (
       <div
-        className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl`}
+        className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl cursor-pointer`}
+        onClick={() => router.push(`${PATHNAME.FOOD}/${food.slug}`)}
       >
         <div className="relative w-full h-36 max-h-36 ">
           <Image

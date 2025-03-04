@@ -43,5 +43,8 @@ export const QUERIES_KEY = {
   },
   ORDER: {
     CHECKOUT: "CHECKOUT",
+    GET_MY_ORDERS: "GET_MY_ORDERS",
+    UPDATE_ORDER: "UPDATE_ORDER",
+    RE_ORDER: "RE_ORDER",
   },
 };

@@ -15,14 +15,37 @@ import { MapperFood } from "@/mapping/food.mapping";
 import { useGetFoodsByParams } from "@/queries";
 import { SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const FoodsByCategory = () => {
   const param = useSearchParams();
   const category = param.get("category");
   const categoryId = category ? parseInt(category, 10) : null;
+  const [filters, setFilters] = useState({
+    categoryId: categoryId,
+    rating: null,
+    freeDelivery: null,
+    popular: null,
+    priceValues: [0, 200],
+  });
 
-  const { data: foods } = useGetFoodsByParams(categoryId, null);
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, categoryId }));
+  }, [categoryId]);
+
+  const { data: foods } = useGetFoodsByParams(
+    filters.categoryId,
+    null,
+    filters.rating,
+    null,
+    filters.popular,
+    null,
+    filters.priceValues[0],
+    filters.priceValues[1]
+  );
   const _foods = foods?.data?.map((food) => MapperFood(food));
+  const handleFilterChange = (newFilters: any) =>
+    setFilters((prev) => ({ ...prev, ...newFilters }));
 
   return (
     <Sheet key="right">
@@ -91,7 +114,7 @@ const FoodsByCategory = () => {
           </div>
         </div>
       </div>
-      <FilterForm />
+      <FilterForm onFilterChange={handleFilterChange} />
     </Sheet>
   );
 };

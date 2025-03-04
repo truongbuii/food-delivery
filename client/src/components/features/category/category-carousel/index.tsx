@@ -9,22 +9,17 @@ import {
 import { ICategory } from "@/interfaces";
 import { MapperCategory } from "@/mapping/category.mapping";
 import { useGetCategories } from "@/queries";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 
-const CategoryCarousel: FC<{ onClick: (id: number | null) => void }> = ({
-  onClick,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+const CategoryCarousel: FC<{
+  selectedCategory: number | null;
+  onClick: (id: number | null) => void;
+}> = ({ selectedCategory, onClick }) => {
   const { data: categories } = useGetCategories();
   const _categories = useMemo(
     () => categories?.data?.map((category) => MapperCategory(category)) ?? [],
     [categories]
   );
-
-  const handleSelectCategory = (id: number) => {
-    setSelectedCategory(id);
-    onClick(id);
-  };
 
   return (
     <Carousel
@@ -41,7 +36,7 @@ const CategoryCarousel: FC<{ onClick: (id: number | null) => void }> = ({
                 image={category.imageUrl}
                 title={category.name}
                 isSelected={selectedCategory === category.id}
-                onClick={() => handleSelectCategory(category.id)}
+                onClick={() => onClick(category.id)}
               />
             </div>
           </CarouselItem>

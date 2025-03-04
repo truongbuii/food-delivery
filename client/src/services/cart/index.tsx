@@ -1,6 +1,11 @@
 import { BASE_CART } from "@/apis/endPoints";
 import createHttpClient from "@/apis/httpClient";
-import { IApiDataResponse, ICartItem, ICartItemResponse } from "@/interfaces";
+import {
+  IApiDataResponse,
+  ICartItem,
+  ICartItemResponse,
+  ICartPost,
+} from "@/interfaces";
 
 const httpClient = createHttpClient();
 
@@ -33,6 +38,20 @@ export const updateCartItemService = async (
     cartItemId: value.cartItemId,
     foodId: value.foodId,
     quantity: value.quantity,
+  });
+  return resp;
+};
+
+export const addCartItemService = async (
+  value: ICartPost
+): Promise<IApiDataResponse<ICartItemResponse>> => {
+  const resp = await httpClient.post<
+    ICartPost,
+    IApiDataResponse<ICartItemResponse>
+  >(BASE_CART, {
+    foodId: value.foodId,
+    quantity: value.quantity,
+    selectedAddons: value.selectedAddons,
   });
   return resp;
 };

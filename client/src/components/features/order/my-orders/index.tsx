@@ -4,11 +4,15 @@ import { Avatar } from "@/components/molecule";
 import OrderItem from "@/components/molecule/OrderItem";
 import { Button } from "@/components/ui/button";
 import { PATHNAME } from "@/configs";
+import { MapperOrder } from "@/mapping/order.mapping";
+import { useMyOrdersQuery } from "@/queries";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const MyOrders = () => {
   const router = useRouter();
+  const { data: order } = useMyOrdersQuery();
+  const _order = order?.data ? order.data.map(MapperOrder) : [];
 
   return (
     <>
@@ -25,9 +29,9 @@ const MyOrders = () => {
         <Avatar className="w-10 h-10 rounded-xl" />
       </div>
       <div className="flex flex-col gap-6 mt-4">
-        <OrderItem />
-        <OrderItem />
-        <OrderItem />
+        {_order.map((item, index) => (
+          <OrderItem key={index} order={item} />
+        ))}
       </div>
     </>
   );

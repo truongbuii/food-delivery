@@ -13,7 +13,8 @@ export const ROOT_PATH = {
   HOME: "/",
   PROFILE: "/profile",
   DELIVERY_ADDRESS: "/delivery-address",
-  RESTAURANTS: "/restaurants",
+  RESTAURANT: "/restaurant",
+  FOOD: "/food",
   LIST: {
     FOOD_BY: "/list/food",
     RESTAURANT_BY: "/list/restaurant",
@@ -21,6 +22,7 @@ export const ROOT_PATH = {
   },
   CART: "/cart",
   ORDER: {
+    DETAIL: "/order",
     CHECKOUT: "/order/checkout",
     MY_ORDERS: "/order/my-orders",
   },

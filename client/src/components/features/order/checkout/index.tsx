@@ -42,6 +42,10 @@ const PaymentMethod = () => {
   };
 
   const handleConfirmOrder = useCallback(() => {
+    if (!paymentMethod) {
+      message.warning("Please choose payment method");
+      return;
+    }
     mutateAsync(
       {
         paymentMethod: paymentMethod,

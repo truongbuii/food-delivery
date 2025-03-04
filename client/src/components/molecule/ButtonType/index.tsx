@@ -18,7 +18,7 @@ const ButtonType = ({
   title?: string;
   className?: string;
 }) => {
-  const { push } = useRouter();
+  const { push, back } = useRouter();
 
   const renderByType = useMemo(
     () => ({
@@ -39,7 +39,7 @@ const ButtonType = ({
           )}
         >
           <Button
-            onClick={() => expectPath && push(expectPath)}
+            onClick={() => (expectPath ? push(expectPath) : back())}
             className="bg-secondary w-10 h-10 rounded-[12px] shadow-backBtnShadow hover:bg-primary "
           >
             <ChevronLeft size={18} className="text-foreground" />

@@ -39,6 +39,8 @@ const EndPoints = {
     checkout: "checkout",
     callback: "payment/callback",
     update: "status",
+    myOrders: "my-orders",
+    reOrder: "re-order",
   }),
 } as const;
 

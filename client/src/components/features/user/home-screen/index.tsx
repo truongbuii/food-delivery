@@ -18,17 +18,22 @@ import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetFoodsByParams, useGetRestaurantsByParams } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const HomeScreen = () => {
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const router = useRouter();
   const [filters, setFilters] = useState({
-    categoryId: categoryId,
+    categoryId: null as number | null,
     rating: null,
     freeDelivery: null,
     popular: null,
     priceValues: [0, 200],
   });
+
+  const handleCategoryChange = (id: number | null) => {
+    setFilters((prev) => ({ ...prev, categoryId: id }));
+  };
 
   const { data: restaurants } = useGetRestaurantsByParams(
     null,
@@ -53,6 +58,8 @@ const HomeScreen = () => {
     MapperRestaurant(restaurant)
   );
   const _foods = foods?.data?.map((food) => MapperFood(food));
+  const handleFilterChange = (newFilters: any) =>
+    setFilters((prev) => ({ ...prev, ...newFilters }));
 
   return (
     <>
@@ -60,7 +67,10 @@ const HomeScreen = () => {
         <SearchAndFilter />
         {/* Category */}
         <div className="flex mt-4">
-          <CategoryCarousel onClick={setCategoryId} />
+          <CategoryCarousel
+            selectedCategory={filters.categoryId}
+            onClick={handleCategoryChange}
+          />
         </div>
 
         <div className="flex flex-col pb-6">
@@ -71,7 +81,7 @@ const HomeScreen = () => {
                 Featured restaurants
               </span>
               <Link
-                href={`${PATHNAME.LIST.RESTAURANT_BY}?category=${categoryId}`}
+                href=""
                 className="flex gap-[2px] items-center text-xs text-primary font-medium"
               >
                 View All
@@ -87,7 +97,10 @@ const HomeScreen = () => {
                   {_restaurants?.map((restaurant) => (
                     <CarouselItem
                       key={restaurant.id}
-                      className="basis-5/5 pr-4"
+                      className="basis-5/5 pr-4 cursor-pointer"
+                      onClick={() =>
+                        router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)
+                      }
                     >
                       <div className="pb-8">
                         <HorizontalCard type="restaurant" item={restaurant} />
@@ -105,8 +118,8 @@ const HomeScreen = () => {
               <span className="text-lg font-semibold">Popular items</span>
               <Link
                 href={
-                  categoryId
-                    ? `${PATHNAME.LIST.FOOD_BY}?category=${categoryId}`
+                  filters.categoryId
+                    ? `${PATHNAME.LIST.FOOD_BY}?category=${filters.categoryId}`
                     : PATHNAME.LIST.FOOD_BY
                 }
                 className="flex gap-[2px] items-center text-xs text-primary font-medium"
@@ -123,7 +136,7 @@ const HomeScreen = () => {
           </div>
         </div>
       </div>
-      <FilterForm onFilterChange={setFilters} />
+      <FilterForm onFilterChange={handleFilterChange} />
     </>
   );
 };

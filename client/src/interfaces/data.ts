@@ -1,3 +1,5 @@
+import { ORDER_STATUS } from "@/interfaces/enum";
+
 interface IApiDataResponse<T> {
   code: number;
   message?: string;
@@ -65,6 +67,12 @@ interface ISelectedAddon {
   price: number;
 }
 
+interface ICartPost {
+  foodId: number;
+  quantity: number;
+  selectedAddons: ISelectedAddon[];
+}
+
 interface ICartItem {
   cartItemId: number;
   foodId: number;
@@ -89,6 +97,27 @@ interface ICheckout {
   numberItem: number;
 }
 
+interface IOrderResponse {
+  id: number;
+  restaurantId: number;
+  restaurantName: string;
+  restaurantImage: string;
+  verifiedBadge: boolean;
+  totalPrice: number;
+  status: ORDER_STATUS;
+  numberItem: number;
+  orderAddress: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  discount: number;
+  updatedAt: string;
+}
+
+interface IOrderUpdate {
+  id: number;
+  status: ORDER_STATUS;
+}
+
 export type {
   IApiDataResponse,
   IApiErrorResponse,
@@ -98,7 +127,10 @@ export type {
   IRestaurantResponse,
   IFoodResponse,
   IAddon,
+  ICartPost,
   ICartItem,
   ICartItemResponse,
   ICheckout,
+  IOrderResponse,
+  IOrderUpdate,
 };

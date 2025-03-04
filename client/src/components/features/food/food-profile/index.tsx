@@ -4,35 +4,45 @@ import FoodAddons from "@/components/features/food/food-addons";
 import { IconBag, IconStar } from "@/components/molecule/svgs";
 import { Button } from "@/components/ui/button";
 import { useAddons } from "@/contexts/AddonsContext";
+import { useMessage } from "@/hooks/useMessage";
+import { IApiErrorResponse } from "@/interfaces";
 import { MapperFood } from "@/mapping/food.mapping";
-import { useGetFoodBySlug } from "@/queries";
+import { useAddCartItem, useGetFoodBySlug } from "@/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const FoodProfile = () => {
   const param = useParams();
+  const message = useMessage();
   const [quantity, setQuantity] = useState<number>(1);
   const { data: food } = useGetFoodBySlug(param.slug as string);
   const _food = food?.data ? MapperFood(food.data) : null;
   const { selectedAddons } = useAddons();
-
-  const handleAddToCart = () => {
+  const { mutateAsync, isPending } = useAddCartItem();
+  const handleAddToCart = useCallback(() => {
     if (!_food) return;
 
-    const cartItem = {
-      productId: _food.id,
-      quantity,
-      selectedAddons: selectedAddons.map((addon) => ({
-        id: addon.id,
-        name: addon.name,
-        price: addon.price,
-      })),
-    };
+    const _selectedAddons = selectedAddons.map((addon) => ({
+      id: addon.id,
+      name: addon.name,
+      price: addon.price,
+    }));
+    console.log(_selectedAddons);
 
-    console.log(cartItem);
-  };
+    mutateAsync(
+      { foodId: _food.id, quantity: quantity, selectedAddons: _selectedAddons },
+      {
+        onSuccess: () => {
+          message.success("Item added to cart");
+        },
+        onError: (err: IApiErrorResponse) => {
+          message.warning(err?.message);
+        },
+      }
+    );
+  }, [_food, quantity, selectedAddons, mutateAsync, message]);
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -98,6 +108,8 @@ const FoodProfile = () => {
         size={"lg"}
         className="w-auto m-auto mt-2 rounded-[40px] px-3 text-left hover:bg-primary shadow-primaryBtnShadow"
         onClick={handleAddToCart}
+        disabled={isPending}
+        loading={isPending}
       >
         <div className="flex justify-center items-center w-10 h-10 bg-white rounded-full">
           <IconBag />

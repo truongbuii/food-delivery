@@ -3,9 +3,11 @@ import {
   IApiErrorResponse,
   ICartItem,
   ICartItemResponse,
+  ICartPost,
 } from "@/interfaces";
 import { QUERIES_KEY } from "@/queries/key";
 import {
+  addCartItemService,
   getCartItemsService,
   removeCartItemService,
   updateCartItemService,
@@ -39,6 +41,21 @@ export const useUpdateCartItem = () => {
   >({
     mutationKey: [QUERIES_KEY.CART.UPDATE],
     mutationFn: (value: ICartItem) => updateCartItemService(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERIES_KEY.CART.GET] });
+    },
+  });
+};
+
+export const useAddCartItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IApiDataResponse<ICartItemResponse>,
+    IApiErrorResponse,
+    ICartPost
+  >({
+    mutationKey: [QUERIES_KEY.CART.ADD],
+    mutationFn: (value: ICartPost) => addCartItemService(value),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERIES_KEY.CART.GET] });
     },
