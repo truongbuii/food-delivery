@@ -59,6 +59,7 @@ interface IFoodResponse {
   slug: string;
   restaurantId: number;
   addons: IAddon[];
+  favorite: boolean;
 }
 
 interface ISelectedAddon {

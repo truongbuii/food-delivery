@@ -13,6 +13,7 @@ const MapperFood = (food: Record<string, any>): IFoodResponse => {
     slug: food.slug ?? "",
     restaurantId: food.restaurantId ?? "",
     addons: food.addons ?? [],
+    favorite: food.favorite ?? false,
   };
 };
 

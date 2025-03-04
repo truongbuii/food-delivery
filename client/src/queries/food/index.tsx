@@ -9,8 +9,10 @@ import {
   getFeaturedFoodsByRestaurantSlug,
   getFoodsByParams,
   getFoodBySlug,
+  toggleFavoriteFoodService,
+  getFavoriteFoods,
 } from "@/services";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetFoods = () => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
@@ -45,7 +47,7 @@ export const useGetFoodsByParams = (
 ) => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
     queryKey: [
-      QUERIES_KEY.FOOD.GET_BY_CATEGORY,
+      QUERIES_KEY.FOOD.GET_BY_PARAMS,
       categoryId,
       restaurantSlug,
       rating,
@@ -66,5 +68,35 @@ export const useGetFoodsByParams = (
         minPrice,
         maxPrice
       ),
+  });
+};
+
+export const useToggleFavoriteFoodMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IApiDataResponse<IFoodResponse[]>,
+    IApiErrorResponse,
+    number
+  >({
+    mutationKey: [QUERIES_KEY.FOOD.TOGGLE_FAVORITE],
+    mutationFn: (value: number) => toggleFavoriteFoodService(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_FAVORITE],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_BY_SLUG],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_BY_PARAMS],
+      });
+    },
+  });
+};
+
+export const useGetFavoriteFoods = () => {
+  return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
+    queryKey: [QUERIES_KEY.FOOD.GET_FAVORITE],
+    queryFn: () => getFavoriteFoods(),
   });
 };

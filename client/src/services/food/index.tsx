@@ -61,3 +61,31 @@ export const getFoodsByParams = async (
   });
   return resp;
 };
+
+export const toggleFavoriteFoodService = async (
+  value: number
+): Promise<IApiDataResponse<IFoodResponse[]>> => {
+  const resp = await httpClient.put<
+    IFoodResponse[],
+    IApiDataResponse<IFoodResponse[]>
+  >(
+    `${BASE_FOOD}/favorite`,
+    {},
+    {
+      params: {
+        foodId: value,
+      },
+    }
+  );
+  return resp;
+};
+
+export const getFavoriteFoods = async (): Promise<
+  IApiDataResponse<IFoodResponse[]>
+> => {
+  const resp = await httpClient.get<
+    IFoodResponse[],
+    IApiDataResponse<IFoodResponse[]>
+  >(`${BASE_FOOD}/my-favorite`);
+  return resp;
+};

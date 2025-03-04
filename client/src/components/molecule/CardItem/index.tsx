@@ -1,29 +1,37 @@
 "use client";
 
 import BadgeNumber from "@/components/molecule/BadgeNumber";
-import { IconChecked, IconStar } from "@/components/molecule/svgs";
+import { IconChecked, IconHeart, IconStar } from "@/components/molecule/svgs";
 import Tag from "@/components/molecule/Tag";
 import { Button } from "@/components/ui/button";
 import { PATHNAME } from "@/configs";
 import useScreenMode from "@/hooks/useScreenMode";
 import { ICategory, IFoodResponse, IRestaurantResponse } from "@/interfaces";
+import { useToggleFavoriteFoodMutation } from "@/queries";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
-import { Bike, CircleCheck, Heart, Timer } from "lucide-react";
+import { Bike, CircleCheck, Timer } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
 
-const HeartButtonComponent: FC<{ onClick?: () => void }> = ({ onClick }) => (
+const HeartButtonComponent: FC<{
+  onClick?: () => void;
+  favorite?: boolean;
+}> = ({ onClick, favorite }) => (
   <Button
     onClick={onClick}
-    className="absolute top-2 right-2 p-0 flex justify-center items-center w-7 h-7 bg-primary rounded-full hover:bg-primary"
+    className={`absolute top-2 right-2 p-0 flex justify-center items-center w-7 h-7 bg-primary rounded-full z-10 ${
+      favorite
+        ? "bg-primary hover:bg-primary"
+        : "bg-[rgba(255,255,255,0.2)] backdrop-blur-md"
+    }`}
   >
-    <Heart strokeWidth={3} size={15} color="#fff" />
+    <IconHeart width={15} height={15} />
   </Button>
 );
 
-export const HeartButton = memo(HeartButtonComponent);
+export const HeartButton = HeartButtonComponent;
 HeartButton.displayName = "HeartButton";
 
 const ratingBadgeVariants = cva(
@@ -251,7 +259,13 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
   const router = useRouter();
   const restaurant = item as IRestaurantResponse;
   const food = item as IFoodResponse;
+  const { mutateAsync: toggleFavoriteFoodMutation } =
+    useToggleFavoriteFoodMutation();
+  const handleToggleFavorite = useCallback(() => {
+    if (!food) return;
 
+    toggleFavoriteFoodMutation(food.id);
+  }, [food, toggleFavoriteFoodMutation]);
   const renderByType = () => ({
     restaurant: (
       <div
@@ -310,8 +324,7 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
     ),
     food: (
       <div
-        className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl cursor-pointer`}
-        onClick={() => router.push(`${PATHNAME.FOOD}/${food.slug}`)}
+        className={`${isMobile} ? "w-full": "w-[153px]" shadow-cardItemShadow bg-cardItem rounded-2xl `}
       >
         <div className="relative w-full h-36 max-h-36 ">
           <Image
@@ -322,7 +335,10 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
             className="w-full h-full rounded-2xl"
             style={{ objectFit: "cover" }}
           />
-          <HeartButton />
+          <HeartButton
+            favorite={food.favorite}
+            onClick={handleToggleFavorite}
+          />
           <RatingBadge
             rating={food.totalStars}
             count={food.totalReviews}
@@ -331,7 +347,10 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
           />
           <PriceBadge price={food.price} />
         </div>
-        <div className="flex flex-col gap-1 py-3 px-3 mt-3">
+        <div
+          className="flex flex-col gap-1 py-3 px-3 mt-3 cursor-pointer"
+          onClick={() => router.push(`${PATHNAME.FOOD}/${food.slug}`)}
+        >
           <span className="font-semibold text-sm">{food.name}</span>
           <p className="text-xs text-lightGray">{food.ingredient}</p>
         </div>

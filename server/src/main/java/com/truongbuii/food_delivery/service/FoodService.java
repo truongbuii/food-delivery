@@ -43,10 +43,13 @@ public class FoodService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
     }
 
-    public FoodResponse getFoodBySlug(String slug) {
+    public FoodResponse getFoodBySlug(Long userId, String slug) {
         Food food = foodRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
-        return foodMapper.toFoodResponse(food);
+        Optional<FavoriteFood> favoriteFood = favoriteFoodRepository.findByUserIdAndFoodId(userId, food.getId());
+        FoodResponse foodResponse = foodMapper.toFoodResponse(food);
+        foodResponse.setFavorite(favoriteFood.isPresent());
+        return foodResponse;
     }
 
     public List<FoodResponse> getAll(Long userId) {
@@ -62,6 +65,7 @@ public class FoodService {
     }
 
     public List<FoodResponse> getAllByParams(
+            Long userId,
             String restaurantSlug,
             Integer categoryId,
             Float rating,
@@ -71,10 +75,17 @@ public class FoodService {
             BigDecimal minPrice,
             BigDecimal maxPrice
     ) {
+        Set<FavoriteFood> favoriteFoods = favoriteFoodRepository.findByUserId((userId));
         return foodRepository
                 .findAllByParams(categoryId, restaurantSlug, rating, keyword, popular, sortAsc, minPrice, maxPrice)
                 .stream()
-                .map(foodMapper::toFoodResponse)
+                .map(
+                        food -> {
+                            FoodResponse foodResponse = foodMapper.toFoodResponse(food);
+                            foodResponse.setFavorite(favoriteFoods.stream().anyMatch(f -> f.getFood().getId().equals(food.getId())));
+                            return foodResponse;
+                        }
+                )
                 .collect(Collectors.toList());
     }
 
@@ -172,7 +183,7 @@ public class FoodService {
     }
 
     @Transactional
-    public List<FoodResponse> addFoodToFavorite(Long userId, Long foodId) {
+    public List<FoodResponse> ToggleFoodToFavorite(Long userId, Long foodId) {
         Food food = getFoodById(foodId);
         User user = userService.getUserById(userId);
 
@@ -186,6 +197,19 @@ public class FoodService {
             favoriteFoodRepository.save(favoriteFood);
         }
         return getAll(userId);
+    }
+
+    public List<FoodResponse> getFavoriteFoods(Long userId) {
+        Set<FavoriteFood> favoriteFoods = favoriteFoodRepository.findByUserId(userId);
+        return favoriteFoods.stream()
+                .map(
+                        f -> {
+                            FoodResponse foodResponse = foodMapper.toFoodResponse(f.getFood());
+                            foodResponse.setFavorite(true);
+                            return foodResponse;
+                        }
+                )
+                .toList();
     }
 
     private void validateFood(String name, Long foodId, Restaurant restaurant, Integer categoryId) {

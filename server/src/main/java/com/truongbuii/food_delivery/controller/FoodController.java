@@ -31,9 +31,10 @@ public class FoodController {
 
     @GetMapping("/{slug}")
     public ResponseEntity<ApiResponse<FoodResponse>> getFoodBySlug(
+            @AuthenticationPrincipal User principal,
             @PathVariable String slug
     ) {
-        var foodResponse = foodService.getFoodBySlug(slug);
+        var foodResponse = foodService.getFoodBySlug(principal.getId(), slug);
         return ResponseEntity.ok(ApiResponse.<FoodResponse>builder().data(foodResponse).build());
     }
 
@@ -47,6 +48,7 @@ public class FoodController {
 
     @GetMapping("/by-params")
     public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodsByParams(
+            @AuthenticationPrincipal User principal,
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) String restaurantSlug,
             @RequestParam(required = false) Float rating,
@@ -57,7 +59,7 @@ public class FoodController {
             @RequestParam(required = false, defaultValue = "200") BigDecimal maxPrice
     ) {
         var foodResponses = foodService.getAllByParams(
-                restaurantSlug, categoryId, rating, keyword, popular, sortAsc, minPrice, maxPrice);
+                principal.getId(), restaurantSlug, categoryId, rating, keyword, popular, sortAsc, minPrice, maxPrice);
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
@@ -79,12 +81,20 @@ public class FoodController {
         return ResponseEntity.ok(ApiResponse.<FoodResponse>builder().data(foodResponse).build());
     }
 
-    @PostMapping("/favorite")
+    @PutMapping("/favorite")
     public ResponseEntity<ApiResponse<List<FoodResponse>>> favoriteFood(
             @AuthenticationPrincipal User principal,
             @RequestParam Long foodId
     ) {
-        var list = foodService.addFoodToFavorite(principal.getId(), foodId);
+        var list = foodService.ToggleFoodToFavorite(principal.getId(), foodId);
+        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(list).build());
+    }
+
+    @GetMapping("/my-favorite")
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getMyFavorite(
+            @AuthenticationPrincipal User principal
+    ) {
+        var list = foodService.getFavoriteFoods(principal.getId());
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(list).build());
     }
 }

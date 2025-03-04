@@ -1,13 +1,20 @@
 "use client";
 
 import FoodAddons from "@/components/features/food/food-addons";
+import { HeartButton } from "@/components/molecule/CardItem";
 import { IconBag, IconStar } from "@/components/molecule/svgs";
 import { Button } from "@/components/ui/button";
 import { useAddons } from "@/contexts/AddonsContext";
 import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse } from "@/interfaces";
 import { MapperFood } from "@/mapping/food.mapping";
-import { useAddCartItem, useGetFoodBySlug } from "@/queries";
+import {
+  QUERIES_KEY,
+  useAddCartItem,
+  useGetFoodBySlug,
+  useToggleFavoriteFoodMutation,
+} from "@/queries";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -21,6 +28,9 @@ const FoodProfile = () => {
   const _food = food?.data ? MapperFood(food.data) : null;
   const { selectedAddons } = useAddons();
   const { mutateAsync, isPending } = useAddCartItem();
+  const { mutateAsync: toggleFavoriteFoodMutation } =
+    useToggleFavoriteFoodMutation();
+
   const handleAddToCart = useCallback(() => {
     if (!_food) return;
 
@@ -29,8 +39,6 @@ const FoodProfile = () => {
       name: addon.name,
       price: addon.price,
     }));
-    console.log(_selectedAddons);
-
     mutateAsync(
       { foodId: _food.id, quantity: quantity, selectedAddons: _selectedAddons },
       {
@@ -44,18 +52,41 @@ const FoodProfile = () => {
     );
   }, [_food, quantity, selectedAddons, mutateAsync, message]);
 
+  const queryClient = useQueryClient();
+  const handleToggleFavorite = useCallback(() => {
+    if (!_food) return;
+
+    queryClient.setQueryData([QUERIES_KEY.FOOD.GET_BY_SLUG], (oldData: any) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        data: {
+          ...oldData.data,
+          favorite: !_food.favorite,
+        },
+      };
+    });
+    toggleFavoriteFoodMutation(_food.id);
+  }, [toggleFavoriteFoodMutation, _food, queryClient]);
+
   return (
     <div className="flex flex-col w-full gap-4">
       {_food && (
         <div className="flex flex-col gap-6">
-          <div className="relative w-full h-36 rounded-2xl overflow-hidden">
-            <Image
-              src={_food.imageUrl}
-              alt={_food.name}
-              fill
-              sizes="100%"
-              priority
-              className="object-cover"
+          <div className="relative">
+            <div className="relative w-full h-36 rounded-2xl overflow-hidden">
+              <Image
+                src={_food.imageUrl}
+                alt={_food.name}
+                fill
+                sizes="100%"
+                priority
+                className="object-cover"
+              />
+            </div>
+            <HeartButton
+              onClick={handleToggleFavorite}
+              favorite={_food.favorite}
             />
           </div>
 
