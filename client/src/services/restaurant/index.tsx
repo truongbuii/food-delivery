@@ -35,3 +35,31 @@ export const getRestaurantBySlug = async (
   >(`${BASE_RESTAURANT}/${slug}`);
   return resp;
 };
+
+export const toggleFavoriteRestaurant = async (
+  value: number
+): Promise<IApiDataResponse<IRestaurantResponse[]>> => {
+  const resp = await httpClient.put<
+    IRestaurantResponse[],
+    IApiDataResponse<IRestaurantResponse[]>
+  >(
+    `${BASE_RESTAURANT}/favorite`,
+    {},
+    {
+      params: {
+        restaurantId: value,
+      },
+    }
+  );
+  return resp;
+};
+
+export const getFavoriteRestaurants = async (): Promise<
+  IApiDataResponse<IRestaurantResponse[]>
+> => {
+  const resp = await httpClient.get<
+    IRestaurantResponse[],
+    IApiDataResponse<IRestaurantResponse[]>
+  >(`${BASE_RESTAURANT}/my-favorite`);
+  return resp;
+};

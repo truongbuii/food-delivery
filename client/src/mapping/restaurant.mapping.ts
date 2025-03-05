@@ -17,6 +17,7 @@ const MapperRestaurant = (
     totalReviews: restaurant.totalReviews ?? 0,
     slug: restaurant.slug ?? "",
     categories: restaurant.categories ?? [],
+    favorite: restaurant.favorite ?? false,
   };
 };
 

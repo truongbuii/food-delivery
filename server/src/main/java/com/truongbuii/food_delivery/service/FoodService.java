@@ -89,11 +89,18 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodResponse> getFeaturedFoodByRestaurantSlug(String restaurantSlug) {
+    public List<FoodResponse> getFeaturedFoodByRestaurantSlug(Long userId, String restaurantSlug) {
         List<Food> foods = foodRepository.findFeaturedByRestaurantSlug(restaurantSlug);
-
         return foods.stream()
-                .map(foodMapper::toFoodResponse)
+                .map(
+                        f -> {
+                            Optional<FavoriteFood> favoriteFood =
+                                    favoriteFoodRepository.findByUserIdAndFoodId(userId, f.getId());
+                            FoodResponse foodResponse = foodMapper.toFoodResponse(f);
+                            foodResponse.setFavorite(favoriteFood.isPresent());
+                            return foodResponse;
+                        }
+                )
                 .collect(Collectors.toList());
     }
 
@@ -187,7 +194,7 @@ public class FoodService {
         Food food = getFoodById(foodId);
         User user = userService.getUserById(userId);
 
-        Optional<FavoriteFood> favoriteFoodOptional = favoriteFoodRepository.findByUserIdAndFoodId(userId, foodId);
+        Optional<FavoriteFood> favoriteFoodOptional = favoriteFoodRepository.findByUserIdAndFoodId(user.getId(), foodId);
         if (favoriteFoodOptional.isPresent()) {
             favoriteFoodRepository.deleteByUserAndFood(user, food);
         } else {
@@ -205,7 +212,7 @@ public class FoodService {
                 .map(
                         f -> {
                             FoodResponse foodResponse = foodMapper.toFoodResponse(f.getFood());
-                            foodResponse.setFavorite(true);
+                            foodResponse.setFavorite(Boolean.TRUE);
                             return foodResponse;
                         }
                 )

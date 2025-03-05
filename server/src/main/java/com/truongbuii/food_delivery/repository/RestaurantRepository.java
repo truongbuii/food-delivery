@@ -34,4 +34,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     );
 
 
+    List<Restaurant> findAllByHasFeatured(Boolean aTrue);
 }

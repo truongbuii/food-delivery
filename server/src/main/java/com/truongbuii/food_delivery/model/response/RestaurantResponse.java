@@ -23,6 +23,7 @@ public class RestaurantResponse {
     private boolean hasBanned;
     private boolean hasFeatured;
     private String slug;
+    private boolean favorite;
 
     Set<CategoryIdNameResponse> categories;
 }

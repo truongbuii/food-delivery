@@ -4,20 +4,32 @@ import RestaurantFeaturedItems from "@/components/features/restaurant/featured-i
 import RestaurantFoods from "@/components/features/restaurant/restaurant-foods";
 import { Avatar, Tag } from "@/components/molecule";
 import { FeeAndTimeDelivery } from "@/components/molecule";
+import { HeartButton } from "@/components/molecule/CardItem";
 import { IconChecked, IconStar } from "@/components/molecule/svgs";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 
-import { useGetRestaurantBySlug } from "@/queries";
+import {
+  useGetRestaurantBySlug,
+  useToggleFavoriteRestaurantMutation,
+} from "@/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useCallback } from "react";
 
 const RestaurantProfile = () => {
   const param = useParams();
+  const { mutateAsync } = useToggleFavoriteRestaurantMutation();
   const { data: restaurant } = useGetRestaurantBySlug(param.slug as string);
   const _restaurant = restaurant?.data
     ? MapperRestaurant(restaurant.data)
     : null;
+
+  const handleToggleFavorite = useCallback(() => {
+    if (!_restaurant) return;
+
+    mutateAsync(_restaurant.id);
+  }, [_restaurant, mutateAsync]);
 
   return (
     <div className="flex flex-col w-full">
@@ -34,6 +46,10 @@ const RestaurantProfile = () => {
                 className="object-cover"
               />
             </div>
+            <HeartButton
+              onClick={handleToggleFavorite}
+              favorite={_restaurant.favorite}
+            />
             <div className="absolute flex justify-center items-center w-[104px] h-[104px] bg-background rounded-full z-10 left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2">
               <div className="relative">
                 <Avatar

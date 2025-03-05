@@ -39,6 +39,7 @@ interface IRestaurantResponse {
   totalReviews: number;
   slug: string;
   categories: ICategory[];
+  favorite: boolean;
 }
 
 interface IAddon {

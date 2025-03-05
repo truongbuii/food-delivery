@@ -6,13 +6,16 @@ import com.truongbuii.food_delivery.mapper.CategoryMapper;
 import com.truongbuii.food_delivery.mapper.RestaurantMapper;
 import com.truongbuii.food_delivery.model.common.ErrorCode;
 import com.truongbuii.food_delivery.model.entity.Category;
+import com.truongbuii.food_delivery.model.entity.FavoriteRestaurant;
 import com.truongbuii.food_delivery.model.entity.Restaurant;
+import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.enums.MediaFolder;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPatch;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPost;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPut;
 import com.truongbuii.food_delivery.model.response.CategoryIdNameResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
+import com.truongbuii.food_delivery.repository.FavoriteRestaurantRepository;
 import com.truongbuii.food_delivery.repository.RestaurantRepository;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
 import com.truongbuii.food_delivery.utils.validateUtils;
@@ -24,32 +27,41 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
+    private final UserService userService;
     private final MediaService mediaService;
     private final CategoryMapper categoryMapper;
     private final CategoryService categoryService;
     private final RestaurantMapper restaurantMapper;
     private final RestaurantRepository restaurantRepository;
+    private final FavoriteRestaurantRepository favoriteRestaurantRepository;
 
     public Restaurant getRestaurantById(Long id) {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
     }
 
-    public RestaurantResponse getRestaurantBySlug(String slug) {
+    public RestaurantResponse getRestaurantBySlug(Long userId, String slug) {
         Restaurant restaurant = restaurantRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
         Set<CategoryIdNameResponse> categories = restaurant.getCategories()
                 .stream()
                 .map(categoryMapper::toCategoryIdNameResponse)
                 .collect(Collectors.toSet());
+        Optional<FavoriteRestaurant> favoriteRestaurantOptional =
+                favoriteRestaurantRepository.findByUserIdAndRestaurantId(
+                        userId,
+                        restaurant.getId()
+                );
         RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
         restaurantResponse.setCategories(categories);
+        restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
         return restaurantResponse;
     }
 
@@ -58,21 +70,26 @@ public class RestaurantService {
             String keyword,
             Boolean popular,
             Integer categoryId,
-            Boolean freeDelivery
+            Boolean freeDelivery,
+            Long userId
     ) {
         List<Restaurant> restaurants = restaurantRepository.findAllByParams(
                 rating, keyword, popular, categoryId, freeDelivery
         );
-
         return restaurants.stream()
                 .map(restaurant -> {
+                    Optional<FavoriteRestaurant> favoriteRestaurantOptional =
+                            favoriteRestaurantRepository.findByUserIdAndRestaurantId(
+                                    userId,
+                                    restaurant.getId()
+                            );
                     Set<CategoryIdNameResponse> categories = restaurant.getCategories()
                             .stream()
                             .map(categoryMapper::toCategoryIdNameResponse)
                             .collect(Collectors.toSet());
-
                     RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
                     restaurantResponse.setCategories(categories);
+                    restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
                     return restaurantResponse;
                 })
                 .collect(Collectors.toList());
@@ -195,6 +212,63 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
         return restaurantMapper.toRestaurantResponse(restaurant);
     }
+
+    public List<RestaurantResponse> getFavoriteRestaurants(Long userId) {
+        Set<FavoriteRestaurant> favoriteRestaurants = favoriteRestaurantRepository.findByUserId(userId);
+        return favoriteRestaurants.stream()
+                .map(favoriteRestaurant -> {
+                    Restaurant restaurant = favoriteRestaurant.getRestaurant();
+                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+                            .stream()
+                            .map(categoryMapper::toCategoryIdNameResponse)
+                            .collect(Collectors.toSet());
+                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+                    restaurantResponse.setCategories(categories);
+                    restaurantResponse.setFavorite(Boolean.TRUE);
+                    return restaurantResponse;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<RestaurantResponse> ToggleFavorite(Long userId, Long RestaurantId) {
+        Restaurant restaurant = getRestaurantById(RestaurantId);
+        User user = userService.getUserById(userId);
+
+        Optional<FavoriteRestaurant> favoriteRestaurantOptional =
+                favoriteRestaurantRepository.findByUserIdAndRestaurantId(user.getId(), restaurant.getId());
+        if (favoriteRestaurantOptional.isPresent()) {
+            favoriteRestaurantRepository.delete(favoriteRestaurantOptional.get());
+        } else {
+            FavoriteRestaurant favoriteRestaurant = new FavoriteRestaurant();
+            favoriteRestaurant.setRestaurant(restaurant);
+            favoriteRestaurant.setUser(user);
+            favoriteRestaurantRepository.save(favoriteRestaurant);
+        }
+        return getFavoriteRestaurants(userId);
+    }
+
+    public List<RestaurantResponse> getFeaturedRestaurants() {
+        List<Restaurant> restaurants = restaurantRepository.findAllByHasFeatured(Boolean.TRUE);
+        return restaurants.stream()
+                .map(restaurant -> {
+                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+                            .stream()
+                            .map(categoryMapper::toCategoryIdNameResponse)
+                            .collect(Collectors.toSet());
+                    Optional<FavoriteRestaurant> favoriteRestaurantOptional =
+                            favoriteRestaurantRepository.findByUserIdAndRestaurantId(
+                                    null,
+                                    restaurant.getId()
+                            );
+                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+                    restaurantResponse.setCategories(categories);
+                    restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
+                    return restaurantResponse;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     private void validateRestaurant(String name, Long id) {
         if (isRestaurantExist(name, id)) {

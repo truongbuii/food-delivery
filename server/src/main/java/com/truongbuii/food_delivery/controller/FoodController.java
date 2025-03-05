@@ -40,9 +40,10 @@ public class FoodController {
 
     @GetMapping("/featured/{restaurantSlug}")
     public ResponseEntity<ApiResponse<List<FoodResponse>>> getFeaturedFoodByRestaurantId(
-            @PathVariable String restaurantSlug
+            @PathVariable String restaurantSlug,
+            @AuthenticationPrincipal User principal
     ) {
-        var foodResponses = foodService.getFeaturedFoodByRestaurantSlug(restaurantSlug);
+        var foodResponses = foodService.getFeaturedFoodByRestaurantSlug(principal.getId(), restaurantSlug);
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 

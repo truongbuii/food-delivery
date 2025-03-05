@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 import { PATHNAME } from "@/configs";
 import useScreenMode from "@/hooks/useScreenMode";
 import { ICategory, IFoodResponse, IRestaurantResponse } from "@/interfaces";
-import { useToggleFavoriteFoodMutation } from "@/queries";
+import {
+  useToggleFavoriteFoodMutation,
+  useToggleFavoriteRestaurantMutation,
+} from "@/queries";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { Bike, CircleCheck, Timer } from "lucide-react";
@@ -225,7 +228,7 @@ const HorizontalCard: FC<CardItemProps> = ({
           priority
           className="object-cover rounded-2xl"
         />
-        <HeartButton />
+        <HeartButton favorite={item.favorite} />
         <RatingBadge
           rating={item.totalStars}
           count={item.totalReviews}
@@ -261,17 +264,30 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
   const food = item as IFoodResponse;
   const { mutateAsync: toggleFavoriteFoodMutation } =
     useToggleFavoriteFoodMutation();
-  const handleToggleFavorite = useCallback(() => {
-    if (!food) return;
+  const { mutateAsync: toggleFavoriteRestaurantMutation } =
+    useToggleFavoriteRestaurantMutation();
 
-    toggleFavoriteFoodMutation(food.id);
-  }, [food, toggleFavoriteFoodMutation]);
+  const handleToggleFavoriteFood = useCallback(
+    (value: number) => {
+      if (!food) return;
+      toggleFavoriteFoodMutation(value);
+    },
+    [food, toggleFavoriteFoodMutation]
+  );
+
+  const handleToggleFavoriteRestaurant = useCallback(
+    (value: number) => {
+      if (!restaurant) return;
+      toggleFavoriteRestaurantMutation(value);
+    },
+    [restaurant, toggleFavoriteRestaurantMutation]
+  );
+
   const renderByType = () => ({
     restaurant: (
       <div
         className={`flex flex-col gap-4 ${isMobile} ? "w-full" : "w-[153px]"
-          } px-2 py-3 shadow-cardItemShadow bg-cardItem rounded-2xl cursor-pointer`}
-        onClick={() => router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)}
+          } px-2 py-3 shadow-cardItemShadow bg-cardItem rounded-2xl`}
       >
         <div className="flex justify-between relative">
           <div
@@ -294,9 +310,17 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
               className="absolute -top-1 -right-2 w-[18px] h-[18px] text-[9px] leading-4 rounded-lg"
             />
           </div>
-          <HeartButton />
+          <HeartButton
+            onClick={() => handleToggleFavoriteRestaurant(restaurant.id)}
+            favorite={restaurant.favorite}
+          />
         </div>
-        <div className="flex flex-col gap-2">
+        <div
+          className="flex flex-col gap-2 cursor-pointer"
+          onClick={() =>
+            router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)
+          }
+        >
           <div className="flex items-center gap-1">
             <span className="font-semibold">{restaurant.name}</span>
             {restaurant.verifiedBadge && (
@@ -337,7 +361,7 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
           />
           <HeartButton
             favorite={food.favorite}
-            onClick={handleToggleFavorite}
+            onClick={() => handleToggleFavoriteFood(food.id)}
           />
           <RatingBadge
             rating={food.totalStars}

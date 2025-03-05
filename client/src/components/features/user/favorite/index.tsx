@@ -5,14 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PATHNAME } from "@/configs";
 import { MapperFood } from "@/mapping/food.mapping";
-import { useGetFavoriteFoods } from "@/queries";
+import { MapperRestaurant } from "@/mapping/restaurant.mapping";
+import { useGetFavoriteFoods, useGetFavoriteRestaurants } from "@/queries";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const FavoriteTabScreen = () => {
   const router = useRouter();
   const { data: _favoritesFood } = useGetFavoriteFoods();
+  const { data: _favoritesRestaurant } = useGetFavoriteRestaurants();
   const favoritesFood = _favoritesFood?.data?.map((food) => MapperFood(food));
+  const favoritesRestaurant = _favoritesRestaurant?.data?.map((restaurant) =>
+    MapperRestaurant(restaurant)
+  );
 
   return (
     <div>
@@ -36,17 +41,17 @@ const FavoriteTabScreen = () => {
         <div className="mt-4">
           <TabsContent value="restaurant">
             <div className="columns-2 gap-4">
-              {/* {_restaurants?.map((restaurant) => (
-                <div key={restaurant.id} className="break-inside-avoid mb-4">
+              {favoritesRestaurant?.map((restaurant) => (
+                <div key={restaurant.slug} className="break-inside-avoid mb-4">
                   <VerticalCard type="restaurant" item={restaurant} />
                 </div>
-              ))} */}
+              ))}
             </div>
           </TabsContent>
           <TabsContent value="food">
             <div className="columns-2 gap-4">
               {favoritesFood?.map((food) => (
-                <div key={food.id} className="break-inside-avoid mb-4">
+                <div key={food.slug} className="break-inside-avoid mb-4">
                   <VerticalCard type="food" item={food} />
                 </div>
               ))}

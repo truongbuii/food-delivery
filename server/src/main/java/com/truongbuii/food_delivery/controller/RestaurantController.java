@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.controller;
 
+import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPatch;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPost;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPut;
@@ -9,6 +10,7 @@ import com.truongbuii.food_delivery.service.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +27,19 @@ public class RestaurantController {
             @RequestParam(required = false) Float rating,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false, defaultValue = "false") Boolean freeDelivery,
-            @RequestParam(required = false, defaultValue = "false") Boolean popular
+            @RequestParam(required = false, defaultValue = "false") Boolean popular,
+            @AuthenticationPrincipal User principal
     ) {
-        var restaurant = restaurantService.getAllByParams(rating, keyword, popular, categoryId, freeDelivery);
+        var restaurant = restaurantService.getAllByParams(rating, keyword, popular, categoryId, freeDelivery, principal.getId());
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
     }
 
     @GetMapping("/{slug}")
     public ResponseEntity<ApiResponse<RestaurantResponse>> getBySlug(
-            @PathVariable String slug
+            @PathVariable String slug,
+            @AuthenticationPrincipal User principal
     ) {
-        var restaurant = restaurantService.getRestaurantBySlug(slug);
+        var restaurant = restaurantService.getRestaurantBySlug(principal.getId(), slug);
         return ResponseEntity.ok(ApiResponse.<RestaurantResponse>builder().data(restaurant).build());
     }
 
@@ -75,4 +79,26 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.<RestaurantResponse>builder().data(restaurant).build());
     }
 
+    @PutMapping("/favorite")
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> favorite(
+            @AuthenticationPrincipal User principal,
+            @RequestParam Long restaurantId
+    ) {
+        var restaurant = restaurantService.ToggleFavorite(principal.getId(), restaurantId);
+        return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
+    }
+
+    @GetMapping("/my-favorite")
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> myFavorite(
+            @AuthenticationPrincipal User principal
+    ) {
+        var restaurant = restaurantService.getFavoriteRestaurants(principal.getId());
+        return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
+    }
+
+    @GetMapping("/featured-restaurants")
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getFeaturedRestaurants() {
+        var restaurant = restaurantService.getFeaturedRestaurants();
+        return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
+    }
 }

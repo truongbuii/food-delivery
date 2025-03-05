@@ -90,6 +90,9 @@ export const useToggleFavoriteFoodMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERIES_KEY.FOOD.GET_BY_PARAMS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_FEATURED_BY_RESTAURANT_SLUG],
+      });
     },
   });
 };
