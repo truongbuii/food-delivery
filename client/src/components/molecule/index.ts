@@ -15,6 +15,7 @@ import DatePicker from "./DatePicker";
 import SideMenu from "./SideMenu";
 import CartAddress from "./CardAddress";
 import FilterForm from "./FilterForm";
+import RatingForm from "./RatingForm";
 
 export {
   PageTransition,
@@ -38,4 +39,5 @@ export {
   SideMenu,
   CartAddress,
   FilterForm,
+  RatingForm,
 };
