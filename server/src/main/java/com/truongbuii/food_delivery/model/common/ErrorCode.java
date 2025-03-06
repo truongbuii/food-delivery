@@ -46,6 +46,7 @@ public class ErrorCode {
 
     // Review error
     public static final String ERR_USER_CANNOT_REVIEW = "Only user who ordered can rating";
-    public static final String ERR_USER_HAD_REVIEWED = "You had reviewed this restaurant";
+    public static final String ERR_USER_HAD_REVIEWED_RESTAURANT = "You had reviewed this restaurant";
+    public static final String ERR_USER_HAD_REVIEWED_FOOD = "You had reviewed this food";
     public static final String ERR_REVIEW_NOT_FOUND = "This review is not found";
 }

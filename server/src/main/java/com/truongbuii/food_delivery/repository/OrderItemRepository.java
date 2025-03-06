@@ -19,4 +19,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :id")
     List<OrderItem> findByOrderId(Long id);
+
+    @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM OrderItem oi " +
+            "WHERE oi.order.id = :id AND oi.foodId = :foodId) THEN TRUE ELSE FALSE END")
+    boolean existsByOrderIdAndFoodId(Long id, Long foodId);
 }
