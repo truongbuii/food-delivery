@@ -1,11 +1,11 @@
 package com.truongbuii.food_delivery.controller;
 
 import com.truongbuii.food_delivery.model.entity.User;
-import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPatch;
-import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPost;
-import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPut;
+import com.truongbuii.food_delivery.model.request.restaurant.*;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
+import com.truongbuii.food_delivery.model.response.RestaurantReviewResponse;
+import com.truongbuii.food_delivery.service.RestaurantReviewService;
 import com.truongbuii.food_delivery.service.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
+    private final RestaurantReviewService restaurantReviewService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll(
@@ -100,5 +101,40 @@ public class RestaurantController {
     public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getFeaturedRestaurants() {
         var restaurant = restaurantService.getFeaturedRestaurants();
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<ApiResponse<RestaurantReviewResponse>> rating(
+            @AuthenticationPrincipal User principal,
+            @RequestBody RestaurantReviewPost restaurantReviewPost
+    ) {
+        var restaurant = restaurantReviewService.createReview(principal.getId(), restaurantReviewPost);
+        return ResponseEntity.ok(ApiResponse.<RestaurantReviewResponse>builder().data(restaurant).build());
+    }
+
+    @PutMapping("/edit-review")
+    public ResponseEntity<ApiResponse<RestaurantReviewResponse>> editReview(
+            @AuthenticationPrincipal User principal,
+            @RequestBody RestaurantReviewPut restaurantReviewPut
+    ) {
+        var restaurant = restaurantReviewService.editReview(principal.getId(), restaurantReviewPut);
+        return ResponseEntity.ok(ApiResponse.<RestaurantReviewResponse>builder().data(restaurant).build());
+    }
+
+    @GetMapping("/reviews")
+    public ResponseEntity<ApiResponse<List<RestaurantReviewResponse>>> getReviews(
+            @RequestParam Long restaurantId
+    ) {
+        var restaurant = restaurantReviewService.getReviews(restaurantId);
+        return ResponseEntity.ok(ApiResponse.<List<RestaurantReviewResponse>>builder().data(restaurant).build());
+    }
+
+    @DeleteMapping("/delete-review")
+    public ResponseEntity<ApiResponse<Void>> deleteReview(
+            @AuthenticationPrincipal User principal,
+            @RequestParam Long reviewId
+    ) {
+        restaurantReviewService.deleteReview(principal.getId(), reviewId);
+        return ResponseEntity.ok(ApiResponse.<Void>builder().build());
     }
 }
