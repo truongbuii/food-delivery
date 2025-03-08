@@ -3,6 +3,7 @@ import createHttpClient from "@/apis/httpClient";
 import {
   IApiDataResponse,
   IFoodResponse,
+  IPageData,
   IRating,
   IReviewResponse,
 } from "@/interfaces";
@@ -47,11 +48,13 @@ export const getFoodsByParams = async (
   popular: boolean | null,
   sortAsc: boolean | null,
   minPrice: number | null,
-  maxPrice: number | null
-): Promise<IApiDataResponse<IFoodResponse[]>> => {
+  maxPrice: number | null,
+  page: number,
+  size?: number
+): Promise<IApiDataResponse<IPageData<IFoodResponse[]>>> => {
   const resp = await httpClient.get<
     IFoodResponse[],
-    IApiDataResponse<IFoodResponse[]>
+    IApiDataResponse<IPageData<IFoodResponse[]>>
   >(`${BASE_FOOD}/by-params`, {
     params: {
       restaurantSlug,
@@ -62,8 +65,11 @@ export const getFoodsByParams = async (
       sortAsc,
       minPrice,
       maxPrice,
+      page,
+      size,
     },
   });
+
   return resp;
 };
 

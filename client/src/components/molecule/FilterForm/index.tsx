@@ -66,6 +66,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
       rating: filters.rating,
       freeDelivery: filters.selectedSortOptions.includes("freeDelivery"),
       popular: filters.selectedSortOptions.includes("popular"),
+      sortAsc: filters.selectedSortOptions.includes("sortBy"),
       priceValues: filters.priceValues,
     };
     onFilterChange?.(value);
@@ -83,6 +84,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
       rating: null,
       freeDelivery: null,
       popular: null,
+      sortAsc: null,
       priceValues: [0, 200],
     });
   };

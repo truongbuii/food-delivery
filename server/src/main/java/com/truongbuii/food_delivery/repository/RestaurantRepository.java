@@ -1,6 +1,8 @@
 package com.truongbuii.food_delivery.repository;
 
 import com.truongbuii.food_delivery.model.entity.Restaurant;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,12 +27,13 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
             "AND (:freeDelivery IS NOT TRUE OR r.freeDelivery = TRUE) " +
             "ORDER BY CASE WHEN :popular = TRUE THEN r.totalReviews END DESC"
     )
-    List<Restaurant> findAllByParams(
+    Page<Restaurant> findAllByParams(
             @Param("rating") Float rating,
             @Param("keyword") String keyword,
             @Param("popular") Boolean popular,
             @Param("categoryId") Integer categoryId,
-            @Param("freeDelivery") Boolean freeDelivery
+            @Param("freeDelivery") Boolean freeDelivery,
+            Pageable pageable
     );
 
 

@@ -1,6 +1,8 @@
 package com.truongbuii.food_delivery.repository;
 
 import com.truongbuii.food_delivery.model.entity.Food;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +32,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             "AND (:maxPrice IS NULL OR f.price <= :maxPrice) " +
             "ORDER BY CASE WHEN :popular = TRUE THEN f.totalReviews END DESC, " +
             "CASE WHEN :sortAsc = TRUE THEN f.price END ASC")
-    List<Food> findAllByParams(
+    Page<Food> findAllByParams(
             @Param("categoryId") Integer categoryId,
             @Param("restaurantSlug") String restaurantSlug,
             @Param("rating") Float rating,
@@ -38,6 +40,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             @Param("popular") Boolean popular,
             @Param("sortAsc") Boolean sortAsc,
             @Param("minPrice") BigDecimal minPrice,
-            @Param("maxPrice") BigDecimal maxPrice
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable
     );
 }

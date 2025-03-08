@@ -29,9 +29,12 @@ public class RestaurantController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false, defaultValue = "false") Boolean freeDelivery,
             @RequestParam(required = false, defaultValue = "false") Boolean popular,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal User principal
     ) {
-        var restaurant = restaurantService.getAllByParams(rating, keyword, popular, categoryId, freeDelivery, principal.getId());
+        var restaurant = restaurantService.getAllByParams(
+                rating, keyword, popular, categoryId, freeDelivery, page, size, principal.getId());
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
     }
 

@@ -9,21 +9,23 @@ import com.truongbuii.food_delivery.model.enums.MediaFolder;
 import com.truongbuii.food_delivery.model.request.food.FoodPost;
 import com.truongbuii.food_delivery.model.request.food.FoodPut;
 import com.truongbuii.food_delivery.model.response.FoodResponse;
+import com.truongbuii.food_delivery.model.response.PageResponse;
 import com.truongbuii.food_delivery.repository.FavoriteFoodRepository;
 import com.truongbuii.food_delivery.repository.FoodRepository;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
 import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,7 +72,7 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodResponse> getAllByParams(
+    public PageResponse<List<FoodResponse>> getAllByParams(
             Long userId,
             String restaurantSlug,
             Integer categoryId,
@@ -79,20 +81,33 @@ public class FoodService {
             Boolean popular,
             Boolean sortAsc,
             BigDecimal minPrice,
-            BigDecimal maxPrice
+            BigDecimal maxPrice,
+            int page,
+            int size
     ) {
-        Set<FavoriteFood> favoriteFoods = favoriteFoodRepository.findByUserId((userId));
-        return foodRepository
-                .findAllByParams(categoryId, restaurantSlug, rating, keyword, popular, sortAsc, minPrice, maxPrice)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
+        Page<Food> foodPage = foodRepository.findAllByParams(
+                categoryId, restaurantSlug, rating, keyword, popular, sortAsc, minPrice, maxPrice, pageable
+        );
+        List<Long> foodIds = foodPage.stream().map(Food::getId).toList();
+        Set<Long> favoriteFoodIds = userId != null
+                ? favoriteFoodRepository.findByUserIdAndFoodIdIn(userId, foodIds)
                 .stream()
-                .map(
-                        food -> {
-                            FoodResponse foodResponse = foodMapper.toFoodResponse(food);
-                            foodResponse.setFavorite(favoriteFoods.stream().anyMatch(f -> f.getFood().getId().equals(food.getId())));
-                            return foodResponse;
-                        }
-                )
-                .collect(Collectors.toList());
+                .map(f -> f.getFood().getId())
+                .collect(Collectors.toSet())
+                : Collections.emptySet();
+
+        List<FoodResponse> foodResponses = foodPage.stream()
+                .map(food -> {
+                    FoodResponse foodResponse = foodMapper.toFoodResponse(food);
+                    foodResponse.setFavorite(favoriteFoodIds.contains(food.getId()));
+                    return foodResponse;
+                })
+                .toList();
+        PageResponse<List<FoodResponse>> pageResponse = new PageResponse<>();
+        pageResponse.setValues(foodResponses);
+        pageResponse.setHasNext(foodPage.hasNext());
+        return pageResponse;
     }
 
     public List<FoodResponse> getFeaturedFoodByRestaurantSlug(Long userId, String restaurantSlug) {

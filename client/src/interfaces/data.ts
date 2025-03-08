@@ -6,6 +6,11 @@ interface IApiDataResponse<T> {
   data?: T;
 }
 
+interface IPageData<T> {
+  values: T;
+  hasNext: boolean;
+}
+
 interface IApiErrorResponse {
   code: number;
   message: string;
@@ -138,6 +143,7 @@ interface IReviewResponse {
 
 export type {
   IApiDataResponse,
+  IPageData,
   IApiErrorResponse,
   IToken,
   ICategory,

@@ -2,6 +2,7 @@ import {
   IApiDataResponse,
   IApiErrorResponse,
   IFoodResponse,
+  IPageData,
   IRating,
   IReviewResponse,
 } from "@/interfaces";
@@ -18,7 +19,12 @@ import {
   getFoodReviewsService,
   deleteMyFoodReview,
 } from "@/services";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useGetFoods = () => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
@@ -49,9 +55,13 @@ export const useGetFoodsByParams = (
   popular: boolean | null,
   sortAsc: boolean | null,
   minPrice: number | null,
-  maxPrice: number | null
+  maxPrice: number | null,
+  size?: number
 ) => {
-  return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
+  return useInfiniteQuery<
+    IApiDataResponse<IPageData<IFoodResponse[]>>,
+    IApiErrorResponse
+  >({
     queryKey: [
       QUERIES_KEY.FOOD.GET_BY_PARAMS,
       categoryId,
@@ -62,8 +72,9 @@ export const useGetFoodsByParams = (
       sortAsc,
       minPrice,
       maxPrice,
+      size,
     ],
-    queryFn: () =>
+    queryFn: ({ pageParam = 0 }) =>
       getFoodsByParams(
         categoryId,
         restaurantSlug,
@@ -72,8 +83,14 @@ export const useGetFoodsByParams = (
         popular,
         sortAsc,
         minPrice,
-        maxPrice
+        maxPrice,
+        pageParam as number,
+        size
       ),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage?.data?.hasNext ? allPages.length : undefined;
+    },
+    initialPageParam: 0,
   });
 };
 

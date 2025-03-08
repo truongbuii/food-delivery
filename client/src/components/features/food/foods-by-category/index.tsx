@@ -1,6 +1,7 @@
 "use client";
 
 import { FilterForm, HorizontalCard } from "@/components/molecule";
+import { ShortByOptions } from "@/components/molecule/FilterForm/data";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,41 +12,66 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IFoodResponse } from "@/interfaces";
 import { MapperFood } from "@/mapping/food.mapping";
 import { useGetFoodsByParams } from "@/queries";
 import { SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const FoodsByCategory = () => {
   const param = useSearchParams();
   const category = param.get("category");
   const categoryId = category ? parseInt(category, 10) : null;
+
+  const { ref, inView } = useInView();
+
   const [filters, setFilters] = useState({
-    categoryId: categoryId,
+    categoryId,
     rating: null,
-    freeDelivery: null,
     popular: null,
+    sortAsc: null,
     priceValues: [0, 200],
+    size: 3,
   });
 
-  useEffect(() => {
-    setFilters((prev) => ({ ...prev, categoryId }));
-  }, [categoryId]);
-
-  const { data: foods } = useGetFoodsByParams(
+  const {
+    data: foods,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetFoodsByParams(
     filters.categoryId,
     null,
     filters.rating,
     null,
     filters.popular,
-    null,
+    filters.sortAsc,
     filters.priceValues[0],
-    filters.priceValues[1]
+    filters.priceValues[1],
+    filters.size
   );
-  const _foods = foods?.data?.map((food) => MapperFood(food));
-  const handleFilterChange = (newFilters: any) =>
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, categoryId }));
+  }, [categoryId]);
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const listFoods: IFoodResponse[] =
+    foods?.pages.flatMap(
+      (page) => page?.data?.values?.map((food) => MapperFood(food)) || []
+    ) || [];
+
+  const handleFilterChange = (newFilters: any) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
 
   return (
     <Sheet key="right">
@@ -58,7 +84,7 @@ const FoodsByCategory = () => {
             </div>
             <div>
               <span className="text-xl text-lightGray">
-                {_foods?.length} types of food
+                {listFoods?.length} types of food
               </span>
             </div>
           </div>
@@ -66,7 +92,15 @@ const FoodsByCategory = () => {
             <div className="flex justify-between h-5">
               <div className="flex w-full h-5 gap-2">
                 <span className="text-sm">Short by: </span>
-                <Select>
+                <Select
+                  onValueChange={(selected) => {
+                    const value = {
+                      popular: selected.includes("popular"),
+                      sortAsc: selected.includes("sortBy"),
+                    };
+                    handleFilterChange(value);
+                  }}
+                >
                   <SelectTrigger className="flex justify-center items-center w-full h-5 text-sm max-w-24 border-none shadow-none focus:ring-0 focus:ring-none text-primary">
                     <SelectValue
                       placeholder="Select..."
@@ -75,11 +109,11 @@ const FoodsByCategory = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
+                      {ShortByOptions.map((option) => (
+                        <SelectItem key={option.key} value={option.key}>
+                          {option.value}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -92,16 +126,14 @@ const FoodsByCategory = () => {
                   <SlidersHorizontal
                     strokeWidth={2}
                     size={20}
-                    style={{
-                      color: "hsl(var(--primary))",
-                    }}
+                    style={{ color: "hsl(var(--primary))" }}
                   />
                 </Button>
               </SheetTrigger>
             </div>
 
             <div className="flex flex-col gap-3">
-              {_foods?.map((food) => (
+              {listFoods?.map((food) => (
                 <HorizontalCard
                   type="food"
                   key={food.id}
@@ -110,6 +142,17 @@ const FoodsByCategory = () => {
                   variant="lg"
                 />
               ))}
+            </div>
+            <div ref={ref}>
+              {isFetchingNextPage && (
+                <div className="flex flex-col space-y-3">
+                  <Skeleton className="h-[125px] w-full rounded-xl" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

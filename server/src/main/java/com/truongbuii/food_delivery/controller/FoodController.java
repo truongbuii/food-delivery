@@ -8,6 +8,7 @@ import com.truongbuii.food_delivery.model.request.food.FoodReviewPut;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
 import com.truongbuii.food_delivery.model.response.FoodResponse;
 import com.truongbuii.food_delivery.model.response.FoodReviewResponse;
+import com.truongbuii.food_delivery.model.response.PageResponse;
 import com.truongbuii.food_delivery.service.FoodReviewService;
 import com.truongbuii.food_delivery.service.FoodService;
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public class FoodController {
     }
 
     @GetMapping("/by-params")
-    public ResponseEntity<ApiResponse<List<FoodResponse>>> getFoodsByParams(
+    public ResponseEntity<ApiResponse<PageResponse<List<FoodResponse>>>> getFoodsByParams(
             @AuthenticationPrincipal User principal,
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) String restaurantSlug,
@@ -62,11 +63,13 @@ public class FoodController {
             @RequestParam(required = false, defaultValue = "false") Boolean popular,
             @RequestParam(required = false, defaultValue = "false") Boolean sortAsc,
             @RequestParam(required = false, defaultValue = "0") BigDecimal minPrice,
-            @RequestParam(required = false, defaultValue = "200") BigDecimal maxPrice
+            @RequestParam(required = false, defaultValue = "200") BigDecimal maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         var foodResponses = foodService.getAllByParams(
-                principal.getId(), restaurantSlug, categoryId, rating, keyword, popular, sortAsc, minPrice, maxPrice);
-        return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
+                principal.getId(), restaurantSlug, categoryId, rating, keyword, popular, sortAsc, minPrice, maxPrice, page, size);
+        return ResponseEntity.ok(ApiResponse.<PageResponse<List<FoodResponse>>>builder().data(foodResponses).build());
     }
 
     @PostMapping

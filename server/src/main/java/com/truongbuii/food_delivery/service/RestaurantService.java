@@ -21,14 +21,14 @@ import com.truongbuii.food_delivery.utils.GeneratorUtils;
 import com.truongbuii.food_delivery.utils.validateUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,28 +76,54 @@ public class RestaurantService {
             Boolean popular,
             Integer categoryId,
             Boolean freeDelivery,
+            int page,
+            int size,
             Long userId
     ) {
-        List<Restaurant> restaurants = restaurantRepository.findAllByParams(
-                rating, keyword, popular, categoryId, freeDelivery
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Restaurant> restaurants = restaurantRepository.findAllByParams(
+                rating, keyword, popular, categoryId, freeDelivery, pageable
         );
+        List<Long> restaurantIds = restaurants.stream().map(Restaurant::getId).collect(Collectors.toList());
+        Set<Long> favoriteRestaurantIds = favoriteRestaurantRepository
+                .findByUserIdAndRestaurantIdIn(userId, restaurantIds)
+                .stream()
+                .map(
+                        favoriteRestaurant -> favoriteRestaurant.getRestaurant().getId()
+                )
+                .collect(Collectors.toSet());
+
         return restaurants.stream()
                 .map(restaurant -> {
-                    Optional<FavoriteRestaurant> favoriteRestaurantOptional =
-                            favoriteRestaurantRepository.findByUserIdAndRestaurantId(
-                                    userId,
-                                    restaurant.getId()
-                            );
-                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+                    LinkedHashSet<CategoryIdNameResponse> categories = restaurant.getCategories()
                             .stream()
                             .map(categoryMapper::toCategoryIdNameResponse)
-                            .collect(Collectors.toSet());
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
+
                     RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
                     restaurantResponse.setCategories(categories);
-                    restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
+                    restaurantResponse.setFavorite(favoriteRestaurantIds.contains(restaurant.getId()));
+
                     return restaurantResponse;
                 })
-                .collect(Collectors.toList());
+                .toList();
+//        return restaurants.stream()
+//                .map(restaurant -> {
+//                    Optional<FavoriteRestaurant> favoriteRestaurantOptional =
+//                            favoriteRestaurantRepository.findByUserIdAndRestaurantId(
+//                                    userId,
+//                                    restaurant.getId()
+//                            );
+//                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
+//                            .stream()
+//                            .map(categoryMapper::toCategoryIdNameResponse)
+//                            .collect(Collectors.toSet());
+//                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+//                    restaurantResponse.setCategories(categories);
+//                    restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
+//                    return restaurantResponse;
+//                })
+//                .collect(Collectors.toList());
     }
 
     @Transactional
