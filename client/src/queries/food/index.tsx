@@ -2,6 +2,8 @@ import {
   IApiDataResponse,
   IApiErrorResponse,
   IFoodResponse,
+  IRating,
+  IReviewResponse,
 } from "@/interfaces";
 import { QUERIES_KEY } from "@/queries/key";
 import {
@@ -11,6 +13,10 @@ import {
   getFoodBySlug,
   toggleFavoriteFoodService,
   getFavoriteFoods,
+  ratingFoodService,
+  editMyFoodReview,
+  getFoodReviewsService,
+  deleteMyFoodReview,
 } from "@/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -101,5 +107,62 @@ export const useGetFavoriteFoods = () => {
   return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
     queryKey: [QUERIES_KEY.FOOD.GET_FAVORITE],
     queryFn: () => getFavoriteFoods(),
+  });
+};
+
+export const useRatingFoodMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IApiDataResponse<IReviewResponse>,
+    IApiErrorResponse,
+    IRating
+  >({
+    mutationKey: [QUERIES_KEY.FOOD.FOOD_RATING],
+    mutationFn: (value: IRating) => ratingFoodService(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.LIST_FOOD_REVIEWS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_ALL],
+      });
+    },
+  });
+};
+
+export const useEditFoodReviewMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IApiDataResponse<IReviewResponse>,
+    IApiErrorResponse,
+    IRating
+  >({
+    mutationKey: [QUERIES_KEY.FOOD.EDIT_FOOD_REVIEW],
+    mutationFn: (value: IRating) => editMyFoodReview(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.LIST_FOOD_REVIEWS],
+      });
+    },
+  });
+};
+
+export const useGetFoodReviews = (foodSlug: string) => {
+  return useQuery<IApiDataResponse<IReviewResponse[]>, IApiErrorResponse>({
+    queryKey: [QUERIES_KEY.FOOD.LIST_FOOD_REVIEWS, foodSlug],
+    queryFn: () => getFoodReviewsService(foodSlug),
+  });
+};
+
+export const useDeleteFoodReviewMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IApiDataResponse<void>, IApiErrorResponse, number>({
+    mutationKey: [QUERIES_KEY.FOOD.DELETE_FOOD_REVIEW],
+    mutationFn: (value: number) => deleteMyFoodReview(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.LIST_FOOD_REVIEWS],
+      });
+    },
   });
 };

@@ -33,7 +33,7 @@ public interface FoodMapper {
         if (date == null) {
             return null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, HH.mm", Locale.ENGLISH);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy", Locale.ENGLISH);
         return date.format(formatter);
     }
 }

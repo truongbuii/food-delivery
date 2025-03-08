@@ -106,9 +106,9 @@ public class FoodController {
 
     @GetMapping("/reviews")
     public ResponseEntity<ApiResponse<List<FoodReviewResponse>>> getReviews(
-            @RequestParam Long foodId
+            @RequestParam String foodSlug
     ) {
-        var list = foodReviewService.getReviews(foodId);
+        var list = foodReviewService.getReviews(foodSlug);
         return ResponseEntity.ok(ApiResponse.<List<FoodReviewResponse>>builder().data(list).build());
     }
 

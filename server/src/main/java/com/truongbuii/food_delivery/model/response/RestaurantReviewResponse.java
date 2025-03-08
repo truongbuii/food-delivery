@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class RestaurantReviewResponse {
     private Long id;
+    private Long userId;
     private String userName;
     private String userImage;
     private int rating;

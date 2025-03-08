@@ -10,6 +10,7 @@ import com.truongbuii.food_delivery.model.entity.Order;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.food.FoodReviewPost;
 import com.truongbuii.food_delivery.model.request.food.FoodReviewPut;
+import com.truongbuii.food_delivery.model.response.FoodResponse;
 import com.truongbuii.food_delivery.model.response.FoodReviewResponse;
 import com.truongbuii.food_delivery.repository.FoodReviewRepository;
 import com.truongbuii.food_delivery.repository.OrderItemRepository;
@@ -30,8 +31,9 @@ public class FoodReviewService {
     private final OrderItemRepository orderItemRepository;
     private final FoodReviewRepository foodReviewRepository;
 
-    public List<FoodReviewResponse> getReviews(Long foodId) {
-        List<FoodReview> foodReviews = foodReviewRepository.findByFoodId(foodId);
+    public List<FoodReviewResponse> getReviews(String foodSlug) {
+        FoodResponse food = foodService.getFoodBySlug(foodSlug);
+        List<FoodReview> foodReviews = foodReviewRepository.findByFoodId(food.getId());
         return foodReviews.stream()
                 .map(foodMapper::toFoodReviewResponse)
                 .toList();

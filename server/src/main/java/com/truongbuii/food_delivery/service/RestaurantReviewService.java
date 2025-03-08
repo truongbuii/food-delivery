@@ -26,8 +26,9 @@ public class RestaurantReviewService {
     private final RestaurantService restaurantService;
     private final RestaurantReviewRepository restaurantReviewRepository;
 
-    public List<RestaurantReviewResponse> getReviews(Long restaurantId) {
-        List<RestaurantReview> restaurantReviews = restaurantReviewRepository.findByRestaurantId(restaurantId);
+    public List<RestaurantReviewResponse> getReviews(String restaurantSlug) {
+        Restaurant restaurant = restaurantService.getRestaurantBySlug(restaurantSlug);
+        List<RestaurantReview> restaurantReviews = restaurantReviewRepository.findByRestaurantId(restaurant.getId());
         return restaurantReviews.stream()
                 .map(restaurantMapper::toRestaurantReviewResponse)
                 .toList();

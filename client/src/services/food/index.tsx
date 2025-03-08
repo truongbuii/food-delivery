@@ -1,6 +1,11 @@
 import { BASE_FOOD } from "@/apis/endPoints";
 import createHttpClient from "@/apis/httpClient";
-import { IApiDataResponse, IFoodResponse } from "@/interfaces";
+import {
+  IApiDataResponse,
+  IFoodResponse,
+  IRating,
+  IReviewResponse,
+} from "@/interfaces";
 
 const httpClient = createHttpClient();
 
@@ -87,5 +92,61 @@ export const getFavoriteFoods = async (): Promise<
     IFoodResponse[],
     IApiDataResponse<IFoodResponse[]>
   >(`${BASE_FOOD}/my-favorite`);
+  return resp;
+};
+
+export const ratingFoodService = async (
+  value: IRating
+): Promise<IApiDataResponse<IReviewResponse>> => {
+  const resp = await httpClient.post<
+    IRating,
+    IApiDataResponse<IReviewResponse>
+  >(`${BASE_FOOD}/review`, {
+    foodId: value.subjectId,
+    rating: value.rating,
+    comment: value.comment,
+  });
+  return resp;
+};
+
+export const editMyFoodReview = async (
+  value: IRating
+): Promise<IApiDataResponse<IReviewResponse>> => {
+  const resp = await httpClient.put<IRating, IApiDataResponse<IReviewResponse>>(
+    `${BASE_FOOD}/edit-review`,
+    {
+      reviewId: value.subjectId,
+      rating: value.rating,
+      comment: value.comment,
+    }
+  );
+  return resp;
+};
+
+export const getFoodReviewsService = async (
+  foodSlug: string
+): Promise<IApiDataResponse<IReviewResponse[]>> => {
+  const resp = await httpClient.get<
+    IReviewResponse[],
+    IApiDataResponse<IReviewResponse[]>
+  >(`${BASE_FOOD}/reviews`, {
+    params: {
+      foodSlug,
+    },
+  });
+  return resp;
+};
+
+export const deleteMyFoodReview = async (
+  reviewId: number
+): Promise<IApiDataResponse<void>> => {
+  const resp = await httpClient.delete<number, IApiDataResponse<void>>(
+    `${BASE_FOOD}/delete-review`,
+    {
+      params: {
+        reviewId,
+      },
+    }
+  );
   return resp;
 };

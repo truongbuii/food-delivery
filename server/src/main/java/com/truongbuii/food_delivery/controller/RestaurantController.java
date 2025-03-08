@@ -123,9 +123,9 @@ public class RestaurantController {
 
     @GetMapping("/reviews")
     public ResponseEntity<ApiResponse<List<RestaurantReviewResponse>>> getReviews(
-            @RequestParam Long restaurantId
+            @RequestParam String restaurantSlug
     ) {
-        var restaurant = restaurantReviewService.getReviews(restaurantId);
+        var restaurant = restaurantReviewService.getReviews(restaurantSlug);
         return ResponseEntity.ok(ApiResponse.<List<RestaurantReviewResponse>>builder().data(restaurant).build());
     }
 

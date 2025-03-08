@@ -56,7 +56,7 @@ const RestaurantProfile = () => {
                   className="w-20 h-20"
                   avatarURL={_restaurant.avatarUrl}
                 />
-                {_restaurant.freeDelivery && (
+                {_restaurant.verifiedBadge && (
                   <div className="absolute w-[22px] h-[22px] flex justify-center items-center bg-background rounded-full bottom-0 right-1">
                     <IconChecked width={15} height={15} />
                   </div>

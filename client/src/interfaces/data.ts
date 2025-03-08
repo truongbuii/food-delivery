@@ -120,6 +120,22 @@ interface IOrderUpdate {
   status: ORDER_STATUS;
 }
 
+interface IRating {
+  subjectId: number;
+  rating: number;
+  comment: string;
+}
+
+interface IReviewResponse {
+  id: number;
+  userId: number;
+  userName: string;
+  userImage: string;
+  rating: number;
+  comment: string;
+  updatedAt: string;
+}
+
 export type {
   IApiDataResponse,
   IApiErrorResponse,
@@ -135,4 +151,6 @@ export type {
   ICheckout,
   IOrderResponse,
   IOrderUpdate,
+  IRating,
+  IReviewResponse,
 };

@@ -47,6 +47,11 @@ public class RestaurantService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
     }
 
+    public Restaurant getRestaurantBySlug(String slug) {
+        return restaurantRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));
+    }
+
     public RestaurantResponse getRestaurantBySlug(Long userId, String slug) {
         Restaurant restaurant = restaurantRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_RESTAURANT_NOT_FOUND));

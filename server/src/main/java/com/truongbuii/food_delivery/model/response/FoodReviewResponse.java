@@ -8,6 +8,7 @@ import lombok.Setter;
 public class FoodReviewResponse {
     private Long id;
     private String userName;
+    private Long userId;
     private String userImage;
     private int rating;
     private String comment;

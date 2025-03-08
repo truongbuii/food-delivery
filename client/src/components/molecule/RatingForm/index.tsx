@@ -2,12 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "@/components/molecule/FormField";
+import {
+  useEditFoodReviewMutation,
+  useEditRestaurantReviewMutation,
+  useRatingFoodMutation,
+  useRatingRestaurantMutation,
+} from "@/queries";
+import { useMessage } from "@/hooks/useMessage";
+import { IApiErrorResponse } from "@/interfaces";
+import { useSearchParams } from "next/navigation";
 
 const RATING_LABELS: Record<number, { text: string; emoji: string }> = {
   0: { text: "Rating me", emoji: "😐" },
@@ -25,8 +34,28 @@ const ratingSchema = z.object({
 
 type RatingFormValues = z.infer<typeof ratingSchema>;
 
-const RatingForm = () => {
+const RatingForm: FC<{
+  subjectId: number;
+  type: "restaurant" | "food";
+  reviewId?: number;
+}> = ({ subjectId, type }) => {
+  const message = useMessage();
+  const searchParams = useSearchParams();
+  const reviewIdParam = searchParams.get("reviewId");
+  const reviewId =
+    reviewIdParam && !isNaN(Number(reviewIdParam))
+      ? Number(reviewIdParam)
+      : null;
+
   const [selectedRating, setSelectedRating] = useState<number>(0);
+  const { mutateAsync: RestaurantRatingMutate, isPending: RestaurantPending } =
+    useRatingRestaurantMutation();
+  const { mutateAsync: EditRestaurantRatingMutate } =
+    useEditRestaurantReviewMutation();
+
+  const { mutateAsync: FoodRatingMutate, isPending: FoodPending } =
+    useRatingFoodMutation();
+  const { mutateAsync: EditFoodRatingMutate } = useEditFoodReviewMutation();
 
   const form = useForm<RatingFormValues>({
     resolver: zodResolver(ratingSchema),
@@ -37,8 +66,29 @@ const RatingForm = () => {
     },
   });
   const { errors } = form.formState;
+
   const onSubmit = (data: RatingFormValues) => {
-    console.log(data);
+    const payload = {
+      ...data,
+      rating: selectedRating,
+      subjectId: reviewId ? reviewId : subjectId,
+    };
+
+    const mutateFn = reviewId
+      ? type === "restaurant"
+        ? EditRestaurantRatingMutate
+        : EditFoodRatingMutate
+      : type === "restaurant"
+      ? RestaurantRatingMutate
+      : FoodRatingMutate;
+
+    mutateFn(payload, {
+      onError: (error: IApiErrorResponse) => message.error(error.message),
+      onSuccess: () => {
+        message.success("Rating submitted successfully");
+        form.reset();
+      },
+    });
   };
 
   return (
@@ -89,8 +139,8 @@ const RatingForm = () => {
         <div className="w-full text-center">
           <Button
             size={"lg"}
-            // loading={isPending}
-            // disabled={isPending}
+            loading={RestaurantPending || FoodPending}
+            disabled={RestaurantPending || FoodPending}
             className="m-auto mt-2 rounded-[40px] hover:bg-primary shadow-primaryBtnShadow"
           >
             Submit

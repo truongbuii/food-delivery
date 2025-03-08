@@ -43,6 +43,12 @@ public class FoodService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
     }
 
+    public FoodResponse getFoodBySlug(String slug) {
+        Food food = foodRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
+        return foodMapper.toFoodResponse(food);
+    }
+
     public FoodResponse getFoodBySlug(Long userId, String slug) {
         Food food = foodRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_FOOD_NOT_FOUND));
