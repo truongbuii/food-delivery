@@ -1,6 +1,7 @@
 import {
   IApiDataResponse,
   IApiErrorResponse,
+  IPageData,
   IRating,
   IRestaurantResponse,
   IReviewResponse,
@@ -10,22 +11,32 @@ import {
   deleteMyReview,
   editMyRestaurantReview,
   getFavoriteRestaurants,
+  getFeaturedRestaurants,
   getRestaurantBySlug,
   getRestaurantReviews,
   getRestaurants,
   ratingRestaurantService,
   toggleFavoriteRestaurant,
 } from "@/services";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useGetRestaurantsByParams = (
   categoryId: number | null,
   rating: number | null,
   keyword: string | null,
   freeDelivery: boolean | null,
-  popular: boolean | null
+  popular: boolean | null,
+  size: number
 ) => {
-  return useQuery<IApiDataResponse<IRestaurantResponse[]>, IApiErrorResponse>({
+  return useInfiniteQuery<
+    IApiDataResponse<IPageData<IRestaurantResponse[]>>,
+    IApiErrorResponse
+  >({
     queryKey: [
       QUERIES_KEY.RESTAURANT.GET_RESTAURANTS,
       categoryId,
@@ -33,9 +44,22 @@ export const useGetRestaurantsByParams = (
       keyword,
       freeDelivery,
       popular,
+      size,
     ],
-    queryFn: () =>
-      getRestaurants(categoryId, rating, keyword, freeDelivery, popular),
+    queryFn: ({ pageParam = 0 }) =>
+      getRestaurants(
+        categoryId,
+        rating,
+        keyword,
+        freeDelivery,
+        popular,
+        pageParam as number,
+        size
+      ),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage?.data?.hasNext ? allPages.length : undefined;
+    },
+    initialPageParam: 0,
   });
 };
 
@@ -130,5 +154,12 @@ export const useEditRestaurantReviewMutation = () => {
         queryKey: [QUERIES_KEY.RESTAURANT.LIST_RESTAURANT_REVIEWS],
       });
     },
+  });
+};
+
+export const useGetFeaturedRestaurants = () => {
+  return useQuery<IApiDataResponse<IRestaurantResponse[]>, IApiErrorResponse>({
+    queryKey: [QUERIES_KEY.RESTAURANT.GET_FEATURED_RESTAURANTS],
+    queryFn: () => getFeaturedRestaurants(),
   });
 };

@@ -50,7 +50,7 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
 
   return (
     <footer
-      className={`fixed bottom-[-4px] w-full h-[65px] bg-cardItem text-lightGray p-4 transition-transform duration-300 ${
+      className={`fixed bottom-[-4px] w-full h-[65px] bg-cardItem text-lightGray p-4 transition-transform duration-300 z-50 ${
         isMobile ? "" : "max-w-[23.4375rem] mx-auto"
       } ${isHidden ? "translate-y-full" : "translate-y-0"}`}
     >

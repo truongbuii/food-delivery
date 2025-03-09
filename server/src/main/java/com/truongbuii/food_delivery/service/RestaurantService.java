@@ -14,6 +14,7 @@ import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPatch;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPost;
 import com.truongbuii.food_delivery.model.request.restaurant.RestaurantPut;
 import com.truongbuii.food_delivery.model.response.CategoryIdNameResponse;
+import com.truongbuii.food_delivery.model.response.PageResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
 import com.truongbuii.food_delivery.repository.FavoriteRestaurantRepository;
 import com.truongbuii.food_delivery.repository.RestaurantRepository;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -70,7 +72,14 @@ public class RestaurantService {
         return restaurantResponse;
     }
 
-    public List<RestaurantResponse> getAllByParams(
+    public List<RestaurantResponse> getAllFeaturedRestaurants() {
+        List<Restaurant> restaurants = restaurantRepository.findAllByHasFeatured(Boolean.TRUE);
+        return restaurants.stream()
+                .map(restaurantMapper::toRestaurantResponse)
+                .collect(Collectors.toList());
+    }
+
+    public PageResponse<List<RestaurantResponse>> getAllByParams(
             Float rating,
             String keyword,
             Boolean popular,
@@ -80,11 +89,11 @@ public class RestaurantService {
             int size,
             Long userId
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Restaurant> restaurants = restaurantRepository.findAllByParams(
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByParams(
                 rating, keyword, popular, categoryId, freeDelivery, pageable
         );
-        List<Long> restaurantIds = restaurants.stream().map(Restaurant::getId).collect(Collectors.toList());
+        List<Long> restaurantIds = restaurantPage.stream().map(Restaurant::getId).toList();
         Set<Long> favoriteRestaurantIds = favoriteRestaurantRepository
                 .findByUserIdAndRestaurantIdIn(userId, restaurantIds)
                 .stream()
@@ -93,7 +102,7 @@ public class RestaurantService {
                 )
                 .collect(Collectors.toSet());
 
-        return restaurants.stream()
+        List<RestaurantResponse> restaurantResponseList = restaurantPage.stream()
                 .map(restaurant -> {
                     LinkedHashSet<CategoryIdNameResponse> categories = restaurant.getCategories()
                             .stream()
@@ -107,23 +116,10 @@ public class RestaurantService {
                     return restaurantResponse;
                 })
                 .toList();
-//        return restaurants.stream()
-//                .map(restaurant -> {
-//                    Optional<FavoriteRestaurant> favoriteRestaurantOptional =
-//                            favoriteRestaurantRepository.findByUserIdAndRestaurantId(
-//                                    userId,
-//                                    restaurant.getId()
-//                            );
-//                    Set<CategoryIdNameResponse> categories = restaurant.getCategories()
-//                            .stream()
-//                            .map(categoryMapper::toCategoryIdNameResponse)
-//                            .collect(Collectors.toSet());
-//                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
-//                    restaurantResponse.setCategories(categories);
-//                    restaurantResponse.setFavorite(favoriteRestaurantOptional.isPresent());
-//                    return restaurantResponse;
-//                })
-//                .collect(Collectors.toList());
+        PageResponse<List<RestaurantResponse>> pageResponse = new PageResponse<>();
+        pageResponse.setValues(restaurantResponseList);
+        pageResponse.setHasNext(restaurantPage.hasNext());
+        return pageResponse;
     }
 
     @Transactional

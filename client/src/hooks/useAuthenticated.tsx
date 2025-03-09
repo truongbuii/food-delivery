@@ -18,7 +18,7 @@ const useAuthenticated = () => {
 
   const getAccessToken = useCallback(() => {
     const tokenState = useTokenStore.getState();
-    return tokenState.token || "";
+    return tokenState.token || null;
   }, []);
 
   const fetchCurrentUser = async () => {
@@ -29,13 +29,12 @@ const useAuthenticated = () => {
       }
       return;
     }
+    return;
   };
 
   useEffect(() => {
     const accessToken = getAccessToken();
-
     const isOnboarding = clientStorage.get(ONBOARDING_STORAGE_KEY);
-
     if (!isOnboarding) {
       push(PATHNAME.ONBOARDING);
       return;

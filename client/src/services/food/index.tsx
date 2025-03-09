@@ -156,3 +156,13 @@ export const deleteMyFoodReview = async (
   );
   return resp;
 };
+
+export const getFeaturedFoods = async (): Promise<
+  IApiDataResponse<IFoodResponse[]>
+> => {
+  const resp = await httpClient.get<
+    IFoodResponse[],
+    IApiDataResponse<IFoodResponse[]>
+  >(`${BASE_FOOD}/all/featured`);
+  return resp;
+};

@@ -19,14 +19,14 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     Optional<Restaurant> findBySlug(String slug);
 
-    @Query("SELECT r FROM Restaurant r JOIN r.categories c " +
+    @Query("SELECT DISTINCT r FROM Restaurant r LEFT JOIN r.categories c " +
             "WHERE r.hasBanned = false " +
             "AND (:categoryId IS NULL OR c.id = :categoryId) " +
             "AND (:rating IS NULL OR r.totalStars >= :rating) " +
             "AND (:keyword IS NULL OR :keyword = '' OR r.name ILIKE CONCAT('%', :keyword, '%')) " +
             "AND (:freeDelivery IS NOT TRUE OR r.freeDelivery = TRUE) " +
-            "ORDER BY CASE WHEN :popular = TRUE THEN r.totalReviews END DESC"
-    )
+            "AND (:popular IS NOT TRUE OR r.hasFeatured = TRUE)" +
+            "ORDER BY r.id ASC")
     Page<Restaurant> findAllByParams(
             @Param("rating") Float rating,
             @Param("keyword") String keyword,

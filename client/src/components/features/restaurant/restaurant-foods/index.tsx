@@ -1,7 +1,8 @@
 "use client";
 
 import { VerticalCard } from "@/components/molecule";
-import { ICategory } from "@/interfaces";
+import { ICategory, IFoodResponse } from "@/interfaces";
+import { MapperFood } from "@/mapping/food.mapping";
 import { useGetFoodsByParams } from "@/queries";
 import { FC, useState } from "react";
 
@@ -10,7 +11,22 @@ const RestaurantFoods: FC<{
   restaurantSlug: string;
 }> = ({ categories, restaurantSlug }) => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const { data: foods } = useGetFoodsByParams(categoryId, restaurantSlug);
+  const { data: foods } = useGetFoodsByParams(
+    categoryId,
+    restaurantSlug,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    10
+  );
+
+  const _foods: IFoodResponse[] =
+    foods?.pages.flatMap(
+      (page) => page?.data?.values?.map((food) => MapperFood(food)) || []
+    ) || [];
 
   const handleClick = (id: number) => {
     setCategoryId(id);
@@ -46,7 +62,7 @@ const RestaurantFoods: FC<{
         ))}
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {foods?.data?.map((food) => (
+        {_foods?.map((food) => (
           <VerticalCard key={food.id} type="food" item={food} />
         ))}
       </div>

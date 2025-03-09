@@ -43,4 +43,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable
     );
+
+
+    List<Food> findAllByHasFeatured(Boolean aTrue);
 }

@@ -3,6 +3,7 @@ package com.truongbuii.food_delivery.controller;
 import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.restaurant.*;
 import com.truongbuii.food_delivery.model.response.ApiResponse;
+import com.truongbuii.food_delivery.model.response.PageResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantResponse;
 import com.truongbuii.food_delivery.model.response.RestaurantReviewResponse;
 import com.truongbuii.food_delivery.service.RestaurantReviewService;
@@ -23,7 +24,7 @@ public class RestaurantController {
     private final RestaurantReviewService restaurantReviewService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAll(
+    public ResponseEntity<ApiResponse<PageResponse<List<RestaurantResponse>>>> getAll(
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Float rating,
             @RequestParam(required = false) String keyword,
@@ -35,6 +36,12 @@ public class RestaurantController {
     ) {
         var restaurant = restaurantService.getAllByParams(
                 rating, keyword, popular, categoryId, freeDelivery, page, size, principal.getId());
+        return ResponseEntity.ok(ApiResponse.<PageResponse<List<RestaurantResponse>>>builder().data(restaurant).build());
+    }
+
+    @GetMapping("/all/featured")
+    public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getAllFeatured() {
+        var restaurant = restaurantService.getAllFeaturedRestaurants();
         return ResponseEntity.ok(ApiResponse.<List<RestaurantResponse>>builder().data(restaurant).build());
     }
 

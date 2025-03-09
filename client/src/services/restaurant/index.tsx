@@ -2,6 +2,7 @@ import { BASE_RESTAURANT } from "@/apis/endPoints";
 import createHttpClient from "@/apis/httpClient";
 import {
   IApiDataResponse,
+  IPageData,
   IRating,
   IRestaurantResponse,
   IReviewResponse,
@@ -14,11 +15,13 @@ export const getRestaurants = async (
   rating: number | null,
   keyword: string | null,
   freeDelivery: boolean | null,
-  popular: boolean | null
-): Promise<IApiDataResponse<IRestaurantResponse[]>> => {
+  popular: boolean | null,
+  page: number,
+  size?: number
+): Promise<IApiDataResponse<IPageData<IRestaurantResponse[]>>> => {
   const resp = await httpClient.get<
     IRestaurantResponse[],
-    IApiDataResponse<IRestaurantResponse[]>
+    IApiDataResponse<IPageData<IRestaurantResponse[]>>
   >(BASE_RESTAURANT, {
     params: {
       categoryId,
@@ -26,6 +29,8 @@ export const getRestaurants = async (
       keyword,
       freeDelivery,
       popular,
+      page,
+      size,
     },
   });
   return resp;
@@ -122,5 +127,15 @@ export const editMyRestaurantReview = async (
       comment: value.comment,
     }
   );
+  return resp;
+};
+
+export const getFeaturedRestaurants = async (): Promise<
+  IApiDataResponse<IRestaurantResponse[]>
+> => {
+  const resp = await httpClient.get<
+    IRestaurantResponse[],
+    IApiDataResponse<IRestaurantResponse[]>
+  >(`${BASE_RESTAURANT}/all/featured`);
   return resp;
 };

@@ -72,6 +72,13 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
+    public List<FoodResponse> getFeaturedFood() {
+        List<Food> foods = foodRepository.findAllByHasFeatured(Boolean.TRUE);
+        return foods.stream()
+                .map(foodMapper::toFoodResponse)
+                .collect(Collectors.toList());
+    }
+
     public PageResponse<List<FoodResponse>> getAllByParams(
             Long userId,
             String restaurantSlug,
@@ -113,6 +120,7 @@ public class FoodService {
     public List<FoodResponse> getFeaturedFoodByRestaurantSlug(Long userId, String restaurantSlug) {
         List<Food> foods = foodRepository.findFeaturedByRestaurantSlug(restaurantSlug);
         return foods.stream()
+                .filter(f -> f.isHasFeatured() == Boolean.TRUE)
                 .map(
                         f -> {
                             Optional<FavoriteFood> favoriteFood =

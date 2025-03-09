@@ -18,6 +18,7 @@ import {
   editMyFoodReview,
   getFoodReviewsService,
   deleteMyFoodReview,
+  getFeaturedFoods,
 } from "@/services";
 import {
   useInfiniteQuery,
@@ -181,5 +182,12 @@ export const useDeleteFoodReviewMutation = () => {
         queryKey: [QUERIES_KEY.FOOD.LIST_FOOD_REVIEWS],
       });
     },
+  });
+};
+
+export const useGetFeaturedFoods = () => {
+  return useQuery<IApiDataResponse<IFoodResponse[]>, IApiErrorResponse>({
+    queryKey: [QUERIES_KEY.FOOD.GET_FEATURED_FOODS],
+    queryFn: () => getFeaturedFoods(),
   });
 };

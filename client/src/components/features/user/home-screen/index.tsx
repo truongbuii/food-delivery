@@ -15,7 +15,7 @@ import {
 import { PATHNAME } from "@/configs";
 import { MapperFood } from "@/mapping/food.mapping";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
-import { useGetFoodsByParams, useGetRestaurantsByParams } from "@/queries";
+import { useGetFeaturedFoods, useGetFeaturedRestaurants } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,24 +35,9 @@ const HomeScreen = () => {
     setFilters((prev) => ({ ...prev, categoryId: id }));
   };
 
-  const { data: restaurants } = useGetRestaurantsByParams(
-    null,
-    null,
-    null,
-    null,
-    null
-  );
+  const { data: restaurants } = useGetFeaturedRestaurants();
 
-  const { data: foods } = useGetFoodsByParams(
-    filters.categoryId,
-    null,
-    filters.rating,
-    null,
-    filters.popular,
-    null,
-    filters.priceValues[0],
-    filters.priceValues[1]
-  );
+  const { data: foods } = useGetFeaturedFoods();
 
   const _restaurants = restaurants?.data?.map((restaurant) =>
     MapperRestaurant(restaurant)

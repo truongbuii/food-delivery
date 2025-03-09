@@ -8,19 +8,23 @@ import {
 } from "@/components/molecule";
 import { Button } from "@/components/ui/button";
 import { Sheet } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PATHNAME } from "@/configs";
+import { IFoodResponse, IRestaurantResponse } from "@/interfaces";
 import { MapperFood } from "@/mapping/food.mapping";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetFoodsByParams, useGetRestaurantsByParams } from "@/queries";
 import { ChevronLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const SearchTabScreen = () => {
   const router = useRouter();
   const searchParam = useSearchParams();
-
+  const { ref: foodRef, inView: foodView } = useInView();
+  const { ref: restaurantRef, inView: restaurantView } = useInView();
   const [filters, setFilters] = useState({
     categoryId: null,
     rating: null,
@@ -28,6 +32,7 @@ const SearchTabScreen = () => {
     freeDelivery: null,
     popular: null,
     priceValues: [0, 200],
+    size: 5,
   });
 
   useEffect(() => {
@@ -39,7 +44,12 @@ const SearchTabScreen = () => {
   }, [searchParam]);
 
   const [selectedTab, setSelectedTab] = useState<string>("restaurant");
-  const { data: foods } = useGetFoodsByParams(
+  const {
+    data: foods,
+    fetchNextPage: foodNextPage,
+    hasNextPage: foodHasNextPage,
+    isFetchingNextPage: foodFetching,
+  } = useGetFoodsByParams(
     filters.categoryId,
     null,
     filters.rating,
@@ -47,20 +57,49 @@ const SearchTabScreen = () => {
     filters.popular,
     null,
     filters.priceValues[0],
-    filters.priceValues[1]
+    filters.priceValues[1],
+    filters.size
   );
-  const { data: restaurants } = useGetRestaurantsByParams(
+  const {
+    data: restaurants,
+    fetchNextPage: RestaurantNextPage,
+    hasNextPage: RestaurantHasNextPage,
+    isFetchingNextPage: restaurantFetching,
+  } = useGetRestaurantsByParams(
     filters.categoryId,
     filters.rating,
     filters.keyword,
     filters.freeDelivery,
-    filters.popular
+    filters.popular,
+    filters.size
   );
+  useEffect(() => {
+    if (foodView && foodHasNextPage) {
+      foodNextPage();
+    }
+    if (restaurantView && RestaurantHasNextPage) {
+      RestaurantNextPage();
+    }
+  }, [
+    foodView,
+    foodHasNextPage,
+    foodNextPage,
+    RestaurantHasNextPage,
+    restaurantView,
+    RestaurantNextPage,
+  ]);
 
-  const _restaurants = restaurants?.data?.map((restaurant) =>
-    MapperRestaurant(restaurant)
-  );
-  const _foods = foods?.data?.map((food) => MapperFood(food));
+  const _restaurants: IRestaurantResponse[] =
+    restaurants?.pages.flatMap(
+      (page) =>
+        page?.data?.values?.map((restaurant) => MapperRestaurant(restaurant)) ||
+        []
+    ) || [];
+
+  const _foods: IFoodResponse[] =
+    foods?.pages.flatMap(
+      (page) => page?.data?.values?.map((food) => MapperFood(food)) || []
+    ) || [];
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
@@ -107,6 +146,17 @@ const SearchTabScreen = () => {
                   </div>
                 ))}
               </div>
+              <div ref={restaurantRef}>
+                {restaurantFetching && (
+                  <div className="flex flex-col space-y-3">
+                    <Skeleton className="h-[125px] w-full rounded-xl" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </TabsContent>
             <TabsContent value="food">
               <div className="columns-2 gap-4">
@@ -121,6 +171,17 @@ const SearchTabScreen = () => {
                     <VerticalCard type="food" item={food} />
                   </div>
                 ))}
+                <div ref={foodRef}>
+                  {foodFetching && (
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-full rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </TabsContent>
           </div>

@@ -1,6 +1,6 @@
 import axios, { AxiosError, CreateAxiosDefaults, HttpStatusCode } from "axios";
 import { useTokenStore } from "@/stores";
-import { AUTH_STORAGE_KEY, PATHNAME } from "@/configs";
+import { AUTH_STORAGE_KEY, PATHNAME, PUBLIC_PATH } from "@/configs";
 import { getNewTokenService } from "@/services";
 
 let isRefreshing = false;
@@ -71,8 +71,11 @@ const createHttpClient = (config?: CreateAxiosDefaults) => {
         } catch (refreshError: any) {
           isRefreshing = false;
           requestQueue = [];
+
           localStorage.removeItem(AUTH_STORAGE_KEY);
-          window.location.href = PATHNAME.SIGN_IN;
+          if (!Object.values(PUBLIC_PATH).includes(window.location.pathname)) {
+            window.location.href = PATHNAME.SIGN_IN;
+          }
           const errorResponse = refreshError.response
             ? {
                 ...refreshError.response.data,

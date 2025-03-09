@@ -175,12 +175,12 @@ const InfoSection: FC<InfoSectionProps> = ({
       <div className="flex flex-col gap-1 mt-2">
         <div className="flex items-center gap-1">
           <span className="font-semibold">{name}</span>
-          <CircleCheck
+          {/* <CircleCheck
             color="#029094"
             strokeWidth={3}
             size={12}
             className="mt-1"
-          />
+          /> */}
         </div>
         <div className="text-xs text-lightGray">{ingredient}</div>
       </div>

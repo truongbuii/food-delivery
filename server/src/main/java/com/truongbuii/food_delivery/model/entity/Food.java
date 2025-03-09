@@ -20,6 +20,7 @@ public class Food extends BaseEntity<Long> {
     private String ingredient;
     private Float totalStars;
     private Integer totalReviews;
+    private boolean hasFeatured;
     private String slug;
 
     @ManyToOne(fetch = FetchType.LAZY)
