@@ -1,12 +1,14 @@
 package com.truongbuii.food_delivery.repository;
 
 import com.truongbuii.food_delivery.model.entity.Order;
+import com.truongbuii.food_delivery.model.entity.OrderItem;
 import com.truongbuii.food_delivery.model.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +28,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT o FROM Order o WHERE o.userId = :userId AND o.status = 'DELIVERED'")
     List<Order> findDeliveredOrderByUserId(Long userId);
+
+    @Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :orderId")
+    Collection<OrderItem> findAllByOrderId(Long orderId);
 }

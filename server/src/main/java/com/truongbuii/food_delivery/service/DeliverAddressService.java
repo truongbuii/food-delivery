@@ -47,7 +47,7 @@ public class DeliverAddressService {
 
     public DeliverAddressResponse create(DeliverAddressPost deliverAddressPost) {
         User user = userService.getUserById(deliverAddressPost.userId());
-        validateDeliverAddressName(deliverAddressPost.name());
+        validateDeliverAddressName(deliverAddressPost.name(), user.getId());
         DeliverAddress deliverAddress = deliverAddressMapper.toDeliverAddress(deliverAddressPost);
         deliverAddress.setUser(user);
         deliverAddressRepository.save(deliverAddress);
@@ -59,7 +59,7 @@ public class DeliverAddressService {
                 .findById(deliverAddressPut.id())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_DELIVER_ADDRESS_NOT_FOUND));
         if (StringUtils.isNotBlank(deliverAddressPut.name())) {
-            validateDeliverAddressName(deliverAddressPut.name());
+            validateDeliverAddressName(deliverAddressPut.name(), deliverAddress.getUser().getId());
             deliverAddress.setName(deliverAddressPut.name());
         }
         validateUtils.checkAndUpdateField(
@@ -82,9 +82,10 @@ public class DeliverAddressService {
         deliverAddressRepository.delete(deliverAddress);
     }
 
-    private void validateDeliverAddressName(String deliverAddressName) {
+    private void validateDeliverAddressName(String deliverAddressName, Long userId) {
         if (StringUtils.isNotBlank(deliverAddressName)) {
-            Optional<DeliverAddress> deliverAddress = deliverAddressRepository.findByName(deliverAddressName);
+            Optional<DeliverAddress> deliverAddress = deliverAddressRepository.findByNameAndUserId(deliverAddressName
+                    , userId);
             if (deliverAddress.isPresent()) {
                 throw new DuplicateResourceException(ErrorCode.ERR_DELIVER_ADDRESS_NAME_DUPLICATE);
             }

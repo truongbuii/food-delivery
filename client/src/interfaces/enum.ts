@@ -16,3 +16,10 @@ export enum ORDER_STATUS {
   REFUND = "REFUND",
   CANCELLED = "CANCELLED",
 }
+
+export enum PAYMENT_STATUS {
+  PENDING = "PENDING",
+  PAID = "PAID",
+  REFUND = "REFUND",
+  CANCELLED = "CANCELLED",
+}

@@ -1,4 +1,4 @@
-import { ORDER_STATUS } from "@/interfaces";
+import { ORDER_STATUS, PAYMENT_STATUS } from "@/interfaces";
 
 export const ONBOARDING_STORAGE_KEY = "fd-onboarding";
 export const AUTH_STORAGE_KEY = "fd-auth";
@@ -13,4 +13,11 @@ export const ORDER_STATUS_COLOR: Record<ORDER_STATUS, string> = {
   [ORDER_STATUS.DELIVERED]: "text-[#4EE476]",
   [ORDER_STATUS.REFUND]: "text-[#b3b3b3]",
   [ORDER_STATUS.CANCELLED]: "text-[#be1201]",
+};
+
+export const PAYMENT_STATUS_COLOR: Record<PAYMENT_STATUS, string> = {
+  [PAYMENT_STATUS.PENDING]: "text-[#e8c81c]",
+  [PAYMENT_STATUS.PAID]: "text-[#4EE476]",
+  [PAYMENT_STATUS.REFUND]: "text-[#b3b3b3]",
+  [PAYMENT_STATUS.CANCELLED]: "text-[#be1201]",
 };

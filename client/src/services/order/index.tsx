@@ -3,6 +3,8 @@ import createHttpClient from "@/apis/httpClient";
 import {
   IApiDataResponse,
   ICheckout,
+  ICheckoutResponse,
+  IOrderItemResponse,
   IOrderResponse,
   IOrderUpdate,
 } from "@/interfaces";
@@ -11,17 +13,17 @@ const httpClient = createHttpClient();
 
 export const checkoutService = async (
   value: ICheckout
-): Promise<IApiDataResponse<string>> => {
-  const resp = await httpClient.post<ICheckout, IApiDataResponse<string>>(
-    EndPoints.ORDER.checkout,
-    {
-      paymentMethod: value.paymentMethod,
-      orderAddress: value.address,
-      discount: value.discount,
-      totalPrice: value.totalPrice,
-      numberItem: value.numberItem,
-    }
-  );
+): Promise<IApiDataResponse<ICheckoutResponse>> => {
+  const resp = await httpClient.post<
+    ICheckout,
+    IApiDataResponse<ICheckoutResponse>
+  >(EndPoints.ORDER.checkout, {
+    paymentMethod: value.paymentMethod,
+    orderAddress: value.address,
+    discount: value.discount,
+    totalPrice: value.totalPrice,
+    numberItem: value.numberItem,
+  });
   return resp;
 };
 
@@ -57,5 +59,33 @@ export const reOrderService = async (
       orderId: value,
     }
   );
+  return resp;
+};
+
+export const getOrderDetailService = async (
+  orderId: number
+): Promise<IApiDataResponse<IOrderResponse>> => {
+  const resp = await httpClient.get<
+    IOrderResponse,
+    IApiDataResponse<IOrderResponse>
+  >(EndPoints.ORDER.detail, {
+    params: {
+      orderId,
+    },
+  });
+  return resp;
+};
+
+export const getOrderItemsByOrderIdService = async (
+  orderId: number
+): Promise<IApiDataResponse<IOrderItemResponse[]>> => {
+  const resp = await httpClient.get<
+    IOrderItemResponse[],
+    IApiDataResponse<IOrderItemResponse[]>
+  >(EndPoints.ORDER.orderDetailByOrderId, {
+    params: {
+      orderId,
+    },
+  });
   return resp;
 };

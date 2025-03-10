@@ -6,6 +6,7 @@ import { Avatar, Tag } from "@/components/molecule";
 import { FeeAndTimeDelivery } from "@/components/molecule";
 import { HeartButton } from "@/components/molecule/CardItem";
 import { IconChecked, IconStar } from "@/components/molecule/svgs";
+import { PATHNAME } from "@/configs";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 
 import {
@@ -89,7 +90,10 @@ const RestaurantProfile = () => {
                 <span className="text-lightGray">
                   ({_restaurant.totalReviews}+)
                 </span>
-                <Link href="" className="text-primary text-xs underline">
+                <Link
+                  href={`${PATHNAME.RESTAURANT}/${param.slug}/reviews`}
+                  className="text-primary text-xs underline"
+                >
                   See Review
                 </Link>
               </div>

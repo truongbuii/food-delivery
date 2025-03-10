@@ -1,4 +1,4 @@
-import { ORDER_STATUS } from "@/interfaces/enum";
+import { ORDER_STATUS, PAYMENT_STATUS } from "@/interfaces/enum";
 
 interface IApiDataResponse<T> {
   code: number;
@@ -104,6 +104,11 @@ interface ICheckout {
   numberItem: number;
 }
 
+interface ICheckoutResponse {
+  paymentMethod: string;
+  value: string | number;
+}
+
 interface IOrderResponse {
   id: number;
   restaurantId: number;
@@ -115,9 +120,19 @@ interface IOrderResponse {
   numberItem: number;
   orderAddress: string;
   paymentMethod: string;
-  paymentStatus: string;
+  paymentStatus: PAYMENT_STATUS;
   discount: number;
   updatedAt: string;
+}
+
+interface IOrderItemResponse {
+  id: number;
+  foodId: number;
+  foodName: string;
+  foodImage: string;
+  foodPrice: number;
+  quantity: number;
+  foodAddons: ISelectedAddon[];
 }
 
 interface IOrderUpdate {
@@ -155,7 +170,9 @@ export type {
   ICartItem,
   ICartItemResponse,
   ICheckout,
+  ICheckoutResponse,
   IOrderResponse,
+  IOrderItemResponse,
   IOrderUpdate,
   IRating,
   IReviewResponse,

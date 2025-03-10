@@ -146,3 +146,10 @@ export const exchangeOauthTokenForToken = async (
   );
   return resp;
 };
+
+export const signOutService = async (): Promise<IApiDataResponse<void>> => {
+  const resp = await httpClient.post<IApiDataResponse<void>>(
+    EndPoints.AUTH.signOut
+  );
+  return resp.data;
+};

@@ -6,10 +6,7 @@ import com.truongbuii.food_delivery.model.entity.User;
 import com.truongbuii.food_delivery.model.request.order.OrderPost;
 import com.truongbuii.food_delivery.model.request.order.OrderStatusPatch;
 import com.truongbuii.food_delivery.model.request.order.ReOrderPost;
-import com.truongbuii.food_delivery.model.response.ApiResponse;
-import com.truongbuii.food_delivery.model.response.CartItemResponse;
-import com.truongbuii.food_delivery.model.response.CheckoutResponse;
-import com.truongbuii.food_delivery.model.response.OrderResponse;
+import com.truongbuii.food_delivery.model.response.*;
 import com.truongbuii.food_delivery.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,7 +51,7 @@ public class OrderController {
             @RequestParam Map<String, String> queryParams,
             HttpServletResponse response
     ) throws IOException {
-        var orderId = orderService.OrderPaymentCallBack(queryParams);
+        Long orderId = orderService.OrderPaymentCallBack(queryParams);
         response.sendRedirect("http://localhost:3000/order/" + orderId);
     }
 
@@ -75,4 +72,19 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.<Order>builder().data(order).build());
     }
 
+    @GetMapping("/order-detail")
+    public ResponseEntity<ApiResponse<OrderResponse>> getOrderDetail(
+            @RequestParam Long orderId
+    ) {
+        var order = orderService.getOrderDetail(orderId);
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder().data(order).build());
+    }
+
+    @GetMapping("/order-item-by-order")
+    public ResponseEntity<ApiResponse<List<OrderItemResponse>>> getOrderItemByOrder(
+            @RequestParam Long orderId
+    ) {
+        var orderItems = orderService.getOrderItemByOrderId(orderId);
+        return ResponseEntity.ok(ApiResponse.<List<OrderItemResponse>>builder().data(orderItems).build());
+    }
 }

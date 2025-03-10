@@ -1,8 +1,10 @@
 package com.truongbuii.food_delivery.mapper;
 
 import com.truongbuii.food_delivery.model.entity.Order;
+import com.truongbuii.food_delivery.model.entity.OrderItem;
 import com.truongbuii.food_delivery.model.entity.Restaurant;
 import com.truongbuii.food_delivery.model.request.order.OrderPost;
+import com.truongbuii.food_delivery.model.response.OrderItemResponse;
 import com.truongbuii.food_delivery.model.response.OrderResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,6 +24,8 @@ public interface OrderMapper {
     @Mapping(source = "restaurant.avatarUrl", target = "restaurantImage")
     @Mapping(source = "order.updatedAt", target = "updatedAt", qualifiedByName = "formatDate")
     OrderResponse toOrderResponse(Order order, Restaurant restaurant);
+
+    OrderItemResponse toOrderItemResponse(OrderItem orderItem);
 
     @Named("formatDate")
     default String formatDate(LocalDateTime date) {

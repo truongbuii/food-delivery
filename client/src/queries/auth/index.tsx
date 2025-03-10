@@ -19,6 +19,7 @@ import {
   phoneRegisterService,
   reSendOtpService,
   signInService,
+  signOutService,
   signUpService,
   verificationEmailService,
 } from "@/services";
@@ -83,5 +84,12 @@ export const useExchangeOauthCodeForToken = () => {
   return useMutation<IApiDataResponse<IUserResponse>, IApiErrorResponse, any>({
     mutationFn: (value: ISocialLogin) => exchangeOauthTokenForToken(value),
     mutationKey: [QUERIES_KEY.AUTH.SOCIAL_CALLBACK],
+  });
+};
+
+export const useLogoutMutation = () => {
+  return useMutation<IApiDataResponse<void>, IApiErrorResponse, any>({
+    mutationKey: [QUERIES_KEY.AUTH.SIGN_OUT],
+    mutationFn: () => signOutService(),
   });
 };

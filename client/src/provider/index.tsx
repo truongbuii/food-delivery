@@ -4,9 +4,10 @@ import * as React from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useAuthenticated from "../hooks/useAuthenticated";
-import { SnackbarProvider } from "notistack";
+import { closeSnackbar, SnackbarProvider } from "notistack";
 import { AddonsProvider } from "@/contexts/AddonsContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { CircleX } from "lucide-react";
 
 export function ThemeProvider({
   children,
@@ -25,7 +26,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const { client } = useAuthProvider();
   const { theme } = useTheme();
   return (
-    <SnackbarProvider preventDuplicate maxSnack={1}>
+    <SnackbarProvider
+      preventDuplicate
+      maxSnack={1}
+      action={(snackbarId) => (
+        <button className="px-4" onClick={() => closeSnackbar(snackbarId)}>
+          <CircleX />
+        </button>
+      )}
+    >
       <ThemeProvider
         attribute="class"
         defaultTheme={theme}

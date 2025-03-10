@@ -18,8 +18,9 @@ import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse, IDeliveryAddressResponse } from "@/interfaces";
 import { useCheckoutMutation } from "@/queries";
 import { useAddressStore } from "@/stores/address/address.store";
-import { ChevronLeft, Ellipsis } from "lucide-react";
+import { ChevronLeft, Ellipsis, Plus } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 
@@ -46,6 +47,12 @@ const PaymentMethod = () => {
       message.warning("Please choose payment method");
       return;
     }
+
+    if (!shippingAddress.id) {
+      message.warning("Missing shipping address");
+      return;
+    }
+
     mutateAsync(
       {
         paymentMethod: paymentMethod,
@@ -57,7 +64,11 @@ const PaymentMethod = () => {
       {
         onSuccess: (res) => {
           if (res && res.data) {
-            window.location.href = res.data;
+            if (res.data.paymentMethod === "VNPAY") {
+              window.location.href = res.data.value as string;
+            } else {
+              router.push(`${PATHNAME.ORDER.DETAIL}/${res.data.value}`);
+            }
           }
         },
         onError: (err: IApiErrorResponse) => {
@@ -73,6 +84,7 @@ const PaymentMethod = () => {
     totalQuantity,
     mutateAsync,
     message,
+    router,
   ]);
 
   return (
@@ -91,43 +103,55 @@ const PaymentMethod = () => {
       <div className="flex flex-col gap-4 mt-4 w-full">
         <div className="flex justify-between">
           <span className="text-lg font-semibold">Shipping to</span>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="ghost" className="p-0 h-fit">
-                <Ellipsis strokeOpacity={1} className="text-lightGray" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[350px]">
-              <DialogHeader>
-                <DialogTitle>Choose your location</DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              {addresses.map((address) => (
-                <div
-                  key={address.id}
-                  className="mt-1 cursor-pointer"
-                  onClick={() => handleAddressChange(address)}
-                >
-                  <CartAddress key={address.id} address={address} />
-                </div>
-              ))}
-            </DialogContent>
-          </Dialog>
+          {shippingAddress.id && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="p-0 h-fit">
+                  <Ellipsis strokeOpacity={1} className="text-lightGray" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[350px]">
+                <DialogHeader>
+                  <DialogTitle>Choose your location</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                {addresses.map((address) => (
+                  <div
+                    key={address.id}
+                    className="mt-1 cursor-pointer"
+                    onClick={() => handleAddressChange(address)}
+                  >
+                    <CartAddress key={address.id} address={address} />
+                  </div>
+                ))}
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
-        <div className="flex items-center gap-8">
-          <Image
-            src={IMAGES_CONST.common.addressMap}
-            alt="address"
-            width={87}
-            height={87}
-          />
-          <div className="flex flex-col gap-2 py-2">
-            <p className="text-xl font-semibold">{shippingAddress.name}</p>
-            <p className="text-sm text-lightGray">
-              {shippingAddress.fullAddress}
-            </p>
+        {shippingAddress.id ? (
+          <div className="flex items-center gap-8">
+            <Image
+              src={IMAGES_CONST.common.addressMap}
+              alt="address"
+              width={87}
+              height={87}
+            />
+            <div className="flex flex-col gap-2 py-2">
+              <p className="text-xl font-semibold">{shippingAddress.name}</p>
+              <p className="text-sm text-lightGray">
+                {shippingAddress.fullAddress}
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <Link
+            href={PATHNAME.DELIVERY_ADDRESS}
+            className="flex items-center h-full "
+          >
+            <Plus size={18} />
+            <p className="text-primary px-1">Add new address</p>
+          </Link>
+        )}
         <div className="mt-4">
           <p className="text-lg font-semibold">Payment Method</p>
           <div className="mt-3">

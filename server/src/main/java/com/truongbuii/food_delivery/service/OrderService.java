@@ -21,6 +21,7 @@ import com.truongbuii.food_delivery.model.request.order.OrderStatusPatch;
 import com.truongbuii.food_delivery.model.request.order.ReOrderPost;
 import com.truongbuii.food_delivery.model.response.CartItemResponse;
 import com.truongbuii.food_delivery.model.response.CheckoutResponse;
+import com.truongbuii.food_delivery.model.response.OrderItemResponse;
 import com.truongbuii.food_delivery.model.response.OrderResponse;
 import com.truongbuii.food_delivery.repository.AddonRepository;
 import com.truongbuii.food_delivery.repository.OrderItemRepository;
@@ -28,6 +29,7 @@ import com.truongbuii.food_delivery.repository.OrderRepository;
 import com.truongbuii.food_delivery.utils.VNPayUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -169,6 +172,20 @@ public class OrderService {
         }
     }
 
+    public OrderResponse getOrderDetail(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_ORDER_NOT_FOUND));
+        Restaurant restaurant = restaurantService.getRestaurantById(order.getRestaurantId());
+        return orderMapper.toOrderResponse(order, restaurant);
+    }
+
+    public List<OrderItemResponse> getOrderItemByOrderId(Long orderId) {
+        return orderRepository.findAllByOrderId(orderId)
+                .stream()
+                .map(orderMapper::toOrderItemResponse)
+                .toList();
+    }
+
     public Order updateStatus(OrderStatusPatch orderStatusPatch) {
         Order order = orderRepository.findById(orderStatusPatch.orderId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_ORDER_NOT_FOUND));
@@ -186,5 +203,5 @@ public class OrderService {
             throw new AppException(e.getMessage());
         }
     }
-    
+
 }

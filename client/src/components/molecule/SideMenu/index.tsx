@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 
 const SideMenu = () => {
   const [container, setContainer] = useState<HTMLElement | null>(null);
+
   useEffect(() => {
     setContainer(document.getElementById(VIEWER_CONTAINER_ID));
   }, []);

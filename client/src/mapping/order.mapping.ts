@@ -1,4 +1,4 @@
-import { IOrderResponse } from "@/interfaces";
+import { IOrderItemResponse, IOrderResponse } from "@/interfaces";
 const MapperOrder = (order: Record<string, any>): IOrderResponse => {
   return {
     id: order.id ?? "",
@@ -17,4 +17,18 @@ const MapperOrder = (order: Record<string, any>): IOrderResponse => {
   };
 };
 
-export { MapperOrder };
+const MapperOrderItem = (
+  orderItem: Record<string, any>
+): IOrderItemResponse => {
+  return {
+    id: orderItem.id ?? "",
+    foodId: orderItem.foodId ?? "",
+    foodName: orderItem.foodName ?? "",
+    foodImage: orderItem.foodImage ?? "",
+    foodPrice: orderItem.foodPrice ?? 0.0,
+    quantity: orderItem.quantity ?? 0,
+    foodAddons: orderItem.foodAddons ?? [],
+  };
+};
+
+export { MapperOrder, MapperOrderItem };

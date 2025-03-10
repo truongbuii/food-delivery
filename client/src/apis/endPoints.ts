@@ -31,6 +31,7 @@ const EndPoints = {
     setPhoneNumber: "set-phone-number",
     socialLogin: "social-login",
     socialCallback: "social-callback",
+    signOut: "sign-out",
   }),
   USER: createPath(BASE_USER, {
     profile: "me",
@@ -41,6 +42,8 @@ const EndPoints = {
     update: "status",
     myOrders: "my-orders",
     reOrder: "re-order",
+    detail: "order-detail",
+    orderDetailByOrderId: "order-item-by-order",
   }),
 } as const;
 

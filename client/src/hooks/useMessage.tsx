@@ -24,7 +24,7 @@ export const useMessage = () => {
           ...options,
           variant,
           transitionDuration: 500,
-          autoHideDuration: 2500,
+          autoHideDuration: 2000,
           preventDuplicate: true,
           anchorOrigin: {
             vertical: placement ? (placement.split("-")[0] as any) : "top",
