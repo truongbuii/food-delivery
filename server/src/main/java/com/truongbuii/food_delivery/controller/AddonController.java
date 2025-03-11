@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/addon")
+@RequestMapping("/addon/internal")
 public class AddonController {
     private final AddonService addonService;
 

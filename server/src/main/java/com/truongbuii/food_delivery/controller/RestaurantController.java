@@ -54,7 +54,7 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.<RestaurantResponse>builder().data(restaurant).build());
     }
 
-    @PostMapping
+    @PostMapping("/internal")
     public ResponseEntity<ApiResponse<RestaurantResponse>> post(
             @Valid
             @ModelAttribute RestaurantPost restaurantPost
@@ -63,7 +63,7 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.<RestaurantResponse>builder().data(restaurant).build());
     }
 
-    @PutMapping
+    @PutMapping("/internal")
     public ResponseEntity<ApiResponse<RestaurantResponse>> put(
             @Valid
             @ModelAttribute RestaurantPut restaurantPut

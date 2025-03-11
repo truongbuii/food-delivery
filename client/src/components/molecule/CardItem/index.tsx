@@ -88,7 +88,7 @@ const PriceBadgeComponent: FC<{ price: number }> = ({ price }) => {
   return (
     <div className="absolute top-2 left-2 w-[70px] h-7 bg-white rounded-2xl text-center font-semibold">
       <span className="text-primary text-xs">$</span>
-      <span className="text-lg text-black">{price}</span>
+      <span className="text-lg text-black">{price.toFixed(1)}</span>
     </div>
   );
 };
@@ -144,7 +144,7 @@ interface InfoSectionProps {
   tags: ICategory[];
   verifiedBadge: boolean;
   freeDelivery: boolean;
-  ingredient?: string;
+  ingredient?: string | undefined;
 }
 
 const InfoSection: FC<InfoSectionProps> = ({
@@ -153,7 +153,7 @@ const InfoSection: FC<InfoSectionProps> = ({
   tags,
   verifiedBadge,
   freeDelivery,
-  ingredient,
+  ingredient = "",
 }) => (
   <>
     {type === "restaurant" ? (
@@ -165,7 +165,7 @@ const InfoSection: FC<InfoSectionProps> = ({
           )}
         </div>
         <FeeAndTimeDelivery free={freeDelivery} time="10-15" />
-        <div className="flex gap-2">
+        <div className="flex gap-2 overflow-hidden">
           {tags.map((tag, index) => (
             <Tag key={index} title={tag.name} size={"sm"} />
           ))}
@@ -182,7 +182,11 @@ const InfoSection: FC<InfoSectionProps> = ({
             className="mt-1"
           /> */}
         </div>
-        <div className="text-xs text-lightGray">{ingredient}</div>
+        <div className="text-xs text-lightGray">
+          {ingredient.length > 38
+            ? ingredient.slice(0, 38) + "..."
+            : ingredient}
+        </div>
       </div>
     )}
   </>
@@ -376,7 +380,11 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
           onClick={() => router.push(`${PATHNAME.FOOD}/${food.slug}`)}
         >
           <span className="font-semibold text-sm">{food.name}</span>
-          <p className="text-xs text-lightGray">{food.ingredient}</p>
+          <p className="text-xs text-lightGray">
+            {food.ingredient.length > 20
+              ? food.ingredient.slice(0, 20) + "..."
+              : food.ingredient}
+          </p>
         </div>
       </div>
     ),

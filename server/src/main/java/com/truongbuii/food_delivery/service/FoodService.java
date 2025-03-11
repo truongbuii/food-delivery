@@ -136,7 +136,12 @@ public class FoodService {
     public FoodResponse create(FoodPost foodPost) {
         Restaurant restaurant = restaurantService.getRestaurantById(foodPost.restaurantId());
         Category category = categoryService.getCategoryById(foodPost.categoryId());
-        Set<Addon> addons = addonService.checkAddonIdExist(foodPost.addonIds());
+        Set<Addon> addons = new HashSet<>();
+        if (foodPost.addonIds() != null && !foodPost.addonIds().isEmpty()) {
+            addons = addonService.checkAddonIdExist(foodPost.addonIds());
+        } else {
+            addons = null;
+        }
         validateFood(foodPost.name(), null, restaurant, foodPost.categoryId());
         String imageUrl = "";
 

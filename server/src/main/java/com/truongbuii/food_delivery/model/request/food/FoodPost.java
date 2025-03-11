@@ -32,7 +32,6 @@ public record FoodPost(
         Long restaurantId,
         @NotNull(message = "Category id is required")
         Integer categoryId,
-        @NotNull(message = "Categories is required")
         List<Long> addonIds
 ) {
 }

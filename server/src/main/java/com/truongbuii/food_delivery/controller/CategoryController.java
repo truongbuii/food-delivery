@@ -24,7 +24,7 @@ public class CategoryController {
         return ResponseEntity.ok(ApiResponse.<List<CategoryResponse>>builder().data(list).build());
     }
 
-    @PostMapping()
+    @PostMapping("/internal")
     public ResponseEntity<ApiResponse<CategoryResponse>> post(
             @Valid
             @ModelAttribute CategoryPost categoryPost
@@ -33,7 +33,7 @@ public class CategoryController {
         return ResponseEntity.ok(ApiResponse.<CategoryResponse>builder().data(categoryResponse).build());
     }
 
-    @PutMapping()
+    @PutMapping("/internal")
     public ResponseEntity<ApiResponse<CategoryResponse>> put(
             @Valid
             @ModelAttribute CategoryPut categoryPut

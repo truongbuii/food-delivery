@@ -1,5 +1,6 @@
 package com.truongbuii.food_delivery.security;
 
+import com.truongbuii.food_delivery.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class SecurityConfiguration {
             "/auth/refresh-access-token", "/auth/social-login", "/auth/social-callback",
             "/order/payment/callback"
     };
+
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -54,6 +56,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         request -> request
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers("/category/internal/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/restaurant/internal/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/food/internal/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/addon/internal/**").hasAuthority(Role.ADMIN.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
