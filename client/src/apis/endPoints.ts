@@ -18,6 +18,7 @@ export const BASE_RESTAURANT = `${BASE_API}/restaurant`;
 export const BASE_FOOD = `${BASE_API}/food`;
 export const BASE_CART = `${BASE_API}/cart`;
 export const BASE_ORDER = `${BASE_API}/order`;
+export const BASE_COUPON = `${BASE_API}/coupon`;
 
 const EndPoints = {
   AUTH: createPath(BASE_AUTH, {

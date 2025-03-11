@@ -20,7 +20,7 @@ export const checkoutService = async (
   >(EndPoints.ORDER.checkout, {
     paymentMethod: value.paymentMethod,
     orderAddress: value.address,
-    discount: value.discount,
+    code: value.code,
     totalPrice: value.totalPrice,
     numberItem: value.numberItem,
   });

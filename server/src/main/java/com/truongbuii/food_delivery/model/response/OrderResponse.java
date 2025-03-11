@@ -17,6 +17,7 @@ public class OrderResponse {
     private Long restaurantId;
     private String restaurantName;
     private String restaurantImage;
+    private String restaurantSlug;
     private boolean verifiedBadge;
     private BigDecimal totalPrice;
     private OrderStatus status;

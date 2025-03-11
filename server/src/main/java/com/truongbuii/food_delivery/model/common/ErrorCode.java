@@ -49,4 +49,12 @@ public class ErrorCode {
     public static final String ERR_USER_HAD_REVIEWED_RESTAURANT = "You has reviewed this restaurant";
     public static final String ERR_USER_HAD_REVIEWED_FOOD = "You has reviewed this food";
     public static final String ERR_REVIEW_NOT_FOUND = "This review is not found";
+
+    // coupon
+    public static final String ERR_COUPON_EXISTED = "This coupon is existed";
+    public static final String ERR_COUPON_NOT_EXISTED = "This coupon is not existed";
+    public static final String ERR_COUPON_EXHAUSTED = "This coupon is reached the limit";
+    public static final String ERR_COUPON_EXPIRED = "This coupon is expired";
+    public static final String ERR_COUPON_MIN_ORDER_VALUE = "Your order value isn't enough to use this coupon";
+    public static final String ERR_COUPON_USED_BY_USER = "You have used this coupon";
 }

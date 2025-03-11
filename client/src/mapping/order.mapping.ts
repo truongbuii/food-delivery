@@ -5,6 +5,7 @@ const MapperOrder = (order: Record<string, any>): IOrderResponse => {
     restaurantId: order.restaurantId ?? "",
     restaurantName: order.restaurantName ?? "",
     restaurantImage: order.restaurantImage ?? "",
+    restaurantSlug: order.restaurantSlug ?? "",
     verifiedBadge: order.verifiedBadge ?? false,
     totalPrice: order.totalPrice ?? 0.0,
     status: order.status ?? "",

@@ -29,12 +29,10 @@ const PaymentMethod = () => {
   const params = useSearchParams();
   const { addresses } = useDeliveryAddresses();
   const { shippingAddress, setAddress } = useAddressStore();
-  const { subTotal, totalQuantity } = useCart();
-  const discount = parseFloat(params.get("discount") || "0");
+  const { totalQuantity, totalPay } = useCart();
+  const discount = params.get("discount") || "";
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const totalPay = parseFloat(
-    (subTotal - (subTotal * discount) / 100).toFixed(4)
-  );
+
   const { mutateAsync } = useCheckoutMutation();
   const message = useMessage();
 
@@ -57,7 +55,7 @@ const PaymentMethod = () => {
       {
         paymentMethod: paymentMethod,
         address: shippingAddress.fullAddress,
-        discount,
+        code: discount,
         totalPrice: totalPay,
         numberItem: totalQuantity,
       },

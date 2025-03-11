@@ -15,24 +15,44 @@ import {
   PATHNAME,
   PAYMENT_STATUS_COLOR,
 } from "@/configs";
+import { useMessage } from "@/hooks/useMessage";
+import { IApiErrorResponse } from "@/interfaces";
 import { MapperOrder, MapperOrderItem } from "@/mapping/order.mapping";
-import { useGetOrderDetail, useGetOrderItemsByOrderId } from "@/queries";
+import {
+  useGetOrderDetail,
+  useGetOrderItemsByOrderId,
+  useReOrderMutation,
+} from "@/queries";
 import { ChevronLeft, ChevronsUpDown, CircleCheck } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 const OrderDetail = () => {
   const router = useRouter();
   const param = useParams();
+  const message = useMessage();
   const orderId = parseInt(param.slug as string, 10);
   const { data: order } = useGetOrderDetail(orderId);
   const { data: orderItems } = useGetOrderItemsByOrderId(orderId);
-
+  const { mutateAsync: reOrderMutation, isPending: reOrderPending } =
+    useReOrderMutation();
   const _order = order?.data ? MapperOrder(order.data) : null;
   const _orderItems = orderItems?.data
     ? orderItems.data.map((item) => MapperOrderItem(item))
     : [];
 
+  const handleReOrder = useCallback(() => {
+    if (!_order) return;
+    reOrderMutation(_order.id, {
+      onSuccess: () => {
+        router.push(PATHNAME.CART);
+      },
+      onError: (err: IApiErrorResponse) => {
+        message.error(err?.message);
+      },
+    });
+  }, [message, _order, reOrderMutation, router]);
   return (
     <>
       {_order && (
@@ -216,12 +236,20 @@ const OrderDetail = () => {
               <Button
                 size={"md"}
                 className="w-36 h-14 rounded-[40px] hover:bg-secondary bg-secondary shadow-socialBtnShadow"
+                onClick={() =>
+                  router.push(
+                    `${PATHNAME.RESTAURANT}/rating/${_order.restaurantSlug}`
+                  )
+                }
               >
                 <span className="text-ring font-medium">Rate</span>
               </Button>
               <Button
                 size={"md"}
                 className="w-36 h-14 rounded-[40px] hover:bg-primary"
+                onClick={handleReOrder}
+                loading={reOrderPending}
+                disabled={reOrderPending}
               >
                 Re-Order
               </Button>

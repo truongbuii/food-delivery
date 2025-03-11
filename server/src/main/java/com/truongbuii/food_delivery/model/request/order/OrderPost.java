@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public record OrderPost(
         PaymentMethod paymentMethod,
         String orderAddress,
-        float discount,
+        String code,
         BigDecimal totalPrice,
         int numberItem
 ) {

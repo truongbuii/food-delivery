@@ -22,6 +22,7 @@ public interface OrderMapper {
     @Mapping(source = "restaurant.id", target = "restaurantId")
     @Mapping(source = "restaurant.name", target = "restaurantName")
     @Mapping(source = "restaurant.avatarUrl", target = "restaurantImage")
+    @Mapping(source = "restaurant.slug", target = "restaurantSlug")
     @Mapping(source = "order.updatedAt", target = "updatedAt", qualifiedByName = "formatDate")
     OrderResponse toOrderResponse(Order order, Restaurant restaurant);
 

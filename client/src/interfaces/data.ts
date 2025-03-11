@@ -99,7 +99,7 @@ interface ICartItemResponse {
 interface ICheckout {
   paymentMethod: string;
   address: string;
-  discount: number;
+  code: string;
   totalPrice: number;
   numberItem: number;
 }
@@ -114,6 +114,7 @@ interface IOrderResponse {
   restaurantId: number;
   restaurantName: string;
   restaurantImage: string;
+  restaurantSlug: string;
   verifiedBadge: boolean;
   totalPrice: number;
   status: ORDER_STATUS;
@@ -156,6 +157,21 @@ interface IReviewResponse {
   updatedAt: string;
 }
 
+interface ICouponApply {
+  code: string;
+  subTotal: number;
+}
+
+interface ICouponResponse {
+  id: number;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  minOrderValue: number;
+  maxDiscount: number;
+  discountAmount: number;
+}
+
 export type {
   IApiDataResponse,
   IPageData,
@@ -176,4 +192,6 @@ export type {
   IOrderUpdate,
   IRating,
   IReviewResponse,
+  ICouponResponse,
+  ICouponApply,
 };

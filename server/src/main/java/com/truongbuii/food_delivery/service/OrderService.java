@@ -56,6 +56,7 @@ public class OrderService {
     private final AddonRepository addonRepository;
     private final RestaurantService restaurantService;
     private final OrderItemRepository orderItemRepository;
+    private final CouponService couponService;
 
     public List<OrderResponse> getMyOrders(Long userId) {
         return orderRepository.findByUserId(userId)
@@ -74,6 +75,7 @@ public class OrderService {
         List<CartItemResponse> cartItems = cartService.getAll(userId);
         Food _food = foodService.getFoodById(cartItems.getFirst().getFoodId());
         Restaurant restaurant = _food.getRestaurant();
+        Coupon coupon = couponService.getCouponByCode(orderPost.code());
 
         Optional<Order> pendingOrder = orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
         if (pendingOrder.isPresent()) {
@@ -83,6 +85,7 @@ public class OrderService {
         Order order = orderMapper.toOrder(orderPost);
         order.setUserId(user.getId());
         order.setRestaurantId(restaurant.getId());
+        order.setDiscount(coupon.getDiscountValue().floatValue());
 
         if (orderPost.paymentMethod().equals(PaymentMethod.VNPAY)) {
             order.setStatus(OrderStatus.PENDING);
@@ -91,6 +94,7 @@ public class OrderService {
             order.setStatus(OrderStatus.SHIPPING);
             order.setPaymentStatus(PaymentStatus.PENDING);
         }
+        couponService.createUserCoupon(coupon, userId);
         orderRepository.save(order);
 
         List<OrderItem> orderItems = cartItems.stream()

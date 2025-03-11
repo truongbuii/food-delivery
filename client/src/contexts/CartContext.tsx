@@ -1,17 +1,20 @@
 import { ICartItemResponse } from "@/interfaces";
 import { MapperCartItem } from "@/mapping/cartItem.mapping";
 import { useGetCartItems } from "@/queries";
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 interface CartContextType {
   cartItems: ICartItemResponse[];
   totalQuantity: number;
   subTotal: number;
+  totalPay: number;
+  setTotalPay: (value: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [totalPay, setTotalPay] = useState<number>(0);
   const { data: cartItems } = useGetCartItems();
   const _cartItems = useMemo(
     () => cartItems?.data?.map((category) => MapperCartItem(category)) ?? [],
@@ -36,6 +39,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         cartItems: _cartItems,
         totalQuantity,
         subTotal,
+        totalPay,
+        setTotalPay,
       }}
     >
       {children}

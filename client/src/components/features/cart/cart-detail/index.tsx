@@ -8,24 +8,50 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { PATHNAME } from "@/configs";
 import { useCart } from "@/contexts/CartContext";
+import { useMessage } from "@/hooks/useMessage";
+import { IApiErrorResponse } from "@/interfaces";
+import { useGetCouponMutation } from "@/queries/coupon";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const CartDetail = () => {
   const router = useRouter();
+  const message = useMessage();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [discount, setDiscount] = useState(0);
-  const { totalQuantity, cartItems, subTotal } = useCart();
+  const [code, setCode] = useState<string>("");
+  const [discount, setDiscount] = useState<number>(0);
+  const [discountType, setDiscountType] = useState<string>("PERCENTAGE");
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const { totalQuantity, cartItems, subTotal, setTotalPay } = useCart();
+  const { mutateAsync } = useGetCouponMutation();
 
-  const handleDiscount = () => {
+  const handleDiscount = useCallback(() => {
     if (inputRef.current) {
-      setDiscount(Number(inputRef.current.value));
+      const couponCode = inputRef.current.value.trim();
+
+      mutateAsync(
+        { code: couponCode, subTotal: subTotal },
+        {
+          onSuccess: (res) => {
+            if (res && res.data) {
+              setDiscount(res.data.discountValue);
+              setDiscountType(res.data.discountType);
+              setDiscountAmount(res.data.discountAmount);
+              setCode(res.data.code);
+            }
+          },
+          onError: (err: IApiErrorResponse) => {
+            message.error(err?.message);
+          },
+        }
+      );
     }
-  };
+  }, [mutateAsync, message, subTotal]);
 
   const handleCheckout = () => {
-    router.push(`${PATHNAME.ORDER.CHECKOUT}?discount=${discount}`);
+    setTotalPay((subTotal - discountAmount).toFixed(4) as unknown as number);
+    router.push(`${PATHNAME.ORDER.CHECKOUT}?discount=${code}`);
   };
   return (
     <>
@@ -73,7 +99,10 @@ const CartDetail = () => {
           <div className="px-2">
             <div className="flex justify-between py-4">
               <span>Discount</span>
-              <span>{discount}%</span>
+              <span>
+                {discount}
+                {discountType === "PERCENTAGE" ? "%" : "USD"}
+              </span>
             </div>
             <Separator />
           </div>
@@ -83,7 +112,7 @@ const CartDetail = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">({totalQuantity} items)</span>
                 <span className="font-bold">
-                  ${(subTotal - (subTotal * discount) / 100).toFixed(4)}
+                  ${(subTotal - discountAmount).toFixed(4)}
                 </span>
               </div>
             </div>
