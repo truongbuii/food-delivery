@@ -32,7 +32,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
   }>({
     categoryId: null,
     rating: null,
-    priceValues: [0, 200],
+    priceValues: [0, 100],
     selectedSortOptions: [],
   });
 
@@ -74,7 +74,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
 
   const handleResetFilter = () => {
     setFilters({
-      priceValues: [0, 200],
+      priceValues: [0, 100],
       rating: null,
       categoryId: null,
       selectedSortOptions: [],
@@ -85,7 +85,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
       freeDelivery: null,
       popular: null,
       sortAsc: null,
-      priceValues: [0, 200],
+      priceValues: [0, 100],
     });
   };
 
@@ -182,8 +182,8 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
           <Slider
             defaultValue={filters.priceValues}
             value={filters.priceValues}
-            minStepsBetweenThumbs={10}
-            max={200}
+            minStepsBetweenThumbs={1}
+            max={100}
             min={0}
             step={1}
             onValueChange={handleValueChange}

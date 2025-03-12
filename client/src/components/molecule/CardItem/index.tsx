@@ -226,7 +226,7 @@ const HorizontalCard: FC<CardItemProps> = ({
               ? (item as IFoodResponse).imageUrl
               : (item as IRestaurantResponse).avatarUrl
           }
-          alt=""
+          alt={item.name}
           fill
           sizes="100%"
           priority
@@ -381,7 +381,7 @@ const VerticalCard: FC<CardItemProps> = ({ type, item }) => {
         >
           <span className="font-semibold text-sm">{food.name}</span>
           <p className="text-xs text-lightGray">
-            {food.ingredient.length > 20
+            {food.ingredient && food.ingredient.length > 20
               ? food.ingredient.slice(0, 20) + "..."
               : food.ingredient}
           </p>

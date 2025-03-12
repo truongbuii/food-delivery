@@ -28,7 +28,7 @@ const HomeScreen = () => {
     rating: null,
     freeDelivery: null,
     popular: null,
-    priceValues: [0, 200],
+    priceValues: [0, 100],
   });
 
   const handleCategoryChange = (id: number | null) => {
@@ -66,7 +66,7 @@ const HomeScreen = () => {
                 Featured restaurants
               </span>
               <Link
-                href=""
+                href={PATHNAME.LIST.RESTAURANT_BY}
                 className="flex gap-[2px] items-center text-xs text-primary font-medium"
               >
                 View All
@@ -82,7 +82,7 @@ const HomeScreen = () => {
                   {_restaurants?.map((restaurant) => (
                     <CarouselItem
                       key={restaurant.id}
-                      className="basis-5/5 pr-4 cursor-pointer"
+                      className="basis-5/5 mr-4 cursor-pointer"
                       onClick={() =>
                         router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)
                       }

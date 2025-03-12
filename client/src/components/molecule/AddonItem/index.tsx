@@ -12,15 +12,17 @@ const AddonItem: FC<AddonItemProps> = ({ addon }) => {
   const checked = selectedAddons.includes(addon);
 
   return (
-    <div className="flex justify-between items-center pt-3">
+    <div className="flex justify-between items-center pt-4">
       <div className="flex items-center gap-5">
-        <Image
-          src={addon.imageUrl}
-          alt={addon.name}
-          width={40}
-          height={40}
-          className="rounded-full"
-        />
+        <div className="relative w-10 h-10">
+          <Image
+            src={addon.imageUrl}
+            alt={addon.name}
+            fill
+            sizes="100%"
+            className="rounded-full object-cover"
+          />
+        </div>
         <span className="text-sm font-medium">{addon.name}</span>
       </div>
       <div className="flex gap-5">

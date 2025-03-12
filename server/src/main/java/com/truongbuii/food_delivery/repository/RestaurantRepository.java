@@ -24,7 +24,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
             "AND (:categoryId IS NULL OR c.id = :categoryId) " +
             "AND (:rating IS NULL OR r.totalStars >= :rating) " +
             "AND (:keyword IS NULL OR :keyword = '' OR r.name ILIKE CONCAT('%', :keyword, '%')) " +
-            "AND (:freeDelivery IS NOT TRUE OR r.freeDelivery = TRUE) " +
+            "AND (:freeDelivery IS NULL OR :freeDelivery = FALSE OR r.freeDelivery = TRUE) " +
             "AND (:popular IS NOT TRUE OR r.hasFeatured = TRUE)" +
             "ORDER BY r.id ASC")
     Page<Restaurant> findAllByParams(

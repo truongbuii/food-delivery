@@ -31,7 +31,7 @@ const SearchTabScreen = () => {
     keyword: searchParam.get("keyword") || null,
     freeDelivery: null,
     popular: null,
-    priceValues: [0, 200],
+    priceValues: [0, 100],
     size: 5,
   });
 
