@@ -18,11 +18,9 @@ import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetFeaturedFoods, useGetFeaturedRestaurants } from "@/queries";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const HomeScreen = () => {
-  const router = useRouter();
   const [filters, setFilters] = useState({
     categoryId: null as number | null,
     rating: null,
@@ -83,9 +81,6 @@ const HomeScreen = () => {
                     <CarouselItem
                       key={restaurant.id}
                       className="basis-5/5 mr-4 cursor-pointer"
-                      onClick={() =>
-                        router.push(`${PATHNAME.RESTAURANT}/${restaurant.slug}`)
-                      }
                     >
                       <div className="pb-8">
                         <HorizontalCard type="restaurant" item={restaurant} />
@@ -100,7 +95,7 @@ const HomeScreen = () => {
           {/* Featured items */}
           <div className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold">Popular items</span>
+              <span className="text-lg font-semibold">Featured foods</span>
               <Link
                 href={
                   filters.categoryId

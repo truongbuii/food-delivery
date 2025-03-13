@@ -25,8 +25,6 @@ const useRedirect = () => {
   const onRedirect = useCallback(
     (user: IUserInfo) => {
       const redirectPath = checkRedirect(user);
-      console.log("redirectPath", redirectPath);
-
       push(redirectPath);
     },
     [checkRedirect, push]

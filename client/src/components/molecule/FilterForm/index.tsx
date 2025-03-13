@@ -162,7 +162,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
                     ? "bg-primary text-white shadow-[0px_10px_30px_0px_rgb(254,114,76,.25)]"
                     : "bg-secondary shadow-[0px_10px_20px_-4px_rgb(0,0,0,.06)]"
                 )}
-                variant={"ghost"}
+                variant={"link"}
                 onClick={() => handleSelectRating(star)}
               >
                 <span className="text-accent-foreground">{star}</span>

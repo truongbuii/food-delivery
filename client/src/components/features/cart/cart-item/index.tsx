@@ -38,7 +38,7 @@ const CartItem: FC<{ cartItems: ICartItemResponse[] }> = ({ cartItems }) => {
     });
   };
   return (
-    <ScrollArea className="h-52">
+    <ScrollArea className="h-60">
       {cartItems.map((item, index) => (
         <div className="py-2 pr-3" key={index}>
           <div className="flex gap-5">
@@ -55,6 +55,9 @@ const CartItem: FC<{ cartItems: ICartItemResponse[] }> = ({ cartItems }) => {
               <div className="flex flex-col">
                 <div className="flex items-center">
                   <span className="flex-1 font-semibold text-lg">
+                    {/* {item.foodName.length > 15
+                      ? item.foodName.slice(0, 15) + "..."
+                      : item.foodName} */}
                     {item.foodName}
                   </span>
                   <Button
@@ -101,10 +104,9 @@ const CartItem: FC<{ cartItems: ICartItemResponse[] }> = ({ cartItems }) => {
                   </span>
                   <span className="text-xs text-lightGray">
                     +$
-                    {item.selectedAddons.reduce(
-                      (sum, addon) => sum + addon.price,
-                      0
-                    )}
+                    {item.selectedAddons
+                      .reduce((sum, addon) => sum + addon.price, 0)
+                      .toFixed(2)}
                   </span>
                 </div>
                 <div className="flex gap-1 h-7">

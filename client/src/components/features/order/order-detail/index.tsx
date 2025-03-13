@@ -192,10 +192,9 @@ const OrderDetail = () => {
                               </span>
                               <span className="text-xs text-lightGray">
                                 +$
-                                {item.foodAddons.reduce(
-                                  (sum, addon) => sum + addon.price,
-                                  0
-                                )}
+                                {item.foodAddons
+                                  .reduce((sum, addon) => sum + addon.price, 0)
+                                  .toFixed(2)}
                               </span>
                             </div>
                           </div>

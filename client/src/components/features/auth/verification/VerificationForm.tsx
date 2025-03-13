@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { PATHNAME } from "@/configs";
 import useRedirect from "@/hooks/useRedirect";
 import { useAuthActions, useUserStore } from "@/stores";
+import { MapperUser } from "@/mapping/user.mapping";
 
 const VerificationForm = () => {
   const [resendCountdown, setResendCountdown] = useState<number>(0);
@@ -62,7 +63,7 @@ const VerificationForm = () => {
           if (res && res?.data) {
             const { ...userInfo } = res.data;
             setAuth(userInfo);
-            onRedirect(userInfo);
+            onRedirect(MapperUser(userInfo));
             return;
           }
         },

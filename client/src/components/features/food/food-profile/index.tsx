@@ -4,6 +4,7 @@ import FoodAddons from "@/components/features/food/food-addons";
 import { HeartButton } from "@/components/molecule/CardItem";
 import { IconBag, IconStar } from "@/components/molecule/svgs";
 import { Button } from "@/components/ui/button";
+import { PATHNAME } from "@/configs";
 import { useAddons } from "@/contexts/AddonsContext";
 import { useMessage } from "@/hooks/useMessage";
 import { IApiErrorResponse } from "@/interfaces";
@@ -96,7 +97,10 @@ const FoodProfile = () => {
               <IconStar width={15} height={15} />
               <span>{_food.totalStars}</span>
               <span className="text-lightGray">({_food.totalReviews}+)</span>
-              <Link href="" className="text-primary text-xs underline">
+              <Link
+                href={`${PATHNAME.FOOD}/${param.slug}/reviews`}
+                className="text-primary text-xs underline"
+              >
                 See Review
               </Link>
             </div>

@@ -205,8 +205,30 @@ const HorizontalCard: FC<CardItemProps> = ({
   className,
   variant = "default",
 }) => {
+  const router = useRouter();
   const isFood = type === "food";
+  const restaurant = item as IRestaurantResponse;
+  const food = item as IFoodResponse;
+  const { mutateAsync: toggleFavoriteFoodMutation } =
+    useToggleFavoriteFoodMutation();
+  const { mutateAsync: toggleFavoriteRestaurantMutation } =
+    useToggleFavoriteRestaurantMutation();
 
+  const handleToggleFavoriteFood = useCallback(
+    (value: number) => {
+      if (!food) return;
+      toggleFavoriteFoodMutation(value);
+    },
+    [food, toggleFavoriteFoodMutation]
+  );
+
+  const handleToggleFavoriteRestaurant = useCallback(
+    (value: number) => {
+      if (!restaurant) return;
+      toggleFavoriteRestaurantMutation(value);
+    },
+    [restaurant, toggleFavoriteRestaurantMutation]
+  );
   return (
     <div
       className={clsx(
@@ -232,7 +254,17 @@ const HorizontalCard: FC<CardItemProps> = ({
           priority
           className="object-cover rounded-2xl"
         />
-        <HeartButton favorite={item.favorite} />
+        <HeartButton
+          favorite={item.favorite}
+          onClick={
+            isFood
+              ? () => handleToggleFavoriteFood((item as IFoodResponse).id)
+              : () =>
+                  handleToggleFavoriteRestaurant(
+                    (item as IRestaurantResponse).id
+                  )
+          }
+        />
         <RatingBadge
           rating={item.totalStars}
           count={item.totalReviews}
@@ -245,7 +277,16 @@ const HorizontalCard: FC<CardItemProps> = ({
         />
         {isFood && <PriceBadge price={(item as IFoodResponse).price} />}
       </div>
-      <div className="py-2 px-4">
+      <div
+        className="py-2 px-4"
+        onClick={() =>
+          router.push(
+            isFood
+              ? `${PATHNAME.FOOD}/${food.slug}`
+              : `${PATHNAME.RESTAURANT}/${restaurant.slug}`
+          )
+        }
+      >
         <div className="flex flex-col">
           <InfoSection
             type={type}

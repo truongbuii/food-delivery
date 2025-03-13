@@ -11,6 +11,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sophia: ['"Sophia Pro"', "sans-serif"],
+      },
       translate: {
         "z-8": "8px",
       },

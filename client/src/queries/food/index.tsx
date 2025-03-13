@@ -117,6 +117,9 @@ export const useToggleFavoriteFoodMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERIES_KEY.FOOD.GET_FEATURED_BY_RESTAURANT_SLUG],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.FOOD.GET_FEATURED_FOODS],
+      });
     },
   });
 };

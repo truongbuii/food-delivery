@@ -4,13 +4,20 @@ import ButtonType from "@/components/molecule/ButtonType";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { PATHNAME } from "@/configs";
 import { Search } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SearchAndFilter = () => {
+  const searchParams = useSearchParams();
+  const initialKeyword = searchParams.get("keyword") || "";
   const [keyword, setKeyword] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    setKeyword(initialKeyword);
+  }, [initialKeyword]);
+
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const trimmedKeyword = keyword.trim();
@@ -45,6 +52,7 @@ const SearchAndFilter = () => {
           type="text"
           placeholder="Find for food or restaurant..."
           className="w-5/6 p-1 text-sm border-none bg-transparent focus:outline-none focus:ring-0"
+          value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={handleSearch}
         />

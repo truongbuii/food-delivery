@@ -47,7 +47,7 @@ const FoodReviews = () => {
         </p>
       </div>
       <div className="flex items-center h-[50px] mt-4 p-2 border border-tag rounded-lg">
-        <Avatar className="w-8 h-8" />
+        <Avatar className="w-8 h-8" avatarURL={userInfo?.avatarUrl} />
         <Input
           placeholder="Write your review..."
           className="w-auto flex-1 bg-transparent shadow-none border-none focus-visible:ring-0"
@@ -66,7 +66,7 @@ const FoodReviews = () => {
             <div key={review.id} className="flex flex-col items-center gap-1">
               <div className="flex w-full gap-8">
                 <div className="relative">
-                  <Avatar className="w-12 h-12" />
+                  <Avatar className="w-12 h-12" avatarURL={review.userImage} />
                   <BadgeNumber
                     className="absolute bottom-1 -right-2 w-[19px] h-[19px] text-[10px] leading-[15px] rounded-md"
                     number={review.rating}

@@ -19,6 +19,7 @@ export const ROOT_PATH = {
     FOOD_BY: "/list/food",
     RESTAURANT_BY: "/list/restaurant",
     SEARCH: "/list/search",
+    FAVORITE: "/list/favorite",
   },
   CART: "/cart",
   ORDER: {

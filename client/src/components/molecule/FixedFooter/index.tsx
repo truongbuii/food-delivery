@@ -4,7 +4,7 @@ import useScreenMode from "@/hooks/useScreenMode";
 import { useEffect, useState, useRef, memo } from "react";
 import throttle from "lodash/throttle";
 import Link from "next/link";
-import { Bell, Compass, Heart, MapPin } from "lucide-react";
+import { Bell, FileText, Heart, MapPin } from "lucide-react";
 import BadgeNumber from "@/components/molecule/BadgeNumber";
 
 import { RefObject } from "react";
@@ -55,10 +55,10 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
       } ${isHidden ? "translate-y-full" : "translate-y-0"}`}
     >
       <div className="flex justify-between items-center h-full px-4">
-        <Link href="/">
-          <Compass size={23} strokeWidth={2} />
+        <Link href={PATHNAME.ORDER.MY_ORDERS}>
+          <FileText size={23} strokeWidth={2} />
         </Link>
-        <Link href="/">
+        <Link href={PATHNAME.DELIVERY_ADDRESS}>
           <MapPin size={23} strokeWidth={2} />
         </Link>
         <Link href={PATHNAME.CART} className="relative">
@@ -68,7 +68,7 @@ const FixedFooter = ({ parentRef }: FixedFooterProps) => {
             className="absolute -top-2 -right-3 w-[15px] h-[15px] text-[10px] leading-[15px] rounded-md"
           />
         </Link>
-        <Link href="/">
+        <Link href={PATHNAME.LIST.FAVORITE}>
           <Heart size={23} strokeWidth={2} />
         </Link>
         <Link href="/">

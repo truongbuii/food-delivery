@@ -19,6 +19,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCheckoutMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<
     IApiDataResponse<ICheckoutResponse>,
     IApiErrorResponse,
@@ -26,6 +27,11 @@ export const useCheckoutMutation = () => {
   >({
     mutationKey: [QUERIES_KEY.ORDER.CHECKOUT],
     mutationFn: (value: ICheckout) => checkoutService(value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.CART.GET],
+      });
+    },
   });
 };
 

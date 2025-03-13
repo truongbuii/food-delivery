@@ -7,6 +7,59 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-RegularAz.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-Bold-Az.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-Medium-Az.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-Light-Az.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-SemiBold-Az.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-ExtraLight-Az.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sophia Pro";
+  src: url("../fonts/SofiaPro-UltraLigh-Az.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+body {
+  font-family: "Sophia Pro", sans-serif !important;
+}
+
 .scrollbar-hide,
 .hide-scrollbar {
   scrollbar-width: none;

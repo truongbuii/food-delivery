@@ -30,7 +30,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       preventDuplicate
       maxSnack={1}
       action={(snackbarId) => (
-        <button className="px-4" onClick={() => closeSnackbar(snackbarId)}>
+        <button onClick={() => closeSnackbar(snackbarId)}>
           <CircleX />
         </button>
       )}

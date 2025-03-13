@@ -89,6 +89,9 @@ export const useToggleFavoriteRestaurantMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERIES_KEY.RESTAURANT.GET_RESTAURANTS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERIES_KEY.RESTAURANT.GET_FEATURED_RESTAURANTS],
+      });
     },
   });
 };
