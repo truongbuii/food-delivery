@@ -27,6 +27,7 @@ import com.truongbuii.food_delivery.repository.AddonRepository;
 import com.truongbuii.food_delivery.repository.OrderItemRepository;
 import com.truongbuii.food_delivery.repository.OrderRepository;
 import com.truongbuii.food_delivery.utils.VNPayUtils;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +76,6 @@ public class OrderService {
         List<CartItemResponse> cartItems = cartService.getAll(userId);
         Food _food = foodService.getFoodById(cartItems.getFirst().getFoodId());
         Restaurant restaurant = _food.getRestaurant();
-        Coupon coupon = couponService.getCouponByCode(orderPost.code());
 
         Optional<Order> pendingOrder = orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
         if (pendingOrder.isPresent()) {
@@ -85,7 +85,6 @@ public class OrderService {
         Order order = orderMapper.toOrder(orderPost);
         order.setUserId(user.getId());
         order.setRestaurantId(restaurant.getId());
-        order.setDiscount(coupon.getDiscountValue().floatValue());
 
         if (orderPost.paymentMethod().equals(PaymentMethod.VNPAY)) {
             order.setStatus(OrderStatus.PENDING);
@@ -93,8 +92,13 @@ public class OrderService {
         } else {
             order.setStatus(OrderStatus.SHIPPING);
             order.setPaymentStatus(PaymentStatus.PENDING);
+            cartService.deleteAll(userId);
         }
-        couponService.createUserCoupon(coupon, userId);
+        if (StringUtils.isNotBlank(orderPost.code()) && !orderPost.code().isEmpty()) {
+            Coupon coupon = couponService.getCouponByCode(orderPost.code());
+            order.setDiscount(coupon.getDiscountValue().floatValue());
+            couponService.createUserCoupon(coupon, userId);
+        }
         orderRepository.save(order);
 
         List<OrderItem> orderItems = cartItems.stream()

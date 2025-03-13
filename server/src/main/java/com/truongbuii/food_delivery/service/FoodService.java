@@ -72,10 +72,17 @@ public class FoodService {
                 .collect(Collectors.toList());
     }
 
-    public List<FoodResponse> getFeaturedFood() {
+    public List<FoodResponse> getFeaturedFood(Long userId) {
+        Set<FavoriteFood> favoriteFoods = favoriteFoodRepository.findByUserId((userId));
         List<Food> foods = foodRepository.findAllByHasFeatured(Boolean.TRUE);
         return foods.stream()
-                .map(foodMapper::toFoodResponse)
+                .map(
+                        f -> {
+                            FoodResponse foodResponse = foodMapper.toFoodResponse(f);
+                            foodResponse.setFavorite(favoriteFoods.stream().anyMatch(fav -> fav.getFood().getId().equals(f.getId())));
+                            return foodResponse;
+                        }
+                )
                 .collect(Collectors.toList());
     }
 

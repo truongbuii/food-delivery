@@ -72,11 +72,30 @@ public class RestaurantService {
         return restaurantResponse;
     }
 
-    public List<RestaurantResponse> getAllFeaturedRestaurants() {
+    public List<RestaurantResponse> getAllFeaturedRestaurants(Long userId) {
         List<Restaurant> restaurants = restaurantRepository.findAllByHasFeatured(Boolean.TRUE);
-        return restaurants.stream()
-                .map(restaurantMapper::toRestaurantResponse)
-                .collect(Collectors.toList());
+        List<Long> restaurantIds = restaurants.stream().map(Restaurant::getId).toList();
+        Set<Long> favoriteRestaurantIds = favoriteRestaurantRepository
+                .findByUserIdAndRestaurantIdIn(userId, restaurantIds)
+                .stream()
+                .map(
+                        favoriteRestaurant -> favoriteRestaurant.getRestaurant().getId()
+                )
+                .collect(Collectors.toSet());
+        return restaurants
+                .stream()
+                .map(restaurant -> {
+                    LinkedHashSet<CategoryIdNameResponse> categories = restaurant.getCategories()
+                            .stream()
+                            .map(categoryMapper::toCategoryIdNameResponse)
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
+
+                    RestaurantResponse restaurantResponse = restaurantMapper.toRestaurantResponse(restaurant);
+                    restaurantResponse.setFavorite(favoriteRestaurantIds.contains(restaurant.getId()));
+                    restaurantResponse.setCategories(categories);
+                    return restaurantResponse;
+                })
+                .toList();
     }
 
     public PageResponse<List<RestaurantResponse>> getAllByParams(

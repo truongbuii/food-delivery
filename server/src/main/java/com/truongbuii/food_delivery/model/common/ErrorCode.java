@@ -37,7 +37,7 @@ public class ErrorCode {
 
     // Cart error
     public static final String ERR_CART_ITEM_NOT_FOUND = "This cart item is not found";
-    public static final String ERR_FOOD_NOT_FROM_SAME_RESTAURANT = "Clear cart before adding from another restaurant";
+    public static final String ERR_FOOD_NOT_FROM_SAME_RESTAURANT = "Can't add food from different restaurant";
 
     // Order error
     public static final String ERR_PAYMENT_INVALID_SIGNATURE = "Invalid signature";
@@ -55,6 +55,6 @@ public class ErrorCode {
     public static final String ERR_COUPON_NOT_EXISTED = "This coupon is not existed";
     public static final String ERR_COUPON_EXHAUSTED = "This coupon is reached the limit";
     public static final String ERR_COUPON_EXPIRED = "This coupon is expired";
-    public static final String ERR_COUPON_MIN_ORDER_VALUE = "Your order value isn't enough to use this coupon";
+    public static final String ERR_COUPON_MIN_ORDER_VALUE = "Your order value is not enough!";
     public static final String ERR_COUPON_USED_BY_USER = "You have used this coupon";
 }

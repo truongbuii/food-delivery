@@ -19,14 +19,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserId(Long userId);
 
     @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM Order o " +
-            "WHERE o.userId = :userId AND o.restaurantId = :restaurantId AND o.status = 'DELIVERED') " +
+            "WHERE o.userId = :userId AND o.restaurantId = :restaurantId) " +
             "THEN TRUE ELSE FALSE END")
     Boolean existsCompletedOrder(
             @Param("userId") Long userId,
             @Param("restaurantId") Long restaurantId
     );
 
-    @Query("SELECT o FROM Order o WHERE o.userId = :userId AND o.status = 'DELIVERED'")
+    @Query("SELECT o FROM Order o WHERE o.userId = :userId")
     List<Order> findDeliveredOrderByUserId(Long userId);
 
     @Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :orderId")

@@ -60,6 +60,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/restaurant/internal/**").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers("/food/internal/**").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers("/addon/internal/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/coupon/internal/**").hasAuthority(Role.ADMIN.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

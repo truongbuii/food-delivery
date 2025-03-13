@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class CouponController {
     private final CouponService couponService;
 
-    @PostMapping
+    @PostMapping("/internal/create")
     public ResponseEntity<ApiResponse<Coupon>> createCoupon(
             @RequestBody CouponPost couponPost
     ) {

@@ -54,8 +54,10 @@ public class FoodController {
     }
 
     @GetMapping("/all/featured")
-    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAllFeatured() {
-        var foodResponses = foodService.getFeaturedFood();
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAllFeatured(
+            @AuthenticationPrincipal User principal
+    ) {
+        var foodResponses = foodService.getFeaturedFood(principal.getId());
         return ResponseEntity.ok(ApiResponse.<List<FoodResponse>>builder().data(foodResponses).build());
     }
 
