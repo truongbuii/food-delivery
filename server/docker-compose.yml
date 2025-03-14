@@ -3,6 +3,24 @@ version: "3.9"
 name: food-delivery-container
 
 services:
+  food-delivery-server:
+    image: food-delivery:latest
+    container_name: food-delivery-server
+    depends_on:
+      - db
+      - redis
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/food_delivery
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8080:8080"
+    networks:
+      - food-delivery-network
 
   db:
     image: postgres:16-alpine
