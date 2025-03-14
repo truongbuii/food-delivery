@@ -1,6 +1,8 @@
 import { ChangePasswordForm } from "@/components/features/auth/change-password";
 import { ButtonType } from "@/components/molecule";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PATHNAME } from "@/configs";
+import { Suspense } from "react";
 
 const ChangePasswordPage = () => {
   return (
@@ -14,7 +16,18 @@ const ChangePasswordPage = () => {
           <span className="w-[247px] h-[40px] text-sm text-lightGray">
             Please enter your new password and confirm it to change
           </span>
-          <ChangePasswordForm />
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 grid-rows-2 gap-2">
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+              </div>
+            }
+          >
+            <ChangePasswordForm />
+          </Suspense>
         </div>
       </div>
     </>

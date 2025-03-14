@@ -3,10 +3,12 @@
 import { Avatar, RatingForm } from "@/components/molecule";
 import { HeartButton } from "@/components/molecule/CardItem";
 import { IconChecked } from "@/components/molecule/svgs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MapperRestaurant } from "@/mapping/restaurant.mapping";
 import { useGetRestaurantBySlug } from "@/queries";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { Suspense } from "react";
 
 const RatingRestaurant = () => {
   const param = useParams();
@@ -54,7 +56,18 @@ const RatingRestaurant = () => {
             <p>How was your last</p>
             <p>order from {_restaurant.name}?</p>
           </div>
-          <RatingForm subjectId={_restaurant.id} type="restaurant" />
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 grid-rows-2 gap-2">
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+                <Skeleton className="h-10 w-10 rounded-md" />
+              </div>
+            }
+          >
+            <RatingForm subjectId={_restaurant.id} type="restaurant" />
+          </Suspense>
         </>
       )}
     </>
