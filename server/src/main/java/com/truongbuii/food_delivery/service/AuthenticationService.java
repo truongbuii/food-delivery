@@ -16,6 +16,7 @@ import com.truongbuii.food_delivery.repository.UserRepository;
 import com.truongbuii.food_delivery.security.JwtService;
 import com.truongbuii.food_delivery.utils.CookieUtils;
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
+import com.truongbuii.food_delivery.utils.MailTemplate;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ import java.util.Optional;
 public class AuthenticationService {
     private final JwtService jwtService;
     private final UserMapper userMapper;
+    private final MailService mailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
@@ -301,8 +303,16 @@ public class AuthenticationService {
         String OTP = GeneratorUtils.generateOtp();
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + email;
         redisService.setTimeToLive(redisOtpKey, OTP, 15 * 60 * 1000);
+        log.warn("OTP: {}", redisOtpKey);
         NotificationEmail notificationEmail = new NotificationEmail(email, subject, OTP);
-        kafkaTemplate.send(topic, notificationEmail);
+        mailService.sendEmailBrevo(
+                SendEmail.builder()
+                        .to(BodyParam.builder().email(notificationEmail.recipient()).build())
+                        .subject(notificationEmail.subject())
+                        .htmlContent(notificationEmail.content())
+                        .build(),
+                MailTemplate.templateBodyEmailOTP(notificationEmail.content())
+        );
     }
 
     public Long getUserId() {
