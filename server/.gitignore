@@ -20,6 +20,7 @@ target/
 *.ipr
 .env
 **/src/main/resources/application.yml
+db_backup.dump
 
 ### NetBeans ###
 /nbproject/private/

@@ -21,7 +21,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +39,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -53,7 +51,7 @@ public class AuthenticationService {
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisService redisService;
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
@@ -150,10 +148,7 @@ public class AuthenticationService {
         }
 
         long tokenExpiration = jwtService.extractExpiration(tokenPost.token()).getTime() - System.currentTimeMillis();
-        redisTemplate.opsForValue().set(
-                tokenPost.token(),
-                Constant.Redis.REDIS_BLACKLIST_TAG,
-                tokenExpiration, TimeUnit.MILLISECONDS);
+        redisService.setTimeToLive(tokenPost.token(), Constant.Redis.REDIS_BLACKLIST_TAG, tokenExpiration);
         response.addCookie(CookieUtils.deleteCookie(Constant.Cookie.COOKIE_REFRESH_TOKEN_NAME));
     }
 
@@ -183,20 +178,20 @@ public class AuthenticationService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ERR_USER_NOT_FOUND));
         // Compare OTP request with otp in Redis
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + changePasswordPatch.email();
-        String redisOtp = (String) redisTemplate.opsForValue().get(redisOtpKey);
+        String redisOtp = (String) redisService.get(redisOtpKey);
         if (redisOtp != null && !redisOtp.trim().equals(changePasswordPatch.otp().trim())) {
             throw new InvalidOtpException(ErrorCode.ERR_USER_INVALID_OTP);
         }
         user.setPassword(passwordEncoder.encode(changePasswordPatch.password()));
         userRepository.save(user);
         // Remove OTP from Redis
-        redisTemplate.delete(redisOtpKey);
+        redisService.delete(redisOtpKey);
     }
 
     public UserResponse verificationEmail(UserEmailPatch userEmailPatch) {
         // Compare OTP request with otp in Redis
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + userEmailPatch.email();
-        String redisOtp = (String) redisTemplate.opsForValue().get(redisOtpKey);
+        String redisOtp = (String) redisService.get(redisOtpKey);
         if (redisOtp == null || !redisOtp.trim().equals(userEmailPatch.otp().trim())) {
             throw new InvalidOtpException(ErrorCode.ERR_USER_INVALID_OTP);
         }
@@ -205,7 +200,7 @@ public class AuthenticationService {
         user.setEmailVerified(true);
         userRepository.save(user);
         // Remove OTP from Redis
-        redisTemplate.delete(redisOtpKey);
+        redisService.delete(redisOtpKey);
         return userMapper.toUserResponse(user);
     }
 
@@ -305,8 +300,7 @@ public class AuthenticationService {
         // Generate OTP and save to Redis with expiration time
         String OTP = GeneratorUtils.generateOtp();
         String redisOtpKey = Constant.Redis.REDIS_OTP_PREFIX + email;
-        redisTemplate.opsForValue().set(redisOtpKey, OTP, 15, TimeUnit.MINUTES);
-
+        redisService.setTimeToLive(redisOtpKey, OTP, 15 * 60 * 1000);
         NotificationEmail notificationEmail = new NotificationEmail(email, subject, OTP);
         kafkaTemplate.send(topic, notificationEmail);
     }
