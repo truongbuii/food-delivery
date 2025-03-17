@@ -93,7 +93,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
     <SheetContent
       side={"right"}
       container={container}
-      className="w-full z-[150]"
+      className="w-full h-full overflow-auto hide-scrollbar z-[150]"
     >
       <SheetHeader>
         <SheetTitle>
@@ -110,7 +110,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
         </SheetTitle>
         <SheetDescription></SheetDescription>
       </SheetHeader>
-      <div className="flex flex-col px-6 gap-10">
+      <div className="flex flex-col px-6 gap-8">
         <div className="flex flex-col gap-5">
           <p className="text-lg font-semibold">Cuisines</p>
           <div className="flex flex-wrap gap-3">
@@ -190,7 +190,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
             className={cn("w-full")}
           />
         </div>
-        <div className="flex">
+        <div className="flex mb-6">
           <Button
             size={"md"}
             variant={"outline"}
