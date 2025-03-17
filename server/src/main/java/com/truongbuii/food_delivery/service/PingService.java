@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PingService {
     private final RestTemplate restTemplate = new RestTemplate();
-    @Value("${backend-url}")
+    @Value("${backend-render-url}")
     private String BACKEND_URL;
 
     /*
@@ -19,8 +19,8 @@ public class PingService {
     @Scheduled(cron = "0 */14 * * * *")
     public void pingBackend() {
         try {
-            restTemplate.postForObject(BACKEND_URL, null, String.class);
-            log.info("Ping backend after 14 minutes");
+            restTemplate.getForObject(BACKEND_URL + "/api/v1/actuator/health", String.class);
+            log.info("Pinged backend server successfully");
         } catch (Exception e) {
             log.error("Error while pinging backend server: {}", e.getMessage());
         }

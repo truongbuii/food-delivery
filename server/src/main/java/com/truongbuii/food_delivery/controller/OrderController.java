@@ -87,9 +87,4 @@ public class OrderController {
         var orderItems = orderService.getOrderItemByOrderId(orderId);
         return ResponseEntity.ok(ApiResponse.<List<OrderItemResponse>>builder().data(orderItems).build());
     }
-
-    @PostMapping("/auto-update-status")
-    public void cronJob() {
-        orderService.cronJobUpdateOrderStatus();
-    }
 }
