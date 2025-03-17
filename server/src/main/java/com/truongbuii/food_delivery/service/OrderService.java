@@ -202,6 +202,19 @@ public class OrderService {
         return order;
     }
 
+    public void cronJobUpdateOrderStatus() {
+        log.info("Cron job update order status");
+        List<Order> orders = orderRepository.findByStatus(OrderStatus.SHIPPING);
+
+        if (orders.isEmpty()) {
+            return;
+        }
+        orders.forEach(order -> {
+            order.setStatus(OrderStatus.DELIVERED);
+            orderRepository.save(order);
+        });
+    }
+
     private List<SelectedAddon> convertJsonToList(JsonNode jsonNode) {
         try {
             return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode),
