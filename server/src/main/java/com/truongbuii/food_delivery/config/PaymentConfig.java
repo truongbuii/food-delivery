@@ -2,6 +2,7 @@ package com.truongbuii.food_delivery.config;
 
 import com.truongbuii.food_delivery.utils.GeneratorUtils;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+@Slf4j
 @Configuration
 public class PaymentConfig {
     @Getter
@@ -42,6 +44,7 @@ public class PaymentConfig {
         vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl);
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
         String vnpCreateDate = formatter.format(calendar.getTime());
         vnpParamsMap.put("vnp_CreateDate", vnpCreateDate);
         calendar.add(Calendar.MINUTE, 15);

@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByUserIdAndStatus(Long userId, OrderStatus status);
 
+    @Query("SELECT o FROM Order o WHERE o.userId = :userId ORDER BY o.updatedAt DESC")
     List<Order> findByUserId(Long userId);
 
     @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM Order o " +

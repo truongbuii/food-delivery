@@ -77,11 +77,12 @@ public class OrderService {
         List<CartItemResponse> cartItems = cartService.getAll(userId);
         Food _food = foodService.getFoodById(cartItems.getFirst().getFoodId());
         Restaurant restaurant = _food.getRestaurant();
-
+        
         Optional<Order> pendingOrder = orderRepository.findByUserIdAndStatus(userId, OrderStatus.PENDING);
         if (pendingOrder.isPresent()) {
             throw new DuplicateResourceException(ErrorCode.ERR_ORDER_PENDING);
         }
+
 
         Order order = orderMapper.toOrder(orderPost);
         order.setUserId(user.getId());
