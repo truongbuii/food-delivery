@@ -11,6 +11,7 @@ import com.truongbuii.food_delivery.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ import java.util.Map;
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
+    @Value("${client-url}")
+    private String CLIENT_URL;
+
     private final OrderService orderService;
 
     @GetMapping("/my-orders")
@@ -52,7 +56,7 @@ public class OrderController {
             HttpServletResponse response
     ) throws IOException {
         Long orderId = orderService.OrderPaymentCallBack(queryParams);
-        response.sendRedirect("http://localhost:3000/order/" + orderId);
+        response.sendRedirect(CLIENT_URL + "/order/" + orderId);
     }
 
     @PostMapping("/re-order")

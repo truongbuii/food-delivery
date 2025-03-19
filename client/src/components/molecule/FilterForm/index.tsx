@@ -110,10 +110,10 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
         </SheetTitle>
         <SheetDescription></SheetDescription>
       </SheetHeader>
-      <div className="flex flex-col px-6 gap-8">
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col px-6 gap-6">
+        <div className="flex flex-col gap-4">
           <p className="text-lg font-semibold">Cuisines</p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-1">
             {_categories?.map((category) => (
               <CategoryItem
                 key={category.id}
@@ -129,7 +129,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
           </div>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <p className="text-lg font-semibold">Short by</p>
           <div className="flex flex-wrap gap-3">
             <ToggleGroup
@@ -150,7 +150,7 @@ const FilterForm: FC<{ onFilterChange?: (filters: any) => void }> = ({
           </div>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <p className="text-lg font-semibold">Rating</p>
           <div className="flex flex-wrap justify-between">
             {[5, 4, 3, 2, 1].map((star) => (
